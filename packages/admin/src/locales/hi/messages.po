@@ -21,7 +21,7 @@ msgstr " - अतिथि"
 msgid " - Linked"
 msgstr " - जुड़ा हुआ"
 
-#: packages/admin/src/components/LocaleSwitcher.tsx:72
+#: packages/admin/src/components/LocaleSwitcher.tsx:75
 #: packages/admin/src/components/TranslationsPanel.tsx:81
 msgid " (default)"
 msgstr " (डिफ़ॉल्ट)"
@@ -447,11 +447,11 @@ msgstr "{filteredCount, plural, one {#{0} आइटम} other {#{1} आइटम
 msgid "{importedFiles, plural, one {<count>#</count> file imported} other {<count>#</count> files imported}}"
 msgstr ""
 
-#: packages/admin/src/components/LocaleSwitcher.tsx:107
+#: packages/admin/src/components/LocaleSwitcher.tsx:117
 msgid "{label} — no translation"
 msgstr "{label} - कोई अनुवाद नहीं"
 
-#: packages/admin/src/components/LocaleSwitcher.tsx:107
+#: packages/admin/src/components/LocaleSwitcher.tsx:117
 msgid "{label} — view translation"
 msgstr "{label} - अनुवाद देखें"
 
@@ -1161,7 +1161,7 @@ msgstr "सभी टिप्पणियों के लिए अनुम�
 msgid "All imported content will be unassigned. You can reassign authors later from the content editor."
 msgstr "सभी आयातित सामग्री अनअसाइन कर दी जाएगी. आप बाद में सामग्री संपादक से लेखकों को पुन: असाइन कर सकते हैं।"
 
-#: packages/admin/src/components/LocaleSwitcher.tsx:68
+#: packages/admin/src/components/LocaleSwitcher.tsx:71
 msgid "All locales"
 msgstr "सभी स्थान"
 
@@ -6146,7 +6146,7 @@ msgstr ""
 
 #: packages/admin/src/components/ContentList.tsx:619
 #: packages/admin/src/components/ContentList.tsx:762
-#: packages/admin/src/components/LocaleSwitcher.tsx:60
+#: packages/admin/src/components/LocaleSwitcher.tsx:61
 msgid "Locale"
 msgstr "स्थान"
 

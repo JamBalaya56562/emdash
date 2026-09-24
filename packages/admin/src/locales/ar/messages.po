@@ -25,7 +25,7 @@ msgstr " - ضيف"
 msgid " - Linked"
 msgstr " - مرتبط"
 
-#: packages/admin/src/components/LocaleSwitcher.tsx:72
+#: packages/admin/src/components/LocaleSwitcher.tsx:75
 #: packages/admin/src/components/TranslationsPanel.tsx:81
 msgid " (default)"
 msgstr " الافتراضي"
@@ -451,11 +451,11 @@ msgstr "{filteredCount, plural, zero {لا عناصر} one {عنصر واحد} t
 msgid "{importedFiles, plural, one {<count>#</count> file imported} other {<count>#</count> files imported}}"
 msgstr ""
 
-#: packages/admin/src/components/LocaleSwitcher.tsx:107
+#: packages/admin/src/components/LocaleSwitcher.tsx:117
 msgid "{label} — no translation"
 msgstr "{label} — بدون ترجمة"
 
-#: packages/admin/src/components/LocaleSwitcher.tsx:107
+#: packages/admin/src/components/LocaleSwitcher.tsx:117
 msgid "{label} — view translation"
 msgstr "{label} — عرض الترجمة"
 
@@ -1165,7 +1165,7 @@ msgstr "جميع التعليقات تستلزم الموافقة"
 msgid "All imported content will be unassigned. You can reassign authors later from the content editor."
 msgstr "سيكون جميع المحتوى المستورد غير مُسنَد. يمكنك إعادة تعيين المؤلفين لاحقًا من محرر المحتوى."
 
-#: packages/admin/src/components/LocaleSwitcher.tsx:68
+#: packages/admin/src/components/LocaleSwitcher.tsx:71
 msgid "All locales"
 msgstr "جميع المَحليات"
 
@@ -6147,7 +6147,7 @@ msgstr ""
 
 #: packages/admin/src/components/ContentList.tsx:619
 #: packages/admin/src/components/ContentList.tsx:762
-#: packages/admin/src/components/LocaleSwitcher.tsx:60
+#: packages/admin/src/components/LocaleSwitcher.tsx:61
 msgid "Locale"
 msgstr "المَحلية"
 

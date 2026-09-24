@@ -21,7 +21,7 @@ msgstr " - Convidado"
 msgid " - Linked"
 msgstr " - Vinculado"
 
-#: packages/admin/src/components/LocaleSwitcher.tsx:72
+#: packages/admin/src/components/LocaleSwitcher.tsx:75
 #: packages/admin/src/components/TranslationsPanel.tsx:81
 msgid " (default)"
 msgstr " (padrão)"
@@ -447,11 +447,11 @@ msgstr "{filteredCount, plural, one {#{0} item} other {#{1} itens}}"
 msgid "{importedFiles, plural, one {<count>#</count> file imported} other {<count>#</count> files imported}}"
 msgstr "{importedFiles, plural, one {<count>#</count> arquivo importado} other {<count>#</count> arquivos importados}}"
 
-#: packages/admin/src/components/LocaleSwitcher.tsx:107
+#: packages/admin/src/components/LocaleSwitcher.tsx:117
 msgid "{label} — no translation"
 msgstr "{label} — sem tradução"
 
-#: packages/admin/src/components/LocaleSwitcher.tsx:107
+#: packages/admin/src/components/LocaleSwitcher.tsx:117
 msgid "{label} — view translation"
 msgstr "{label} — ver tradução"
 
@@ -1161,7 +1161,7 @@ msgstr "Todos os comentários exigem aprovação"
 msgid "All imported content will be unassigned. You can reassign authors later from the content editor."
 msgstr "Todo o conteúdo importado será desatribuído. Você pode reatribuir autores depois pelo editor de conteúdo."
 
-#: packages/admin/src/components/LocaleSwitcher.tsx:68
+#: packages/admin/src/components/LocaleSwitcher.tsx:71
 msgid "All locales"
 msgstr "Todos os idiomas do conteúdo"
 
@@ -6146,7 +6146,7 @@ msgstr "Horário local"
 
 #: packages/admin/src/components/ContentList.tsx:619
 #: packages/admin/src/components/ContentList.tsx:762
-#: packages/admin/src/components/LocaleSwitcher.tsx:60
+#: packages/admin/src/components/LocaleSwitcher.tsx:61
 msgid "Locale"
 msgstr "Idioma do conteúdo"
 

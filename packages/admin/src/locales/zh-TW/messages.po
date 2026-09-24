@@ -21,7 +21,7 @@ msgstr " - 訪客"
 msgid " - Linked"
 msgstr " - 已連結"
 
-#: packages/admin/src/components/LocaleSwitcher.tsx:72
+#: packages/admin/src/components/LocaleSwitcher.tsx:75
 #: packages/admin/src/components/TranslationsPanel.tsx:81
 msgid " (default)"
 msgstr " (預設)"
@@ -447,11 +447,11 @@ msgstr "{filteredCount, plural, one {#{0} 個項目} other {#{1} 個項目}}"
 msgid "{importedFiles, plural, one {<count>#</count> file imported} other {<count>#</count> files imported}}"
 msgstr ""
 
-#: packages/admin/src/components/LocaleSwitcher.tsx:107
+#: packages/admin/src/components/LocaleSwitcher.tsx:117
 msgid "{label} — no translation"
 msgstr "{label} — 沒有翻譯"
 
-#: packages/admin/src/components/LocaleSwitcher.tsx:107
+#: packages/admin/src/components/LocaleSwitcher.tsx:117
 msgid "{label} — view translation"
 msgstr "{label} — 檢視翻譯"
 
@@ -1161,7 +1161,7 @@ msgstr "所有留言都需要審核"
 msgid "All imported content will be unassigned. You can reassign authors later from the content editor."
 msgstr "所有匯入內容將不會指派給任何人。之後可在內容編輯器中重新指派作者。"
 
-#: packages/admin/src/components/LocaleSwitcher.tsx:68
+#: packages/admin/src/components/LocaleSwitcher.tsx:71
 msgid "All locales"
 msgstr "所有語系"
 
@@ -6146,7 +6146,7 @@ msgstr ""
 
 #: packages/admin/src/components/ContentList.tsx:619
 #: packages/admin/src/components/ContentList.tsx:762
-#: packages/admin/src/components/LocaleSwitcher.tsx:60
+#: packages/admin/src/components/LocaleSwitcher.tsx:61
 msgid "Locale"
 msgstr "語系"
 

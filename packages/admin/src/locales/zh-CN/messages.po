@@ -21,7 +21,7 @@ msgstr " - 访客"
 msgid " - Linked"
 msgstr " - 已关联"
 
-#: packages/admin/src/components/LocaleSwitcher.tsx:72
+#: packages/admin/src/components/LocaleSwitcher.tsx:75
 #: packages/admin/src/components/TranslationsPanel.tsx:81
 msgid " (default)"
 msgstr "（默认）"
@@ -447,11 +447,11 @@ msgstr "{filteredCount, plural, one {#{0} 个项目} other {#{1} 个项目}}"
 msgid "{importedFiles, plural, one {<count>#</count> file imported} other {<count>#</count> files imported}}"
 msgstr ""
 
-#: packages/admin/src/components/LocaleSwitcher.tsx:107
+#: packages/admin/src/components/LocaleSwitcher.tsx:117
 msgid "{label} — no translation"
 msgstr "{label} — 无翻译"
 
-#: packages/admin/src/components/LocaleSwitcher.tsx:107
+#: packages/admin/src/components/LocaleSwitcher.tsx:117
 msgid "{label} — view translation"
 msgstr "{label} — 查看翻译"
 
@@ -1161,7 +1161,7 @@ msgstr "所有评论需要审核"
 msgid "All imported content will be unassigned. You can reassign authors later from the content editor."
 msgstr "所有导入的内容将被取消分配。您可以稍后在内容编辑器中重新分配作者。"
 
-#: packages/admin/src/components/LocaleSwitcher.tsx:68
+#: packages/admin/src/components/LocaleSwitcher.tsx:71
 msgid "All locales"
 msgstr "所有语言"
 
@@ -6146,7 +6146,7 @@ msgstr ""
 
 #: packages/admin/src/components/ContentList.tsx:619
 #: packages/admin/src/components/ContentList.tsx:762
-#: packages/admin/src/components/LocaleSwitcher.tsx:60
+#: packages/admin/src/components/LocaleSwitcher.tsx:61
 msgid "Locale"
 msgstr "语言区域"
 

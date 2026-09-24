@@ -21,7 +21,7 @@ msgstr " - Misafir"
 msgid " - Linked"
 msgstr " - Bağlı"
 
-#: packages/admin/src/components/LocaleSwitcher.tsx:72
+#: packages/admin/src/components/LocaleSwitcher.tsx:75
 #: packages/admin/src/components/TranslationsPanel.tsx:81
 msgid " (default)"
 msgstr " (varsayılan)"
@@ -447,11 +447,11 @@ msgstr "{filteredCount, plural, one {#{0} öğe} other {#{1} öğe}}"
 msgid "{importedFiles, plural, one {<count>#</count> file imported} other {<count>#</count> files imported}}"
 msgstr ""
 
-#: packages/admin/src/components/LocaleSwitcher.tsx:107
+#: packages/admin/src/components/LocaleSwitcher.tsx:117
 msgid "{label} — no translation"
 msgstr "{label} — çeviri yok"
 
-#: packages/admin/src/components/LocaleSwitcher.tsx:107
+#: packages/admin/src/components/LocaleSwitcher.tsx:117
 msgid "{label} — view translation"
 msgstr "{label} — çeviriyi görüntüle"
 
@@ -1161,7 +1161,7 @@ msgstr "Tüm yorumlar onay gerektirir"
 msgid "All imported content will be unassigned. You can reassign authors later from the content editor."
 msgstr "İçe aktarılan tüm içeriğin ataması kaldırılacak. Yazarları daha sonra içerik düzenleyiciden yeniden atayabilirsiniz."
 
-#: packages/admin/src/components/LocaleSwitcher.tsx:68
+#: packages/admin/src/components/LocaleSwitcher.tsx:71
 msgid "All locales"
 msgstr "Tüm yerel ayarlar"
 
@@ -6146,7 +6146,7 @@ msgstr ""
 
 #: packages/admin/src/components/ContentList.tsx:619
 #: packages/admin/src/components/ContentList.tsx:762
-#: packages/admin/src/components/LocaleSwitcher.tsx:60
+#: packages/admin/src/components/LocaleSwitcher.tsx:61
 msgid "Locale"
 msgstr "Yerel ayar"
 

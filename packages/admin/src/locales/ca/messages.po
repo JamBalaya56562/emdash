@@ -21,7 +21,7 @@ msgstr " - Convidat"
 msgid " - Linked"
 msgstr " - Enllaçat"
 
-#: packages/admin/src/components/LocaleSwitcher.tsx:72
+#: packages/admin/src/components/LocaleSwitcher.tsx:75
 #: packages/admin/src/components/TranslationsPanel.tsx:81
 msgid " (default)"
 msgstr " (per defecte)"
@@ -447,11 +447,11 @@ msgstr "{filteredCount, plural, one {#{0} element} other {#{1} elements}}"
 msgid "{importedFiles, plural, one {<count>#</count> file imported} other {<count>#</count> files imported}}"
 msgstr ""
 
-#: packages/admin/src/components/LocaleSwitcher.tsx:107
+#: packages/admin/src/components/LocaleSwitcher.tsx:117
 msgid "{label} — no translation"
 msgstr "{label} — sense traducció"
 
-#: packages/admin/src/components/LocaleSwitcher.tsx:107
+#: packages/admin/src/components/LocaleSwitcher.tsx:117
 msgid "{label} — view translation"
 msgstr "{label} — mostra la traducció"
 
@@ -1161,7 +1161,7 @@ msgstr "Tots els comentaris requereixen aprovació"
 msgid "All imported content will be unassigned. You can reassign authors later from the content editor."
 msgstr "Tot el contingut importat quedarà sense assignar. Pots reassignar els autors més tard des de l'editor de contingut."
 
-#: packages/admin/src/components/LocaleSwitcher.tsx:68
+#: packages/admin/src/components/LocaleSwitcher.tsx:71
 msgid "All locales"
 msgstr "Tots els idiomes"
 
@@ -6146,7 +6146,7 @@ msgstr ""
 
 #: packages/admin/src/components/ContentList.tsx:619
 #: packages/admin/src/components/ContentList.tsx:762
-#: packages/admin/src/components/LocaleSwitcher.tsx:60
+#: packages/admin/src/components/LocaleSwitcher.tsx:61
 msgid "Locale"
 msgstr "Idioma"
 

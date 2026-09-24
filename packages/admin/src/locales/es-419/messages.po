@@ -21,7 +21,7 @@ msgstr " - Invitada"
 msgid " - Linked"
 msgstr " - Vinculada"
 
-#: packages/admin/src/components/LocaleSwitcher.tsx:72
+#: packages/admin/src/components/LocaleSwitcher.tsx:75
 #: packages/admin/src/components/TranslationsPanel.tsx:81
 msgid " (default)"
 msgstr " (por defecto)"
@@ -447,11 +447,11 @@ msgstr "{filteredCount, plural, one {#{0} elemento} other {#{1} elementos}}"
 msgid "{importedFiles, plural, one {<count>#</count> file imported} other {<count>#</count> files imported}}"
 msgstr ""
 
-#: packages/admin/src/components/LocaleSwitcher.tsx:107
+#: packages/admin/src/components/LocaleSwitcher.tsx:117
 msgid "{label} — no translation"
 msgstr "{label} — sin traducción"
 
-#: packages/admin/src/components/LocaleSwitcher.tsx:107
+#: packages/admin/src/components/LocaleSwitcher.tsx:117
 msgid "{label} — view translation"
 msgstr "{label} — ver traducción"
 
@@ -1161,7 +1161,7 @@ msgstr "Todos los comentarios requieren aprobación"
 msgid "All imported content will be unassigned. You can reassign authors later from the content editor."
 msgstr "Todo el contenido importado será desasignado. Puedes reasignar autores más tarde desde el editor de contenido."
 
-#: packages/admin/src/components/LocaleSwitcher.tsx:68
+#: packages/admin/src/components/LocaleSwitcher.tsx:71
 msgid "All locales"
 msgstr "Todos los locales"
 
@@ -6146,7 +6146,7 @@ msgstr ""
 
 #: packages/admin/src/components/ContentList.tsx:619
 #: packages/admin/src/components/ContentList.tsx:762
-#: packages/admin/src/components/LocaleSwitcher.tsx:60
+#: packages/admin/src/components/LocaleSwitcher.tsx:61
 msgid "Locale"
 msgstr "Lugar"
 

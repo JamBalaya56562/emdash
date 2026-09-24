@@ -21,7 +21,7 @@ msgstr " - vendég"
 msgid " - Linked"
 msgstr " - összekapcsolva"
 
-#: packages/admin/src/components/LocaleSwitcher.tsx:72
+#: packages/admin/src/components/LocaleSwitcher.tsx:75
 #: packages/admin/src/components/TranslationsPanel.tsx:81
 msgid " (default)"
 msgstr " (alapértelmezett)"
@@ -447,11 +447,11 @@ msgstr "{filteredCount, plural, one {#{0} elem} other {#{1} elem}}"
 msgid "{importedFiles, plural, one {<count>#</count> file imported} other {<count>#</count> files imported}}"
 msgstr ""
 
-#: packages/admin/src/components/LocaleSwitcher.tsx:107
+#: packages/admin/src/components/LocaleSwitcher.tsx:117
 msgid "{label} — no translation"
 msgstr "{label} — nincs fordítás"
 
-#: packages/admin/src/components/LocaleSwitcher.tsx:107
+#: packages/admin/src/components/LocaleSwitcher.tsx:117
 msgid "{label} — view translation"
 msgstr "{label} — fordítás megtekintése"
 
@@ -1161,7 +1161,7 @@ msgstr "Minden hozzászóláshoz jóváhagyás szükséges"
 msgid "All imported content will be unassigned. You can reassign authors later from the content editor."
 msgstr "Minden importált tartalom hozzárendelés nélkül marad. A szerzőket később a tartalomszerkesztőben újra hozzárendelheted."
 
-#: packages/admin/src/components/LocaleSwitcher.tsx:68
+#: packages/admin/src/components/LocaleSwitcher.tsx:71
 msgid "All locales"
 msgstr "Összes nyelvi változat"
 
@@ -6146,7 +6146,7 @@ msgstr ""
 
 #: packages/admin/src/components/ContentList.tsx:619
 #: packages/admin/src/components/ContentList.tsx:762
-#: packages/admin/src/components/LocaleSwitcher.tsx:60
+#: packages/admin/src/components/LocaleSwitcher.tsx:61
 msgid "Locale"
 msgstr "Nyelvi változat"
 

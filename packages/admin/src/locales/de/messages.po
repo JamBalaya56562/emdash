@@ -21,7 +21,7 @@ msgstr " - Gast"
 msgid " - Linked"
 msgstr " - Zugeordnet"
 
-#: packages/admin/src/components/LocaleSwitcher.tsx:72
+#: packages/admin/src/components/LocaleSwitcher.tsx:75
 #: packages/admin/src/components/TranslationsPanel.tsx:81
 msgid " (default)"
 msgstr " (Standard)"
@@ -447,11 +447,11 @@ msgstr "{filteredCount, plural, one {#{0} Element} other {#{1} Elemente}}"
 msgid "{importedFiles, plural, one {<count>#</count> file imported} other {<count>#</count> files imported}}"
 msgstr "{importedFiles, plural, one {<count>#</count> Datei importiert} other {<count>#</count> Dateien importiert}}"
 
-#: packages/admin/src/components/LocaleSwitcher.tsx:107
+#: packages/admin/src/components/LocaleSwitcher.tsx:117
 msgid "{label} — no translation"
 msgstr "{label} — keine Übersetzung"
 
-#: packages/admin/src/components/LocaleSwitcher.tsx:107
+#: packages/admin/src/components/LocaleSwitcher.tsx:117
 msgid "{label} — view translation"
 msgstr "{label} — Übersetzung anzeigen"
 
@@ -1161,7 +1161,7 @@ msgstr "Alle Kommentare benötigen eine Freigabe"
 msgid "All imported content will be unassigned. You can reassign authors later from the content editor."
 msgstr "Alle importierten Inhalte bleiben ohne Zuordnung. Du kannst Autoren(zeilen) später im Inhaltseditor neu zuweisen."
 
-#: packages/admin/src/components/LocaleSwitcher.tsx:68
+#: packages/admin/src/components/LocaleSwitcher.tsx:71
 msgid "All locales"
 msgstr "Alle Sprachen"
 
@@ -6146,7 +6146,7 @@ msgstr "Ortszeit"
 
 #: packages/admin/src/components/ContentList.tsx:619
 #: packages/admin/src/components/ContentList.tsx:762
-#: packages/admin/src/components/LocaleSwitcher.tsx:60
+#: packages/admin/src/components/LocaleSwitcher.tsx:61
 msgid "Locale"
 msgstr "Sprache"
 

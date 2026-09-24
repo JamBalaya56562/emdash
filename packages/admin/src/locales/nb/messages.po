@@ -21,7 +21,7 @@ msgstr " - Gjest"
 msgid " - Linked"
 msgstr " - Lenket"
 
-#: packages/admin/src/components/LocaleSwitcher.tsx:72
+#: packages/admin/src/components/LocaleSwitcher.tsx:75
 #: packages/admin/src/components/TranslationsPanel.tsx:81
 msgid " (default)"
 msgstr " (standard)"
@@ -447,11 +447,11 @@ msgstr "{filteredCount, plural, one {#{0} oppføring} other {#{1} oppføringer}}
 msgid "{importedFiles, plural, one {<count>#</count> file imported} other {<count>#</count> files imported}}"
 msgstr ""
 
-#: packages/admin/src/components/LocaleSwitcher.tsx:107
+#: packages/admin/src/components/LocaleSwitcher.tsx:117
 msgid "{label} — no translation"
 msgstr "{label} — ingen oversettelse"
 
-#: packages/admin/src/components/LocaleSwitcher.tsx:107
+#: packages/admin/src/components/LocaleSwitcher.tsx:117
 msgid "{label} — view translation"
 msgstr "{label} — vis oversettelse"
 
@@ -1161,7 +1161,7 @@ msgstr "Alle kommentarer krever godkjenning"
 msgid "All imported content will be unassigned. You can reassign authors later from the content editor."
 msgstr "Alt importert innhold blir uten tilordning. Du kan tilordne forfattere på nytt senere fra innholdsredigeringen."
 
-#: packages/admin/src/components/LocaleSwitcher.tsx:68
+#: packages/admin/src/components/LocaleSwitcher.tsx:71
 msgid "All locales"
 msgstr "Alle språk"
 
@@ -6146,7 +6146,7 @@ msgstr ""
 
 #: packages/admin/src/components/ContentList.tsx:619
 #: packages/admin/src/components/ContentList.tsx:762
-#: packages/admin/src/components/LocaleSwitcher.tsx:60
+#: packages/admin/src/components/LocaleSwitcher.tsx:61
 msgid "Locale"
 msgstr "Språk"
 

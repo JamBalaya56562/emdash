@@ -21,7 +21,7 @@ msgstr " - Гість"
 msgid " - Linked"
 msgstr " - Пов'язано"
 
-#: packages/admin/src/components/LocaleSwitcher.tsx:72
+#: packages/admin/src/components/LocaleSwitcher.tsx:75
 #: packages/admin/src/components/TranslationsPanel.tsx:81
 msgid " (default)"
 msgstr " (за замовчуванням)"
@@ -447,11 +447,11 @@ msgstr "{filteredCount, plural, one {#{0} елемент} few {#{0} елемен
 msgid "{importedFiles, plural, one {<count>#</count> file imported} other {<count>#</count> files imported}}"
 msgstr ""
 
-#: packages/admin/src/components/LocaleSwitcher.tsx:107
+#: packages/admin/src/components/LocaleSwitcher.tsx:117
 msgid "{label} — no translation"
 msgstr "{label} — без перекладу"
 
-#: packages/admin/src/components/LocaleSwitcher.tsx:107
+#: packages/admin/src/components/LocaleSwitcher.tsx:117
 msgid "{label} — view translation"
 msgstr "{label} — переглянути переклад"
 
@@ -1161,7 +1161,7 @@ msgstr "Усі коментарі потребують схвалення"
 msgid "All imported content will be unassigned. You can reassign authors later from the content editor."
 msgstr "Увесь імпортований вміст буде без автора. Пізніше ви зможете призначити авторів у редакторі вмісту."
 
-#: packages/admin/src/components/LocaleSwitcher.tsx:68
+#: packages/admin/src/components/LocaleSwitcher.tsx:71
 msgid "All locales"
 msgstr "Усі локалі"
 
@@ -6146,7 +6146,7 @@ msgstr ""
 
 #: packages/admin/src/components/ContentList.tsx:619
 #: packages/admin/src/components/ContentList.tsx:762
-#: packages/admin/src/components/LocaleSwitcher.tsx:60
+#: packages/admin/src/components/LocaleSwitcher.tsx:61
 msgid "Locale"
 msgstr "Локаль"
 
