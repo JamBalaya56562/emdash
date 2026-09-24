@@ -189,7 +189,7 @@ msgstr ""
 #. placeholder {1}: state.columns
 #: packages/admin/src/components/editor/TableControls.tsx:210
 #: packages/admin/src/components/editor/TableControls.tsx:243
-#: packages/admin/src/components/PortableTextEditor.tsx:4098
+#: packages/admin/src/components/PortableTextEditor.tsx:4110
 msgid "{0, plural, one {# row} other {# rows}} × {1, plural, one {# column} other {# columns}} selected"
 msgstr ""
 
@@ -403,7 +403,7 @@ msgstr ""
 msgid "{changedCount, plural, one {# change from next revision} other {# changes from next revision}}"
 msgstr ""
 
-#: packages/admin/src/components/PortableTextEditor.tsx:2692
+#: packages/admin/src/components/PortableTextEditor.tsx:2704
 msgid "{characters, plural, one {# character} other {# characters}}"
 msgstr ""
 
@@ -580,7 +580,7 @@ msgstr ""
 msgid "{previewRows} × {previewColumns} table"
 msgstr ""
 
-#: packages/admin/src/components/PortableTextEditor.tsx:2693
+#: packages/admin/src/components/PortableTextEditor.tsx:2705
 msgid "{readingTime, plural, one {# min read} other {# min read}}"
 msgstr ""
 
@@ -600,7 +600,7 @@ msgstr ""
 msgid "{rows, plural, one {Row deleted} other {# rows deleted}}"
 msgstr ""
 
-#: packages/admin/src/components/PortableTextEditor.tsx:2823
+#: packages/admin/src/components/PortableTextEditor.tsx:2835
 msgid "{rows} × {columns} table pasted"
 msgstr ""
 
@@ -636,7 +636,7 @@ msgstr ""
 msgid "{unchangedCount, plural, one {Show # unchanged} other {Show # unchanged}}"
 msgstr ""
 
-#: packages/admin/src/components/PortableTextEditor.tsx:2691
+#: packages/admin/src/components/PortableTextEditor.tsx:2703
 msgid "{words, plural, one {# word} other {# words}}"
 msgstr ""
 
@@ -796,7 +796,7 @@ msgstr ""
 msgid "A publishing action is already in progress"
 msgstr ""
 
-#: packages/admin/src/components/settings/GeneralSettings.tsx:177
+#: packages/admin/src/components/settings/GeneralSettings.tsx:183
 msgid "A short description of your site"
 msgstr ""
 
@@ -893,7 +893,7 @@ msgstr ""
 #. placeholder {0}: option.byline.displayName
 #. placeholder {0}: taxonomyDef.labelSingular || t`Term`
 #: packages/admin/src/components/BylineCreditsEditor.tsx:503
-#: packages/admin/src/components/PortableTextEditor.tsx:2304
+#: packages/admin/src/components/PortableTextEditor.tsx:2316
 #: packages/admin/src/components/TaxonomyManager.tsx:557
 #: packages/admin/src/components/TaxonomyManager.tsx:1082
 msgid "Add {0}"
@@ -924,7 +924,7 @@ msgid "Add byline"
 msgstr ""
 
 #: packages/admin/src/components/editor/TableControls.tsx:30
-#: packages/admin/src/components/PortableTextEditor.tsx:4111
+#: packages/admin/src/components/PortableTextEditor.tsx:4123
 msgid "Add column after"
 msgstr ""
 
@@ -986,7 +986,7 @@ msgstr ""
 msgid "Add images to gallery"
 msgstr ""
 
-#: packages/admin/src/components/PortableTextEditor.tsx:2304
+#: packages/admin/src/components/PortableTextEditor.tsx:2316
 msgid "Add item"
 msgstr ""
 
@@ -994,7 +994,7 @@ msgstr ""
 msgid "Add Item"
 msgstr ""
 
-#: packages/admin/src/components/PortableTextEditor.tsx:4023
+#: packages/admin/src/components/PortableTextEditor.tsx:4035
 msgid "Add link"
 msgstr ""
 
@@ -1033,7 +1033,7 @@ msgid "Add row above"
 msgstr ""
 
 #: packages/admin/src/components/editor/TableControls.tsx:29
-#: packages/admin/src/components/PortableTextEditor.tsx:4104
+#: packages/admin/src/components/PortableTextEditor.tsx:4116
 msgid "Add row below"
 msgstr ""
 
@@ -1114,15 +1114,15 @@ msgstr ""
 msgid "Agent-callable MCP tools"
 msgstr ""
 
-#: packages/admin/src/components/PortableTextEditor.tsx:4609
+#: packages/admin/src/components/PortableTextEditor.tsx:4621
 msgid "Align Center"
 msgstr ""
 
-#: packages/admin/src/components/PortableTextEditor.tsx:4601
+#: packages/admin/src/components/PortableTextEditor.tsx:4613
 msgid "Align Left"
 msgstr ""
 
-#: packages/admin/src/components/PortableTextEditor.tsx:4617
+#: packages/admin/src/components/PortableTextEditor.tsx:4629
 msgid "Align Right"
 msgstr ""
 
@@ -1273,15 +1273,15 @@ msgstr ""
 #: packages/admin/src/components/settings/BackupSettings.tsx:123
 #: packages/admin/src/components/settings/BackupSettings.tsx:166
 #: packages/admin/src/components/settings/EmailSettings.tsx:45
-#: packages/admin/src/components/settings/GeneralSettings.tsx:79
-#: packages/admin/src/components/settings/GeneralSettings.tsx:141
-#: packages/admin/src/components/settings/GeneralSettings.tsx:142
+#: packages/admin/src/components/settings/GeneralSettings.tsx:85
+#: packages/admin/src/components/settings/GeneralSettings.tsx:147
+#: packages/admin/src/components/settings/GeneralSettings.tsx:148
 #: packages/admin/src/components/settings/SecuritySettings.tsx:51
 #: packages/admin/src/components/settings/SecuritySettings.tsx:67
 #: packages/admin/src/components/settings/SecuritySettings.tsx:124
-#: packages/admin/src/components/settings/SeoSettings.tsx:77
-#: packages/admin/src/components/settings/SeoSettings.tsx:139
-#: packages/admin/src/components/settings/SeoSettings.tsx:140
+#: packages/admin/src/components/settings/SeoSettings.tsx:82
+#: packages/admin/src/components/settings/SeoSettings.tsx:144
+#: packages/admin/src/components/settings/SeoSettings.tsx:145
 #: packages/admin/src/components/settings/SocialSettings.tsx:67
 #: packages/admin/src/components/settings/SocialSettings.tsx:111
 #: packages/admin/src/components/settings/SocialSettings.tsx:112
@@ -1357,7 +1357,7 @@ msgid "Application Password"
 msgstr ""
 
 #: packages/admin/src/components/editor/ImageDetailPanel.tsx:542
-#: packages/admin/src/components/PortableTextEditor.tsx:4695
+#: packages/admin/src/components/PortableTextEditor.tsx:4707
 msgid "Apply"
 msgstr ""
 
@@ -1365,8 +1365,8 @@ msgstr ""
 msgid "Apply changes"
 msgstr ""
 
-#: packages/admin/src/components/PortableTextEditor.tsx:3949
-#: packages/admin/src/components/PortableTextEditor.tsx:3950
+#: packages/admin/src/components/PortableTextEditor.tsx:3961
+#: packages/admin/src/components/PortableTextEditor.tsx:3962
 msgid "Apply link"
 msgstr ""
 
@@ -1682,8 +1682,8 @@ msgstr ""
 msgid "Between {min} and {max}"
 msgstr ""
 
-#: packages/admin/src/components/settings/SeoSettings.tsx:233
-#: packages/admin/src/components/settings/SeoSettings.tsx:247
+#: packages/admin/src/components/settings/SeoSettings.tsx:238
+#: packages/admin/src/components/settings/SeoSettings.tsx:252
 msgid "Bing Verification"
 msgstr ""
 
@@ -1712,8 +1712,8 @@ msgstr ""
 msgid "Blocks"
 msgstr ""
 
-#: packages/admin/src/components/PortableTextEditor.tsx:3973
-#: packages/admin/src/components/PortableTextEditor.tsx:4477
+#: packages/admin/src/components/PortableTextEditor.tsx:3985
+#: packages/admin/src/components/PortableTextEditor.tsx:4489
 msgid "Bold"
 msgstr ""
 
@@ -1761,8 +1761,8 @@ msgid "Build provenance verified"
 msgstr ""
 
 #: packages/admin/src/components/editor/BlockMenu.tsx:127
-#: packages/admin/src/components/PortableTextEditor.tsx:1613
-#: packages/admin/src/components/PortableTextEditor.tsx:4526
+#: packages/admin/src/components/PortableTextEditor.tsx:1625
+#: packages/admin/src/components/PortableTextEditor.tsx:4538
 msgid "Bullet List"
 msgstr "Buleta zerrenda"
 
@@ -1844,7 +1844,7 @@ msgstr "Edukia ikusi dezake"
 #: packages/admin/src/components/MenuEditor.tsx:623
 #: packages/admin/src/components/MenuList.tsx:175
 #: packages/admin/src/components/PluginManager.tsx:790
-#: packages/admin/src/components/PortableTextEditor.tsx:4679
+#: packages/admin/src/components/PortableTextEditor.tsx:4691
 #: packages/admin/src/components/PublishingDateTimeEditor.tsx:367
 #: packages/admin/src/components/Redirects.tsx:185
 #: packages/admin/src/components/SectionPickerModal.tsx:131
@@ -1954,15 +1954,15 @@ msgstr ""
 msgid "Change <0>{0}</0> from <1>{1}</1> to <2>{2}</2>? They will lose access to higher-level features."
 msgstr ""
 
-#: packages/admin/src/components/settings/GeneralSettings.tsx:281
+#: packages/admin/src/components/settings/GeneralSettings.tsx:287
 msgid "Change Favicon"
 msgstr ""
 
-#: packages/admin/src/components/settings/SeoSettings.tsx:203
+#: packages/admin/src/components/settings/SeoSettings.tsx:208
 msgid "Change Image"
 msgstr ""
 
-#: packages/admin/src/components/settings/GeneralSettings.tsx:221
+#: packages/admin/src/components/settings/GeneralSettings.tsx:227
 msgid "Change Logo"
 msgstr ""
 
@@ -1995,7 +1995,7 @@ msgstr ""
 msgid "Changes discarded"
 msgstr ""
 
-#: packages/admin/src/components/settings/SeoSettings.tsx:167
+#: packages/admin/src/components/settings/SeoSettings.tsx:172
 msgid "Character between page title and site name (e.g., \"My Post | My Site\")"
 msgstr ""
 
@@ -2202,9 +2202,9 @@ msgstr "Egin klik emailean webgunean sartzeko."
 #: packages/admin/src/components/MenuList.tsx:139
 #: packages/admin/src/components/MenuList.tsx:145
 #: packages/admin/src/components/MenuList.tsx:149
-#: packages/admin/src/components/PortableTextEditor.tsx:2088
-#: packages/admin/src/components/PortableTextEditor.tsx:2094
-#: packages/admin/src/components/PortableTextEditor.tsx:2098
+#: packages/admin/src/components/PortableTextEditor.tsx:2100
+#: packages/admin/src/components/PortableTextEditor.tsx:2106
+#: packages/admin/src/components/PortableTextEditor.tsx:2110
 #: packages/admin/src/components/PublishingDateTimeEditor.tsx:347
 #: packages/admin/src/components/Redirects.tsx:117
 #: packages/admin/src/components/Redirects.tsx:123
@@ -2261,14 +2261,14 @@ msgid "Close settings"
 msgstr ""
 
 #: packages/admin/src/components/ContentTypeList.tsx:356
-#: packages/admin/src/components/PortableTextEditor.tsx:4015
+#: packages/admin/src/components/PortableTextEditor.tsx:4027
 #: packages/admin/src/components/Redirects.tsx:487
 msgid "Code"
 msgstr ""
 
 #: packages/admin/src/components/editor/BlockMenu.tsx:119
-#: packages/admin/src/components/PortableTextEditor.tsx:1643
-#: packages/admin/src/components/PortableTextEditor.tsx:4568
+#: packages/admin/src/components/PortableTextEditor.tsx:1655
+#: packages/admin/src/components/PortableTextEditor.tsx:4580
 msgid "Code Block"
 msgstr "Kode blokea"
 
@@ -2306,7 +2306,7 @@ msgid "Collections created:"
 msgstr ""
 
 #: packages/admin/src/components/editor/TableControls.tsx:30
-#: packages/admin/src/components/PortableTextEditor.tsx:4109
+#: packages/admin/src/components/PortableTextEditor.tsx:4121
 msgid "Column added after"
 msgstr ""
 
@@ -2322,7 +2322,7 @@ msgstr ""
 msgid "Column width increased"
 msgstr ""
 
-#: packages/admin/src/components/PortableTextEditor.tsx:2823
+#: packages/admin/src/components/PortableTextEditor.tsx:2835
 msgid "Column width resized"
 msgstr ""
 
@@ -2440,7 +2440,7 @@ msgstr ""
 #: packages/admin/src/components/comments/CommentDetail.tsx:103
 #: packages/admin/src/components/comments/CommentInbox.tsx:331
 #: packages/admin/src/components/Dashboard.tsx:375
-#: packages/admin/src/components/PortableTextEditor.tsx:2926
+#: packages/admin/src/components/PortableTextEditor.tsx:2938
 #: packages/admin/src/components/SectionEditor.tsx:215
 #: packages/admin/src/components/Sidebar.tsx:588
 #: packages/admin/src/components/Widgets.tsx:899
@@ -2541,7 +2541,7 @@ msgstr ""
 msgid "Continue Import"
 msgstr ""
 
-#: packages/admin/src/components/PortableTextEditor.tsx:4543
+#: packages/admin/src/components/PortableTextEditor.tsx:4555
 msgid "Continue numbering"
 msgstr ""
 
@@ -2613,7 +2613,7 @@ msgstr ""
 msgid "Could not copy automatically. Please select the URL above and copy manually."
 msgstr ""
 
-#: packages/admin/src/components/PortableTextEditor.tsx:3700
+#: packages/admin/src/components/PortableTextEditor.tsx:3712
 msgid "Could not insert section"
 msgstr ""
 
@@ -2716,7 +2716,7 @@ msgstr ""
 msgid "Create a block type before adding a blocks field."
 msgstr ""
 
-#: packages/admin/src/components/PortableTextEditor.tsx:1614
+#: packages/admin/src/components/PortableTextEditor.tsx:1626
 msgid "Create a bullet list"
 msgstr "Sortu buleta zerrenda"
 
@@ -2729,7 +2729,7 @@ msgstr ""
 msgid "Create a new {singularLabel}"
 msgstr ""
 
-#: packages/admin/src/components/PortableTextEditor.tsx:1624
+#: packages/admin/src/components/PortableTextEditor.tsx:1636
 msgid "Create a numbered list"
 msgstr "Sortu zenbakitutako zerrenda"
 
@@ -2968,7 +2968,7 @@ msgstr ""
 msgid "Custom Fields"
 msgstr ""
 
-#: packages/admin/src/components/settings/SeoSettings.tsx:262
+#: packages/admin/src/components/settings/SeoSettings.tsx:267
 msgid "Custom robots.txt content. Leave empty to use the default."
 msgstr ""
 
@@ -3019,7 +3019,7 @@ msgstr ""
 msgid "Date field to filter on"
 msgstr ""
 
-#: packages/admin/src/components/settings/GeneralSettings.tsx:325
+#: packages/admin/src/components/settings/GeneralSettings.tsx:331
 msgid "Date Format"
 msgstr ""
 
@@ -3048,11 +3048,11 @@ msgstr ""
 msgid "Default role:"
 msgstr ""
 
-#: packages/admin/src/components/settings/SeoSettings.tsx:181
+#: packages/admin/src/components/settings/SeoSettings.tsx:186
 msgid "Default social image"
 msgstr ""
 
-#: packages/admin/src/components/settings/SeoSettings.tsx:172
+#: packages/admin/src/components/settings/SeoSettings.tsx:177
 msgid "Default Social Image"
 msgstr ""
 
@@ -3468,11 +3468,11 @@ msgstr "Baztertu"
 msgid "Dismiss completed {0}"
 msgstr ""
 
-#: packages/admin/src/components/PortableTextEditor.tsx:3721
+#: packages/admin/src/components/PortableTextEditor.tsx:3733
 msgid "Dismiss section error"
 msgstr ""
 
-#: packages/admin/src/components/PortableTextEditor.tsx:3688
+#: packages/admin/src/components/PortableTextEditor.tsx:3700
 msgid "Dismiss table paste error"
 msgstr ""
 
@@ -3521,7 +3521,7 @@ msgstr ""
 msgid "Distribute columns evenly"
 msgstr ""
 
-#: packages/admin/src/components/PortableTextEditor.tsx:1661
+#: packages/admin/src/components/PortableTextEditor.tsx:1673
 msgid "Divider"
 msgstr "Banatzailea"
 
@@ -3636,7 +3636,7 @@ msgstr ""
 msgid "Drag here to add"
 msgstr ""
 
-#: packages/admin/src/components/PortableTextEditor.tsx:2480
+#: packages/admin/src/components/PortableTextEditor.tsx:2492
 msgid "Drag to reorder"
 msgstr ""
 
@@ -3730,7 +3730,7 @@ msgstr ""
 #. placeholder {0}: collection.label
 #. placeholder {0}: domain.domain
 #: packages/admin/src/components/ContentTypeList.tsx:332
-#: packages/admin/src/components/PortableTextEditor.tsx:2085
+#: packages/admin/src/components/PortableTextEditor.tsx:2097
 #: packages/admin/src/components/settings/AllowedDomainsSettings.tsx:263
 #: packages/admin/src/components/TaxonomyManager.tsx:289
 #: packages/admin/src/components/TaxonomyManager.tsx:556
@@ -3802,7 +3802,7 @@ msgstr ""
 msgid "Edit image {0}"
 msgstr ""
 
-#: packages/admin/src/components/PortableTextEditor.tsx:4023
+#: packages/admin/src/components/PortableTextEditor.tsx:4035
 msgid "Edit link"
 msgstr ""
 
@@ -3927,11 +3927,11 @@ msgid "Email verified!"
 msgstr ""
 
 #. placeholder {0}: block.label
-#: packages/admin/src/components/PortableTextEditor.tsx:2940
+#: packages/admin/src/components/PortableTextEditor.tsx:2952
 msgid "Embed a {0}"
 msgstr "{0} txertatu"
 
-#: packages/admin/src/components/PortableTextEditor.tsx:2943
+#: packages/admin/src/components/PortableTextEditor.tsx:2955
 msgid "Embeds"
 msgstr "Txertaketak"
 
@@ -4109,7 +4109,7 @@ msgid "Every published release of this plugin has been withdrawn or could not be
 msgstr ""
 
 #. placeholder {0}: formData.dateFormat ?? "MMMM d, yyyy"
-#: packages/admin/src/components/settings/GeneralSettings.tsx:328
+#: packages/admin/src/components/settings/GeneralSettings.tsx:334
 msgid "Example: {0} → January 23, 2026"
 msgstr ""
 
@@ -4457,7 +4457,7 @@ msgstr ""
 msgid "Failed to fetch sections"
 msgstr ""
 
-#: packages/admin/src/lib/api/settings.ts:50
+#: packages/admin/src/lib/api/settings.ts:60
 msgid "Failed to fetch settings"
 msgstr ""
 
@@ -4687,8 +4687,8 @@ msgid "Failed to save field"
 msgstr ""
 
 #: packages/admin/src/components/PluginSettings.tsx:74
-#: packages/admin/src/components/settings/GeneralSettings.tsx:78
-#: packages/admin/src/components/settings/SeoSettings.tsx:76
+#: packages/admin/src/components/settings/GeneralSettings.tsx:84
+#: packages/admin/src/components/settings/SeoSettings.tsx:81
 #: packages/admin/src/components/settings/SocialSettings.tsx:66
 msgid "Failed to save settings"
 msgstr ""
@@ -4775,7 +4775,7 @@ msgstr ""
 msgid "Failed to update section"
 msgstr ""
 
-#: packages/admin/src/lib/api/settings.ts:64
+#: packages/admin/src/lib/api/settings.ts:72
 msgid "Failed to update settings"
 msgstr ""
 
@@ -4811,8 +4811,8 @@ msgstr ""
 msgid "FAQ"
 msgstr ""
 
-#: packages/admin/src/components/settings/GeneralSettings.tsx:252
-#: packages/admin/src/components/settings/GeneralSettings.tsx:259
+#: packages/admin/src/components/settings/GeneralSettings.tsx:258
+#: packages/admin/src/components/settings/GeneralSettings.tsx:265
 msgid "Favicon"
 msgstr ""
 
@@ -5069,7 +5069,7 @@ msgid "Full admin access"
 msgstr "Kudeatzailearen sarbide osoa"
 
 #: packages/admin/src/components/editor/GalleryDetailPanel.tsx:235
-#: packages/admin/src/components/PortableTextEditor.tsx:2907
+#: packages/admin/src/components/PortableTextEditor.tsx:2919
 msgid "Gallery"
 msgstr ""
 
@@ -5082,7 +5082,7 @@ msgstr ""
 msgid "General"
 msgstr "Orokorra"
 
-#: packages/admin/src/components/settings/GeneralSettings.tsx:119
+#: packages/admin/src/components/settings/GeneralSettings.tsx:125
 msgid "General Settings"
 msgstr ""
 
@@ -5115,8 +5115,8 @@ msgstr ""
 msgid "Go to Dashboard"
 msgstr ""
 
-#: packages/admin/src/components/settings/SeoSettings.tsx:233
-#: packages/admin/src/components/settings/SeoSettings.tsx:239
+#: packages/admin/src/components/settings/SeoSettings.tsx:238
+#: packages/admin/src/components/settings/SeoSettings.tsx:244
 msgid "Google Verification"
 msgstr ""
 
@@ -5179,37 +5179,37 @@ msgstr ""
 
 #: packages/admin/src/components/editor/BlockMenu.tsx:63
 #: packages/admin/src/components/editor/HeadingDropdownMenu.tsx:33
-#: packages/admin/src/components/PortableTextEditor.tsx:1553
+#: packages/admin/src/components/PortableTextEditor.tsx:1565
 msgid "Heading 1"
 msgstr "1. goiburukoa"
 
 #: packages/admin/src/components/editor/BlockMenu.tsx:71
 #: packages/admin/src/components/editor/HeadingDropdownMenu.tsx:34
-#: packages/admin/src/components/PortableTextEditor.tsx:1563
+#: packages/admin/src/components/PortableTextEditor.tsx:1575
 msgid "Heading 2"
 msgstr "2. goiburukoa"
 
 #: packages/admin/src/components/editor/BlockMenu.tsx:79
 #: packages/admin/src/components/editor/HeadingDropdownMenu.tsx:35
-#: packages/admin/src/components/PortableTextEditor.tsx:1573
+#: packages/admin/src/components/PortableTextEditor.tsx:1585
 msgid "Heading 3"
 msgstr "3. goiburukoa"
 
 #: packages/admin/src/components/editor/BlockMenu.tsx:87
 #: packages/admin/src/components/editor/HeadingDropdownMenu.tsx:36
-#: packages/admin/src/components/PortableTextEditor.tsx:1583
+#: packages/admin/src/components/PortableTextEditor.tsx:1595
 msgid "Heading 4"
 msgstr ""
 
 #: packages/admin/src/components/editor/BlockMenu.tsx:95
 #: packages/admin/src/components/editor/HeadingDropdownMenu.tsx:37
-#: packages/admin/src/components/PortableTextEditor.tsx:1593
+#: packages/admin/src/components/PortableTextEditor.tsx:1605
 msgid "Heading 5"
 msgstr ""
 
 #: packages/admin/src/components/editor/BlockMenu.tsx:103
 #: packages/admin/src/components/editor/HeadingDropdownMenu.tsx:38
-#: packages/admin/src/components/PortableTextEditor.tsx:1603
+#: packages/admin/src/components/PortableTextEditor.tsx:1615
 msgid "Heading 6"
 msgstr ""
 
@@ -5291,7 +5291,7 @@ msgstr ""
 
 #: packages/admin/src/components/editor/codeBlockLanguages.ts:38
 #: packages/admin/src/components/editor/HtmlBlockNode.tsx:114
-#: packages/admin/src/components/PortableTextEditor.tsx:1653
+#: packages/admin/src/components/PortableTextEditor.tsx:1665
 msgid "HTML"
 msgstr ""
 
@@ -5334,7 +5334,7 @@ msgstr "<0>{email}</0> kontua existitzen bada, sartzeko esteka magikoa bidali du
 
 #: packages/admin/src/components/FieldEditor.tsx:264
 #: packages/admin/src/components/FieldEditor.tsx:803
-#: packages/admin/src/components/PortableTextEditor.tsx:2892
+#: packages/admin/src/components/PortableTextEditor.tsx:2904
 msgid "Image"
 msgstr "Irudia"
 
@@ -5537,49 +5537,49 @@ msgstr ""
 msgid "Indexing existing content"
 msgstr ""
 
-#: packages/admin/src/components/PortableTextEditor.tsx:4505
+#: packages/admin/src/components/PortableTextEditor.tsx:4517
 msgid "Inline Code"
 msgstr ""
 
 #. placeholder {0}: block?.label || ""
-#: packages/admin/src/components/PortableTextEditor.tsx:2085
+#: packages/admin/src/components/PortableTextEditor.tsx:2097
 msgid "Insert {0}"
 msgstr ""
 
-#: packages/admin/src/components/PortableTextEditor.tsx:1634
+#: packages/admin/src/components/PortableTextEditor.tsx:1646
 msgid "Insert a blockquote"
 msgstr "Txertatu blockquote etiketa"
 
-#: packages/admin/src/components/PortableTextEditor.tsx:1644
+#: packages/admin/src/components/PortableTextEditor.tsx:1656
 msgid "Insert a code block"
 msgstr "Txertatu kode blokea"
 
-#: packages/admin/src/components/PortableTextEditor.tsx:1662
+#: packages/admin/src/components/PortableTextEditor.tsx:1674
 msgid "Insert a horizontal rule"
 msgstr "Txertatu marra horizontala"
 
-#: packages/admin/src/components/PortableTextEditor.tsx:2923
+#: packages/admin/src/components/PortableTextEditor.tsx:2935
 msgid "Insert a reusable section"
 msgstr "Txertatu atal berrerabilgarria"
 
-#: packages/admin/src/components/PortableTextEditor.tsx:1672
+#: packages/admin/src/components/PortableTextEditor.tsx:1684
 msgid "Insert a table"
 msgstr ""
 
-#: packages/admin/src/components/PortableTextEditor.tsx:2893
+#: packages/admin/src/components/PortableTextEditor.tsx:2905
 msgid "Insert an image"
 msgstr "Txertatu irudia"
 
-#: packages/admin/src/components/PortableTextEditor.tsx:2908
+#: packages/admin/src/components/PortableTextEditor.tsx:2920
 msgid "Insert an image gallery"
 msgstr ""
 
-#: packages/admin/src/components/PortableTextEditor.tsx:1916
+#: packages/admin/src/components/PortableTextEditor.tsx:1928
 msgid "Insert block"
 msgstr ""
 
-#: packages/admin/src/components/PortableTextEditor.tsx:4457
-#: packages/admin/src/components/PortableTextEditor.tsx:4467
+#: packages/admin/src/components/PortableTextEditor.tsx:4469
+#: packages/admin/src/components/PortableTextEditor.tsx:4479
 msgid "Insert block after current block"
 msgstr ""
 
@@ -5587,20 +5587,20 @@ msgstr ""
 msgid "Insert block below"
 msgstr ""
 
-#: packages/admin/src/components/PortableTextEditor.tsx:4582
+#: packages/admin/src/components/PortableTextEditor.tsx:4594
 msgid "Insert HTML"
 msgstr ""
 
-#: packages/admin/src/components/PortableTextEditor.tsx:3793
+#: packages/admin/src/components/PortableTextEditor.tsx:3805
 msgid "Insert image"
 msgstr ""
 
-#: packages/admin/src/components/PortableTextEditor.tsx:4575
+#: packages/admin/src/components/PortableTextEditor.tsx:4587
 msgid "Insert Image"
 msgstr ""
 
-#: packages/admin/src/components/PortableTextEditor.tsx:4635
-#: packages/admin/src/components/PortableTextEditor.tsx:4649
+#: packages/admin/src/components/PortableTextEditor.tsx:4647
+#: packages/admin/src/components/PortableTextEditor.tsx:4661
 msgid "Insert Link"
 msgstr ""
 
@@ -5616,7 +5616,7 @@ msgstr ""
 msgid "Insert paragraph before"
 msgstr ""
 
-#: packages/admin/src/components/PortableTextEditor.tsx:1654
+#: packages/admin/src/components/PortableTextEditor.tsx:1666
 msgid "Insert raw HTML"
 msgstr ""
 
@@ -5732,13 +5732,13 @@ msgstr ""
 msgid "It is stored by the authenticator or credential manager you selected in the secure system prompt."
 msgstr ""
 
-#: packages/admin/src/components/PortableTextEditor.tsx:3980
-#: packages/admin/src/components/PortableTextEditor.tsx:4484
+#: packages/admin/src/components/PortableTextEditor.tsx:3992
+#: packages/admin/src/components/PortableTextEditor.tsx:4496
 msgid "Italic"
 msgstr ""
 
 #. placeholder {0}: index + 1
-#: packages/admin/src/components/PortableTextEditor.tsx:2466
+#: packages/admin/src/components/PortableTextEditor.tsx:2478
 #: packages/admin/src/components/RepeaterField.tsx:247
 msgid "Item {0}"
 msgstr ""
@@ -5857,7 +5857,7 @@ msgstr ""
 msgid "Language"
 msgstr "Hizkuntza"
 
-#: packages/admin/src/components/PortableTextEditor.tsx:1554
+#: packages/admin/src/components/PortableTextEditor.tsx:1566
 msgid "Large section heading"
 msgstr "Atal-goiburu handia"
 
@@ -5929,7 +5929,7 @@ msgstr ""
 msgid "Limit"
 msgstr ""
 
-#: packages/admin/src/components/PortableTextEditor.tsx:4660
+#: packages/admin/src/components/PortableTextEditor.tsx:4672
 msgid "Link"
 msgstr ""
 
@@ -6034,7 +6034,7 @@ msgstr ""
 msgid "Loading content..."
 msgstr ""
 
-#: packages/admin/src/components/PortableTextEditor.tsx:3655
+#: packages/admin/src/components/PortableTextEditor.tsx:3667
 msgid "Loading editor..."
 msgstr ""
 
@@ -6082,8 +6082,8 @@ msgid "Loading sections..."
 msgstr ""
 
 #: packages/admin/src/components/PluginSettings.tsx:131
-#: packages/admin/src/components/settings/GeneralSettings.tsx:130
-#: packages/admin/src/components/settings/SeoSettings.tsx:128
+#: packages/admin/src/components/settings/GeneralSettings.tsx:136
+#: packages/admin/src/components/settings/SeoSettings.tsx:133
 #: packages/admin/src/components/settings/SocialSettings.tsx:100
 msgid "Loading settings..."
 msgstr ""
@@ -6116,7 +6116,7 @@ msgstr ""
 #: packages/admin/src/components/MediaDetailPanel.tsx:1729
 #: packages/admin/src/components/MediaLibrary.tsx:1352
 #: packages/admin/src/components/MediaUsedIn.tsx:204
-#: packages/admin/src/components/PortableTextEditor.tsx:2593
+#: packages/admin/src/components/PortableTextEditor.tsx:2605
 #: packages/admin/src/components/Redirects.tsx:569
 #: packages/admin/src/components/RegistryBrowse.tsx:179
 #: packages/admin/src/components/settings/AllowedDomainsSettings.tsx:169
@@ -6172,8 +6172,8 @@ msgstr ""
 msgid "Log out"
 msgstr ""
 
-#: packages/admin/src/components/settings/GeneralSettings.tsx:192
-#: packages/admin/src/components/settings/GeneralSettings.tsx:199
+#: packages/admin/src/components/settings/GeneralSettings.tsx:198
+#: packages/admin/src/components/settings/GeneralSettings.tsx:205
 msgid "Logo"
 msgstr ""
 
@@ -6325,8 +6325,8 @@ msgstr ""
 msgid "MDX"
 msgstr ""
 
-#: packages/admin/src/components/PortableTextEditor.tsx:2896
-#: packages/admin/src/components/PortableTextEditor.tsx:2911
+#: packages/admin/src/components/PortableTextEditor.tsx:2908
+#: packages/admin/src/components/PortableTextEditor.tsx:2923
 #: packages/admin/src/components/Settings.tsx:70
 #: packages/admin/src/components/Sidebar.tsx:406
 #: packages/admin/src/components/WordPressImport.tsx:770
@@ -6408,7 +6408,7 @@ msgstr ""
 msgid "Media Write"
 msgstr "Media idatzi"
 
-#: packages/admin/src/components/PortableTextEditor.tsx:1564
+#: packages/admin/src/components/PortableTextEditor.tsx:1576
 msgid "Medium section heading"
 msgstr "Atal-goiburu ertaina"
 
@@ -6481,11 +6481,11 @@ msgstr ""
 msgid "Meta Description"
 msgstr ""
 
-#: packages/admin/src/components/settings/SeoSettings.tsx:250
+#: packages/admin/src/components/settings/SeoSettings.tsx:255
 msgid "Meta tag content for Bing Webmaster Tools verification"
 msgstr ""
 
-#: packages/admin/src/components/settings/SeoSettings.tsx:242
+#: packages/admin/src/components/settings/SeoSettings.tsx:247
 msgid "Meta tag content for Google Search Console verification"
 msgstr ""
 
@@ -6517,7 +6517,7 @@ msgstr ""
 msgid "Minimum blocks"
 msgstr ""
 
-#: packages/admin/src/components/PortableTextEditor.tsx:1594
+#: packages/admin/src/components/PortableTextEditor.tsx:1606
 msgid "Minor section heading"
 msgstr ""
 
@@ -7030,7 +7030,7 @@ msgstr ""
 msgid "No invite token provided"
 msgstr ""
 
-#: packages/admin/src/components/PortableTextEditor.tsx:2389
+#: packages/admin/src/components/PortableTextEditor.tsx:2401
 #: packages/admin/src/components/RepeaterField.tsx:167
 #: packages/admin/src/components/settings/BackupSettings.tsx:283
 msgid "No items yet"
@@ -7148,7 +7148,7 @@ msgstr ""
 msgid "No redirects yet"
 msgstr ""
 
-#: packages/admin/src/components/PortableTextEditor.tsx:1945
+#: packages/admin/src/components/PortableTextEditor.tsx:1957
 #: packages/admin/src/components/RepeaterField.tsx:398
 msgid "No results"
 msgstr "Emaitzarik ez"
@@ -7244,13 +7244,13 @@ msgstr ""
 msgid "Number of posts"
 msgstr ""
 
-#: packages/admin/src/components/settings/GeneralSettings.tsx:320
+#: packages/admin/src/components/settings/GeneralSettings.tsx:326
 msgid "Number of posts to show per page on list views"
 msgstr ""
 
 #: packages/admin/src/components/editor/BlockMenu.tsx:135
-#: packages/admin/src/components/PortableTextEditor.tsx:1623
-#: packages/admin/src/components/PortableTextEditor.tsx:4534
+#: packages/admin/src/components/PortableTextEditor.tsx:1635
+#: packages/admin/src/components/PortableTextEditor.tsx:4546
 msgid "Numbered List"
 msgstr "Zenbakitutako zerrenda"
 
@@ -7825,7 +7825,7 @@ msgstr ""
 msgid "Posts & Pages"
 msgstr ""
 
-#: packages/admin/src/components/settings/GeneralSettings.tsx:314
+#: packages/admin/src/components/settings/GeneralSettings.tsx:320
 msgid "Posts Per Page"
 msgstr ""
 
@@ -8023,8 +8023,8 @@ msgid "Quick edit alt text"
 msgstr ""
 
 #: packages/admin/src/components/editor/BlockMenu.tsx:111
-#: packages/admin/src/components/PortableTextEditor.tsx:1633
-#: packages/admin/src/components/PortableTextEditor.tsx:4560
+#: packages/admin/src/components/PortableTextEditor.tsx:1645
+#: packages/admin/src/components/PortableTextEditor.tsx:4572
 msgid "Quote"
 msgstr "Zita"
 
@@ -8094,7 +8094,7 @@ msgstr ""
 msgid "Read-only"
 msgstr ""
 
-#: packages/admin/src/components/settings/GeneralSettings.tsx:311
+#: packages/admin/src/components/settings/GeneralSettings.tsx:317
 msgid "Reading"
 msgstr ""
 
@@ -8144,7 +8144,7 @@ msgstr ""
 msgid "Redirects"
 msgstr ""
 
-#: packages/admin/src/components/PortableTextEditor.tsx:4718
+#: packages/admin/src/components/PortableTextEditor.tsx:4730
 msgid "Redo"
 msgstr ""
 
@@ -8152,7 +8152,7 @@ msgstr ""
 msgid "Reference"
 msgstr ""
 
-#: packages/admin/src/components/settings/GeneralSettings.tsx:270
+#: packages/admin/src/components/settings/GeneralSettings.tsx:276
 msgid "Referenced favicon unavailable."
 msgstr ""
 
@@ -8222,12 +8222,12 @@ msgstr ""
 #: packages/admin/src/components/ImageFieldRenderer.tsx:368
 #: packages/admin/src/components/ImageFieldRenderer.tsx:439
 #: packages/admin/src/components/media/MediaBrowserItems.tsx:221
-#: packages/admin/src/components/PortableTextEditor.tsx:4691
-#: packages/admin/src/components/settings/GeneralSettings.tsx:230
-#: packages/admin/src/components/settings/GeneralSettings.tsx:290
+#: packages/admin/src/components/PortableTextEditor.tsx:4703
+#: packages/admin/src/components/settings/GeneralSettings.tsx:236
+#: packages/admin/src/components/settings/GeneralSettings.tsx:296
 #: packages/admin/src/components/settings/PasskeyItem.tsx:180
 #: packages/admin/src/components/settings/PasskeyItem.tsx:202
-#: packages/admin/src/components/settings/SeoSettings.tsx:212
+#: packages/admin/src/components/settings/SeoSettings.tsx:217
 msgid "Remove"
 msgstr ""
 
@@ -8290,13 +8290,13 @@ msgid "Remove image?"
 msgstr ""
 
 #. placeholder {0}: index + 1
-#: packages/admin/src/components/PortableTextEditor.tsx:2505
+#: packages/admin/src/components/PortableTextEditor.tsx:2517
 #: packages/admin/src/components/RepeaterField.tsx:283
 msgid "Remove item {0}"
 msgstr ""
 
-#: packages/admin/src/components/PortableTextEditor.tsx:3961
-#: packages/admin/src/components/PortableTextEditor.tsx:3962
+#: packages/admin/src/components/PortableTextEditor.tsx:3973
+#: packages/admin/src/components/PortableTextEditor.tsx:3974
 msgid "Remove link"
 msgstr ""
 
@@ -8531,7 +8531,7 @@ msgstr ""
 msgid "Resolving publisher handle..."
 msgstr ""
 
-#: packages/admin/src/components/PortableTextEditor.tsx:4550
+#: packages/admin/src/components/PortableTextEditor.tsx:4562
 msgid "Restart numbering"
 msgstr ""
 
@@ -8708,8 +8708,8 @@ msgstr ""
 msgid "Risk score: {0}/100"
 msgstr ""
 
-#: packages/admin/src/components/settings/SeoSettings.tsx:255
-#: packages/admin/src/components/settings/SeoSettings.tsx:258
+#: packages/admin/src/components/settings/SeoSettings.tsx:260
+#: packages/admin/src/components/settings/SeoSettings.tsx:263
 msgid "robots.txt"
 msgstr ""
 
@@ -8749,7 +8749,7 @@ msgid "Row added above"
 msgstr ""
 
 #: packages/admin/src/components/editor/TableControls.tsx:29
-#: packages/admin/src/components/PortableTextEditor.tsx:4102
+#: packages/admin/src/components/PortableTextEditor.tsx:4114
 msgid "Row added below"
 msgstr ""
 
@@ -9041,12 +9041,12 @@ msgstr ""
 msgid "Search content..."
 msgstr ""
 
-#: packages/admin/src/components/settings/SeoSettings.tsx:161
+#: packages/admin/src/components/settings/SeoSettings.tsx:166
 msgid "Search Engine Optimization"
 msgstr ""
 
 #: packages/admin/src/components/Settings.tsx:65
-#: packages/admin/src/components/settings/SeoSettings.tsx:118
+#: packages/admin/src/components/settings/SeoSettings.tsx:123
 msgid "Search engine optimization and verification"
 msgstr "Bilaketa motoreetarako optimizazioa (SEO) eta egiaztaketa"
 
@@ -9139,7 +9139,7 @@ msgstr ""
 msgid "Searching…"
 msgstr ""
 
-#: packages/admin/src/components/PortableTextEditor.tsx:2922
+#: packages/admin/src/components/PortableTextEditor.tsx:2934
 msgid "Section"
 msgstr "Atala"
 
@@ -9287,15 +9287,15 @@ msgstr ""
 msgid "Select dark mode variant for {label}"
 msgstr ""
 
-#: packages/admin/src/components/settings/SeoSettings.tsx:284
+#: packages/admin/src/components/settings/SeoSettings.tsx:289
 msgid "Select default social image"
 msgstr ""
 
-#: packages/admin/src/components/settings/GeneralSettings.tsx:365
+#: packages/admin/src/components/settings/GeneralSettings.tsx:371
 msgid "Select favicon"
 msgstr ""
 
-#: packages/admin/src/components/settings/GeneralSettings.tsx:302
+#: packages/admin/src/components/settings/GeneralSettings.tsx:308
 msgid "Select Favicon"
 msgstr ""
 
@@ -9304,25 +9304,25 @@ msgstr ""
 msgid "Select file"
 msgstr ""
 
-#: packages/admin/src/components/PortableTextEditor.tsx:3807
+#: packages/admin/src/components/PortableTextEditor.tsx:3819
 msgid "Select gallery images"
 msgstr ""
 
 #: packages/admin/src/components/ImageFieldRenderer.tsx:558
 #: packages/admin/src/components/MediaPickerModal.tsx:228
-#: packages/admin/src/components/PortableTextEditor.tsx:3792
+#: packages/admin/src/components/PortableTextEditor.tsx:3804
 msgid "Select image"
 msgstr ""
 
-#: packages/admin/src/components/settings/SeoSettings.tsx:223
+#: packages/admin/src/components/settings/SeoSettings.tsx:228
 msgid "Select Image"
 msgstr ""
 
-#: packages/admin/src/components/settings/GeneralSettings.tsx:357
+#: packages/admin/src/components/settings/GeneralSettings.tsx:363
 msgid "Select logo"
 msgstr ""
 
-#: packages/admin/src/components/settings/GeneralSettings.tsx:242
+#: packages/admin/src/components/settings/GeneralSettings.tsx:248
 msgid "Select Logo"
 msgstr ""
 
@@ -9347,7 +9347,7 @@ msgid "Select which content types to import."
 msgstr ""
 
 #: packages/admin/src/components/BlockKitFieldWidget.tsx:108
-#: packages/admin/src/components/PortableTextEditor.tsx:2600
+#: packages/admin/src/components/PortableTextEditor.tsx:2612
 #: packages/admin/src/components/RepeaterField.tsx:396
 msgid "Select..."
 msgstr ""
@@ -9356,7 +9356,7 @@ msgstr ""
 msgid "Selected {label}"
 msgstr ""
 
-#: packages/admin/src/components/PortableTextEditor.tsx:1936
+#: packages/admin/src/components/PortableTextEditor.tsx:1948
 msgid "Selected {selectedItemTitle}"
 msgstr ""
 
@@ -9423,7 +9423,7 @@ msgstr "Bidaltzen..."
 msgid "SEO"
 msgstr "SEO"
 
-#: packages/admin/src/components/settings/SeoSettings.tsx:117
+#: packages/admin/src/components/settings/SeoSettings.tsx:122
 msgid "SEO Settings"
 msgstr ""
 
@@ -9431,7 +9431,7 @@ msgstr ""
 msgid "SEO settings (Yoast)"
 msgstr ""
 
-#: packages/admin/src/components/settings/SeoSettings.tsx:72
+#: packages/admin/src/components/settings/SeoSettings.tsx:77
 msgid "SEO settings saved"
 msgstr ""
 
@@ -9511,7 +9511,7 @@ msgid "Settings Read"
 msgstr ""
 
 #: packages/admin/src/components/PluginSettings.tsx:68
-#: packages/admin/src/components/settings/GeneralSettings.tsx:71
+#: packages/admin/src/components/settings/GeneralSettings.tsx:77
 msgid "Settings saved successfully"
 msgstr ""
 
@@ -9644,7 +9644,7 @@ msgstr ""
 msgid "Site"
 msgstr ""
 
-#: packages/admin/src/components/settings/GeneralSettings.tsx:163
+#: packages/admin/src/components/settings/GeneralSettings.tsx:169
 msgid "Site Identity"
 msgstr ""
 
@@ -9653,7 +9653,7 @@ msgid "site identity applied (title, tagline, logo)"
 msgstr ""
 
 #: packages/admin/src/components/Settings.tsx:53
-#: packages/admin/src/components/settings/GeneralSettings.tsx:120
+#: packages/admin/src/components/settings/GeneralSettings.tsx:126
 msgid "Site identity, logo, favicon, and reading preferences"
 msgstr "Webgunearen identitatea, logoa, faviconak eta irakurtzeko hobespenak"
 
@@ -9662,7 +9662,7 @@ msgstr "Webgunearen identitatea, logoa, faviconak eta irakurtzeko hobespenak"
 msgid "Site Settings"
 msgstr ""
 
-#: packages/admin/src/components/settings/GeneralSettings.tsx:166
+#: packages/admin/src/components/settings/GeneralSettings.tsx:172
 #: packages/admin/src/components/SetupWizard.tsx:116
 msgid "Site Title"
 msgstr ""
@@ -9675,7 +9675,7 @@ msgstr ""
 msgid "Site title is required"
 msgstr ""
 
-#: packages/admin/src/components/settings/GeneralSettings.tsx:182
+#: packages/admin/src/components/settings/GeneralSettings.tsx:188
 msgid "Site URL"
 msgstr ""
 
@@ -9726,15 +9726,15 @@ msgstr ""
 msgid "Slugs cannot be changed after the field is created."
 msgstr ""
 
-#: packages/admin/src/components/PortableTextEditor.tsx:1574
+#: packages/admin/src/components/PortableTextEditor.tsx:1586
 msgid "Small section heading"
 msgstr "Atal-goiburu txikia"
 
-#: packages/admin/src/components/PortableTextEditor.tsx:1584
+#: packages/admin/src/components/PortableTextEditor.tsx:1596
 msgid "Smaller section heading"
 msgstr ""
 
-#: packages/admin/src/components/PortableTextEditor.tsx:1604
+#: packages/admin/src/components/PortableTextEditor.tsx:1616
 msgid "Smallest section heading"
 msgstr ""
 
@@ -9828,8 +9828,8 @@ msgid "Start Import"
 msgstr ""
 
 #: packages/admin/src/components/ContentEditor.tsx:1938
-#: packages/admin/src/components/PortableTextEditor.tsx:2758
-#: packages/admin/src/components/PortableTextEditor.tsx:2759
+#: packages/admin/src/components/PortableTextEditor.tsx:2770
+#: packages/admin/src/components/PortableTextEditor.tsx:2771
 msgid "Start writing, or type '/' for commands"
 msgstr ""
 
@@ -9863,8 +9863,8 @@ msgstr ""
 msgid "Stored per locale — each translation of a byline gets its own value."
 msgstr ""
 
-#: packages/admin/src/components/PortableTextEditor.tsx:3994
-#: packages/admin/src/components/PortableTextEditor.tsx:4498
+#: packages/admin/src/components/PortableTextEditor.tsx:4006
+#: packages/admin/src/components/PortableTextEditor.tsx:4510
 msgid "Strikethrough"
 msgstr ""
 
@@ -9885,11 +9885,11 @@ msgstr ""
 msgid "Subscriber"
 msgstr "Harpideduna"
 
-#: packages/admin/src/components/PortableTextEditor.tsx:4001
+#: packages/admin/src/components/PortableTextEditor.tsx:4013
 msgid "Subscript"
 msgstr ""
 
-#: packages/admin/src/components/PortableTextEditor.tsx:4008
+#: packages/admin/src/components/PortableTextEditor.tsx:4020
 msgid "Superscript"
 msgstr ""
 
@@ -9927,15 +9927,15 @@ msgstr ""
 
 #: packages/admin/src/components/editor/TableControls.tsx:35
 #: packages/admin/src/components/editor/TableControls.tsx:388
-#: packages/admin/src/components/PortableTextEditor.tsx:1671
+#: packages/admin/src/components/PortableTextEditor.tsx:1683
 msgid "Table"
 msgstr ""
 
-#: packages/admin/src/components/PortableTextEditor.tsx:3669
+#: packages/admin/src/components/PortableTextEditor.tsx:3681
 msgid "Table cells accept text, links, and formatting only."
 msgstr ""
 
-#: packages/admin/src/components/PortableTextEditor.tsx:4093
+#: packages/admin/src/components/PortableTextEditor.tsx:4105
 msgid "Table controls"
 msgstr ""
 
@@ -9944,7 +9944,7 @@ msgid "Table deleted"
 msgstr ""
 
 #: packages/admin/src/components/editor/TableControls.tsx:421
-#: packages/admin/src/components/PortableTextEditor.tsx:3552
+#: packages/admin/src/components/PortableTextEditor.tsx:3564
 msgid "Table inserted"
 msgstr ""
 
@@ -9952,11 +9952,11 @@ msgstr ""
 msgid "Table size"
 msgstr ""
 
-#: packages/admin/src/components/PortableTextEditor.tsx:3666
+#: packages/admin/src/components/PortableTextEditor.tsx:3678
 msgid "Tables cannot be pasted inside lists or quotes. Paste the table into its own paragraph and try again."
 msgstr ""
 
-#: packages/admin/src/components/settings/GeneralSettings.tsx:174
+#: packages/admin/src/components/settings/GeneralSettings.tsx:180
 #: packages/admin/src/components/SetupWizard.tsx:127
 msgid "Tagline"
 msgstr ""
@@ -10043,7 +10043,7 @@ msgstr ""
 msgid "test@example.com"
 msgstr ""
 
-#: packages/admin/src/components/PortableTextEditor.tsx:4449
+#: packages/admin/src/components/PortableTextEditor.tsx:4461
 msgid "Text formatting"
 msgstr ""
 
@@ -10112,7 +10112,7 @@ msgstr ""
 msgid "The menu has been deleted."
 msgstr ""
 
-#: packages/admin/src/components/settings/GeneralSettings.tsx:169
+#: packages/admin/src/components/settings/GeneralSettings.tsx:175
 msgid "The name of your site, used in the header and metadata"
 msgstr ""
 
@@ -10141,7 +10141,7 @@ msgstr ""
 msgid "The plugin result is stale because the editor changed while it was working."
 msgstr ""
 
-#: packages/admin/src/components/settings/GeneralSettings.tsx:186
+#: packages/admin/src/components/settings/GeneralSettings.tsx:192
 msgid "The public URL of your site (used for canonical links and sitemaps)"
 msgstr ""
 
@@ -10150,11 +10150,11 @@ msgstr ""
 msgid "The publisher identity cannot be verified."
 msgstr ""
 
-#: packages/admin/src/components/settings/SeoSettings.tsx:192
+#: packages/admin/src/components/settings/SeoSettings.tsx:197
 msgid "The referenced image is no longer available. Pick a new one or remove the reference."
 msgstr ""
 
-#: packages/admin/src/components/settings/GeneralSettings.tsx:210
+#: packages/admin/src/components/settings/GeneralSettings.tsx:216
 msgid "The referenced logo is no longer available. Pick a new one or remove the reference."
 msgstr ""
 
@@ -10221,7 +10221,7 @@ msgstr ""
 msgid "This collection is defined in code. Some settings cannot be changed here. Edit your live.config.ts file to modify the schema."
 msgstr ""
 
-#: packages/admin/src/components/PortableTextEditor.tsx:3641
+#: packages/admin/src/components/PortableTextEditor.tsx:3653
 msgid "This content cannot be edited safely"
 msgstr ""
 
@@ -10258,11 +10258,11 @@ msgstr ""
 msgid "This field cannot be edited by this version of EmDash."
 msgstr ""
 
-#: packages/admin/src/components/PortableTextEditor.tsx:3624
+#: packages/admin/src/components/PortableTextEditor.tsx:3636
 msgid "This field contains table content that the editor cannot preserve. Update it through the API before editing or saving this content."
 msgstr ""
 
-#: packages/admin/src/components/PortableTextEditor.tsx:3643
+#: packages/admin/src/components/PortableTextEditor.tsx:3655
 msgid "This field contains unsupported Portable Text marks: <0>{markList}</0>. Remove them through the API before editing or saving this content."
 msgstr ""
 
@@ -10325,7 +10325,7 @@ msgstr ""
 msgid "This passkey is already registered on this device."
 msgstr ""
 
-#: packages/admin/src/components/PortableTextEditor.tsx:3662
+#: packages/admin/src/components/PortableTextEditor.tsx:3674
 msgid "This paste is too large. Paste fewer cells or less text at a time."
 msgstr ""
 
@@ -10386,12 +10386,12 @@ msgstr ""
 msgid "This removes the schedule and publishes immediately."
 msgstr ""
 
-#: packages/admin/src/components/PortableTextEditor.tsx:3703
+#: packages/admin/src/components/PortableTextEditor.tsx:3715
 msgid "This section contains table content that the editor cannot preserve. Update the section before inserting it."
 msgstr ""
 
 #. placeholder {0}: sectionInsertErrorMarks.join(", ")
-#: packages/admin/src/components/PortableTextEditor.tsx:3705
+#: packages/admin/src/components/PortableTextEditor.tsx:3717
 msgid "This section contains unsupported Portable Text marks: <0>{0}</0>. Update the section before inserting it."
 msgstr ""
 
@@ -10411,15 +10411,15 @@ msgstr ""
 msgid "This sign-in link is invalid or has already been used. Request a new one from the login page."
 msgstr ""
 
-#: packages/admin/src/components/PortableTextEditor.tsx:3664
+#: packages/admin/src/components/PortableTextEditor.tsx:3676
 msgid "This spreadsheet data has invalid quoted cells. Fix the quotes or remove the tab separators and try again."
 msgstr ""
 
-#: packages/admin/src/components/PortableTextEditor.tsx:3622
+#: packages/admin/src/components/PortableTextEditor.tsx:3634
 msgid "This table cannot be edited safely"
 msgstr ""
 
-#: packages/admin/src/components/PortableTextEditor.tsx:3668
+#: packages/admin/src/components/PortableTextEditor.tsx:3680
 msgid "This table has unsupported cell formatting, merged cells, or column widths. Paste it as plain text or simplify the table and try again."
 msgstr ""
 
@@ -10474,11 +10474,11 @@ msgid "Time"
 msgstr ""
 
 #: packages/admin/src/components/PublishingDateTimeEditor.tsx:252
-#: packages/admin/src/components/settings/GeneralSettings.tsx:333
+#: packages/admin/src/components/settings/GeneralSettings.tsx:339
 msgid "Timezone"
 msgstr ""
 
-#: packages/admin/src/components/settings/GeneralSettings.tsx:336
+#: packages/admin/src/components/settings/GeneralSettings.tsx:342
 msgid "Timezone for displaying dates (e.g., America/New_York)"
 msgstr ""
 
@@ -10494,7 +10494,7 @@ msgstr ""
 msgid "Title (Tooltip)"
 msgstr ""
 
-#: packages/admin/src/components/settings/SeoSettings.tsx:164
+#: packages/admin/src/components/settings/SeoSettings.tsx:169
 msgid "Title Separator"
 msgstr ""
 
@@ -10720,12 +10720,12 @@ msgstr ""
 msgid "Unassigned"
 msgstr ""
 
-#: packages/admin/src/components/PortableTextEditor.tsx:3987
-#: packages/admin/src/components/PortableTextEditor.tsx:4491
+#: packages/admin/src/components/PortableTextEditor.tsx:3999
+#: packages/admin/src/components/PortableTextEditor.tsx:4503
 msgid "Underline"
 msgstr ""
 
-#: packages/admin/src/components/PortableTextEditor.tsx:4711
+#: packages/admin/src/components/PortableTextEditor.tsx:4723
 msgid "Undo"
 msgstr ""
 
@@ -11073,7 +11073,7 @@ msgstr ""
 msgid "Use your registered passkey to sign in securely."
 msgstr "Erabili zuk erregistratutako sarbide-gakoa era seguruan sartzeko."
 
-#: packages/admin/src/components/settings/SeoSettings.tsx:173
+#: packages/admin/src/components/settings/SeoSettings.tsx:178
 msgid "Used as the fallback Open Graph image when a page has none. Recommended size: 1200×630."
 msgstr ""
 
