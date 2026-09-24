@@ -96,7 +96,7 @@ msgid "{0, plural, one {# comment imported} other {# comments imported}}"
 msgstr ""
 
 #. placeholder {0}: result.affected
-#: packages/admin/src/router.tsx:2136
+#: packages/admin/src/router.tsx:2153
 msgid "{0, plural, one {# comment updated} other {# comments updated}}"
 msgstr ""
 
@@ -338,17 +338,17 @@ msgid "{0} items will be imported"
 msgstr "{0}개 ​​항목을 가져옵니다"
 
 #. placeholder {0}: failedIds.length
-#: packages/admin/src/router.tsx:583
+#: packages/admin/src/router.tsx:600
 msgid "{0} of {total} could not be deleted"
 msgstr ""
 
 #. placeholder {0}: failedIds.length
-#: packages/admin/src/router.tsx:539
+#: packages/admin/src/router.tsx:556
 msgid "{0} of {total} could not be published"
 msgstr ""
 
 #. placeholder {0}: failedIds.length
-#: packages/admin/src/router.tsx:562
+#: packages/admin/src/router.tsx:579
 msgid "{0} of {total} could not be updated"
 msgstr ""
 
@@ -829,7 +829,7 @@ msgstr ""
 msgid "Access denied"
 msgstr ""
 
-#: packages/admin/src/router.tsx:2156
+#: packages/admin/src/router.tsx:2173
 msgid "Access Denied"
 msgstr ""
 
@@ -1288,24 +1288,24 @@ msgstr ""
 #: packages/admin/src/components/TaxonomySidebar.tsx:683
 #: packages/admin/src/components/TaxonomySidebar.tsx:779
 #: packages/admin/src/components/ThemeMarketplaceBrowse.tsx:114
-#: packages/admin/src/router.tsx:471
-#: packages/admin/src/router.tsx:486
-#: packages/admin/src/router.tsx:500
-#: packages/admin/src/router.tsx:514
-#: packages/admin/src/router.tsx:742
-#: packages/admin/src/router.tsx:1106
-#: packages/admin/src/router.tsx:1200
-#: packages/admin/src/router.tsx:1225
-#: packages/admin/src/router.tsx:1249
-#: packages/admin/src/router.tsx:1273
-#: packages/admin/src/router.tsx:1319
-#: packages/admin/src/router.tsx:1338
-#: packages/admin/src/router.tsx:1371
-#: packages/admin/src/router.tsx:1392
-#: packages/admin/src/router.tsx:2101
-#: packages/admin/src/router.tsx:2117
-#: packages/admin/src/router.tsx:2142
-#: packages/admin/src/router.tsx:2657
+#: packages/admin/src/router.tsx:488
+#: packages/admin/src/router.tsx:503
+#: packages/admin/src/router.tsx:517
+#: packages/admin/src/router.tsx:531
+#: packages/admin/src/router.tsx:759
+#: packages/admin/src/router.tsx:1123
+#: packages/admin/src/router.tsx:1217
+#: packages/admin/src/router.tsx:1242
+#: packages/admin/src/router.tsx:1266
+#: packages/admin/src/router.tsx:1290
+#: packages/admin/src/router.tsx:1336
+#: packages/admin/src/router.tsx:1355
+#: packages/admin/src/router.tsx:1388
+#: packages/admin/src/router.tsx:1409
+#: packages/admin/src/router.tsx:2118
+#: packages/admin/src/router.tsx:2134
+#: packages/admin/src/router.tsx:2159
+#: packages/admin/src/router.tsx:2674
 #: packages/admin/src/routes/byline-schema.tsx:103
 #: packages/admin/src/routes/byline-schema.tsx:123
 #: packages/admin/src/routes/byline-schema.tsx:139
@@ -1552,7 +1552,7 @@ msgstr ""
 msgid "Automatic backups need a storage backend (R2, S3, or local storage). Configure storage in your EmDash config to enable them."
 msgstr ""
 
-#: packages/admin/src/router.tsx:1197
+#: packages/admin/src/router.tsx:1214
 msgid "Autosave failed"
 msgstr ""
 
@@ -1603,6 +1603,7 @@ msgstr ""
 #: packages/admin/src/components/LoginPage.tsx:118
 #: packages/admin/src/components/LoginPage.tsx:154
 #: packages/admin/src/components/LoginPage.tsx:313
+#: packages/admin/src/components/MagicLinkConfirmPage.tsx:90
 #: packages/admin/src/components/SignupPage.tsx:298
 msgid "Back to login"
 msgstr "로그인으로 돌아가기"
@@ -1990,7 +1991,7 @@ msgstr ""
 msgid "Changes apply everywhere this byline appears."
 msgstr ""
 
-#: packages/admin/src/router.tsx:1265
+#: packages/admin/src/router.tsx:1282
 msgid "Changes discarded"
 msgstr ""
 
@@ -2459,7 +2460,7 @@ msgstr "콘텐츠 오류({0})"
 msgid "Content found:"
 msgstr "발견된 콘텐츠:"
 
-#: packages/admin/src/router.tsx:1312
+#: packages/admin/src/router.tsx:1329
 msgid "Content has been scheduled for publishing"
 msgstr ""
 
@@ -2471,7 +2472,7 @@ msgstr "콘텐츠가 선택한 버전으로 업데이트되었습니다."
 msgid "Content ID:"
 msgstr "콘텐츠 ID:"
 
-#: packages/admin/src/router.tsx:1219
+#: packages/admin/src/router.tsx:1236
 msgid "Content is now live"
 msgstr ""
 
@@ -2483,11 +2484,11 @@ msgstr ""
 msgid "Content Read"
 msgstr "콘텐츠 읽기"
 
-#: packages/admin/src/router.tsx:1243
+#: packages/admin/src/router.tsx:1260
 msgid "Content removed from public view"
 msgstr ""
 
-#: packages/admin/src/router.tsx:1331
+#: packages/admin/src/router.tsx:1348
 msgid "Content reverted to draft"
 msgstr ""
 
@@ -2526,6 +2527,7 @@ msgid "Content Write"
 msgstr "콘텐츠 쓰기"
 
 #: packages/admin/src/components/auth/PasskeyRegistration.tsx:274
+#: packages/admin/src/components/MagicLinkConfirmPage.tsx:80
 #: packages/admin/src/components/SignupPage.tsx:109
 msgid "Continue"
 msgstr "계속"
@@ -2541,6 +2543,10 @@ msgstr "계속 가져오기"
 
 #: packages/admin/src/components/PortableTextEditor.tsx:4543
 msgid "Continue numbering"
+msgstr ""
+
+#: packages/admin/src/components/MagicLinkConfirmPage.tsx:70
+msgid "Continue to finish signing in. The link works only once."
 msgstr ""
 
 #: packages/admin/src/components/auth/PasskeyRegistration.tsx:673
@@ -2883,7 +2889,7 @@ msgid "Created {0}"
 msgstr "{0} 생성됨"
 
 #. placeholder {0}: result.locale?.toUpperCase() ?? t`new`
-#: packages/admin/src/router.tsx:1363
+#: packages/admin/src/router.tsx:1380
 msgid "Created {0} translation"
 msgstr ""
 
@@ -4066,7 +4072,7 @@ msgstr "WordPress 사이트 URL을 입력하세요."
 #: packages/admin/src/components/SetupWizard.tsx:532
 #: packages/admin/src/components/TaxonomyManager.tsx:982
 #: packages/admin/src/components/Widgets.tsx:769
-#: packages/admin/src/router.tsx:2874
+#: packages/admin/src/router.tsx:2892
 msgid "Error"
 msgstr "오류"
 
@@ -4228,14 +4234,14 @@ msgid "Failed to create term"
 msgstr "분류 항목을 생성하지 못했습니다."
 
 #: packages/admin/src/components/TaxonomySidebar.tsx:778
-#: packages/admin/src/router.tsx:1368
+#: packages/admin/src/router.tsx:1385
 msgid "Failed to create translation"
 msgstr ""
 
-#: packages/admin/src/router.tsx:470
-#: packages/admin/src/router.tsx:499
-#: packages/admin/src/router.tsx:582
-#: packages/admin/src/router.tsx:1391
+#: packages/admin/src/router.tsx:487
+#: packages/admin/src/router.tsx:516
+#: packages/admin/src/router.tsx:599
+#: packages/admin/src/router.tsx:1408
 msgid "Failed to delete"
 msgstr ""
 
@@ -4260,7 +4266,7 @@ msgid "Failed to delete collection"
 msgstr ""
 
 #: packages/admin/src/lib/api/comments.ts:111
-#: packages/admin/src/router.tsx:2116
+#: packages/admin/src/router.tsx:2133
 msgid "Failed to delete comment"
 msgstr ""
 
@@ -4334,7 +4340,7 @@ msgstr ""
 msgid "Failed to disable user"
 msgstr ""
 
-#: packages/admin/src/router.tsx:1272
+#: packages/admin/src/router.tsx:1289
 msgid "Failed to discard changes"
 msgstr ""
 
@@ -4347,7 +4353,7 @@ msgstr ""
 msgid "Failed to dismiss welcome"
 msgstr ""
 
-#: packages/admin/src/router.tsx:513
+#: packages/admin/src/router.tsx:530
 msgid "Failed to duplicate"
 msgstr ""
 
@@ -4466,8 +4472,8 @@ msgstr ""
 #: packages/admin/src/lib/api/current-user.ts:22
 #: packages/admin/src/lib/api/users.ts:88
 #: packages/admin/src/lib/api/users.ts:93
-#: packages/admin/src/router.tsx:981
-#: packages/admin/src/router.tsx:2047
+#: packages/admin/src/router.tsx:998
+#: packages/admin/src/router.tsx:2064
 msgid "Failed to fetch user"
 msgstr ""
 
@@ -4509,7 +4515,7 @@ msgstr ""
 msgid "Failed to list byline fields"
 msgstr ""
 
-#: packages/admin/src/router.tsx:310
+#: packages/admin/src/router.tsx:327
 msgid "Failed to load admin"
 msgstr ""
 
@@ -4582,7 +4588,7 @@ msgstr ""
 msgid "Failed to lock the entry"
 msgstr ""
 
-#: packages/admin/src/router.tsx:2141
+#: packages/admin/src/router.tsx:2158
 msgid "Failed to perform bulk action"
 msgstr ""
 
@@ -4594,8 +4600,8 @@ msgstr ""
 msgid "Failed to prepare import"
 msgstr ""
 
-#: packages/admin/src/router.tsx:538
-#: packages/admin/src/router.tsx:1224
+#: packages/admin/src/router.tsx:555
+#: packages/admin/src/router.tsx:1241
 msgid "Failed to publish"
 msgstr ""
 
@@ -4645,7 +4651,7 @@ msgstr ""
 msgid "Failed to replace media image"
 msgstr ""
 
-#: packages/admin/src/router.tsx:485
+#: packages/admin/src/router.tsx:502
 msgid "Failed to restore"
 msgstr ""
 
@@ -4666,9 +4672,9 @@ msgstr ""
 msgid "Failed to rewrite URLs"
 msgstr ""
 
-#: packages/admin/src/router.tsx:737
-#: packages/admin/src/router.tsx:1103
-#: packages/admin/src/router.tsx:2656
+#: packages/admin/src/router.tsx:754
+#: packages/admin/src/router.tsx:1120
+#: packages/admin/src/router.tsx:2673
 msgid "Failed to save"
 msgstr "저장하지 못했습니다."
 
@@ -4687,7 +4693,7 @@ msgstr ""
 msgid "Failed to save settings"
 msgstr "설정을 저장하지 못했습니다."
 
-#: packages/admin/src/router.tsx:1318
+#: packages/admin/src/router.tsx:1335
 msgid "Failed to schedule"
 msgstr ""
 
@@ -4718,15 +4724,15 @@ msgstr ""
 msgid "Failed to uninstall plugin"
 msgstr ""
 
-#: packages/admin/src/router.tsx:1248
+#: packages/admin/src/router.tsx:1265
 msgid "Failed to unpublish"
 msgstr ""
 
-#: packages/admin/src/router.tsx:1337
+#: packages/admin/src/router.tsx:1354
 msgid "Failed to unschedule"
 msgstr ""
 
-#: packages/admin/src/router.tsx:561
+#: packages/admin/src/router.tsx:578
 msgid "Failed to update"
 msgstr ""
 
@@ -4773,7 +4779,7 @@ msgstr ""
 msgid "Failed to update settings"
 msgstr ""
 
-#: packages/admin/src/router.tsx:2100
+#: packages/admin/src/router.tsx:2117
 msgid "Failed to update status"
 msgstr ""
 
@@ -4980,7 +4986,7 @@ msgstr ""
 msgid "Folder name must be between 1 and 200 characters"
 msgstr ""
 
-#: packages/admin/src/router.tsx:1770
+#: packages/admin/src/router.tsx:1787
 msgid "Folder no longer exists"
 msgstr ""
 
@@ -5105,7 +5111,7 @@ msgid "Go"
 msgstr ""
 
 #: packages/admin/src/components/WordPressImport.tsx:2434
-#: packages/admin/src/router.tsx:2894
+#: packages/admin/src/router.tsx:2912
 msgid "Go to Dashboard"
 msgstr "대시보드로 이동"
 
@@ -5998,7 +6004,7 @@ msgstr "더 보기"
 msgid "Load more folders"
 msgstr ""
 
-#: packages/admin/src/router.tsx:2849
+#: packages/admin/src/router.tsx:2867
 msgid "Loading"
 msgstr ""
 
@@ -6019,8 +6025,8 @@ msgstr "컬렉션 로드 중..."
 msgid "Loading comments..."
 msgstr "댓글 로드 중..."
 
-#: packages/admin/src/router.tsx:2851
-#: packages/admin/src/router.tsx:2863
+#: packages/admin/src/router.tsx:2869
+#: packages/admin/src/router.tsx:2881
 msgid "Loading configuration..."
 msgstr ""
 
@@ -6283,11 +6289,11 @@ msgstr ""
 msgid "Marketplace"
 msgstr "마켓플레이스"
 
-#: packages/admin/src/router.tsx:2382
+#: packages/admin/src/router.tsx:2399
 msgid "Marketplace browsing is no longer available."
 msgstr ""
 
-#: packages/admin/src/router.tsx:2357
+#: packages/admin/src/router.tsx:2374
 msgid "Marketplace browsing is no longer available. Manage installed plugins from Plugins."
 msgstr ""
 
@@ -6660,11 +6666,11 @@ msgstr "위로 이동"
 msgid "Moved {filename} to position {0}."
 msgstr ""
 
-#: packages/admin/src/router.tsx:558
+#: packages/admin/src/router.tsx:575
 msgid "Moved {total} items to draft"
 msgstr ""
 
-#: packages/admin/src/router.tsx:579
+#: packages/admin/src/router.tsx:596
 msgid "Moved {total} items to trash"
 msgstr ""
 
@@ -6755,7 +6761,7 @@ msgstr ""
 msgid "Never"
 msgstr "없음"
 
-#: packages/admin/src/router.tsx:1363
+#: packages/admin/src/router.tsx:1380
 msgid "new"
 msgstr ""
 
@@ -7443,7 +7449,7 @@ msgstr "소유권"
 msgid "Package"
 msgstr "패키지"
 
-#: packages/admin/src/router.tsx:2889
+#: packages/admin/src/router.tsx:2907
 msgid "Page Not Found"
 msgstr ""
 
@@ -7752,8 +7758,8 @@ msgstr ""
 msgid "Plugin registry configuration error"
 msgstr ""
 
-#: packages/admin/src/router.tsx:2317
-#: packages/admin/src/router.tsx:2348
+#: packages/admin/src/router.tsx:2334
+#: packages/admin/src/router.tsx:2365
 msgid "Plugin registry is not configured."
 msgstr ""
 
@@ -7957,7 +7963,7 @@ msgstr ""
 #: packages/admin/src/components/ContentList.tsx:870
 #: packages/admin/src/components/ContentStatusBadge.tsx:59
 #: packages/admin/src/components/Dashboard.tsx:403
-#: packages/admin/src/router.tsx:1219
+#: packages/admin/src/router.tsx:1236
 msgid "Published"
 msgstr "게시됨"
 
@@ -7966,7 +7972,7 @@ msgstr "게시됨"
 msgid "Published {0}"
 msgstr "게시됨 {0}"
 
-#: packages/admin/src/router.tsx:535
+#: packages/admin/src/router.tsx:552
 msgid "Published {total} items"
 msgstr ""
 
@@ -8578,7 +8584,7 @@ msgstr ""
 #: packages/admin/src/components/SandboxedContentEditorPanel.tsx:239
 #: packages/admin/src/components/ThemeMarketplaceBrowse.tsx:122
 #: packages/admin/src/lib/content-editor-panels.tsx:201
-#: packages/admin/src/router.tsx:2877
+#: packages/admin/src/router.tsx:2895
 #: packages/admin/src/routes/byline-schema.tsx:280
 msgid "Retry"
 msgstr "재시도"
@@ -8616,7 +8622,7 @@ msgstr ""
 msgid "Reusable content blocks you can insert into any content"
 msgstr "모든 콘텐츠에 삽입할 수 있는 재사용 가능한 콘텐츠 블록"
 
-#: packages/admin/src/router.tsx:1266
+#: packages/admin/src/router.tsx:1283
 msgid "Reverted to published version"
 msgstr ""
 
@@ -8892,7 +8898,7 @@ msgstr ""
 
 #: packages/admin/src/components/ContentList.tsx:861
 #: packages/admin/src/components/ContentStatusBadge.tsx:63
-#: packages/admin/src/router.tsx:1311
+#: packages/admin/src/router.tsx:1328
 msgid "Scheduled"
 msgstr "예약됨"
 
@@ -9599,6 +9605,7 @@ msgid "Sign in with {0}"
 msgstr "{0}(으)로 로그인"
 
 #: packages/admin/src/components/LoginPage.tsx:231
+#: packages/admin/src/components/MagicLinkConfirmPage.tsx:61
 msgid "Sign in with email"
 msgstr "이메일로 로그인"
 
@@ -9618,6 +9625,10 @@ msgstr "{0}(으)로 로그인됨"
 
 #: packages/admin/src/components/CapabilityConsentDialog.tsx:160
 msgid "Signed release verified"
+msgstr ""
+
+#: packages/admin/src/components/MagicLinkConfirmPage.tsx:54
+msgid "Signing in failed. Please try again."
 msgstr ""
 
 #: packages/admin/src/components/FieldEditor.tsx:247
@@ -10109,7 +10120,7 @@ msgstr "헤더 및 메타데이터에 사용되는 사이트 이름"
 msgid "The order controls how block types appear in the picker."
 msgstr ""
 
-#: packages/admin/src/router.tsx:2891
+#: packages/admin/src/router.tsx:2909
 msgid "The page you're looking for doesn't exist."
 msgstr ""
 
@@ -10227,7 +10238,7 @@ msgid "This entry changed somewhere else after you opened it."
 msgstr ""
 
 #: packages/admin/src/components/ContentEditor.tsx:919
-#: packages/admin/src/router.tsx:907
+#: packages/admin/src/router.tsx:924
 msgid "This entry changed somewhere else. Save anyway, or reload to get the newer version."
 msgstr ""
 
@@ -10391,6 +10402,14 @@ msgstr "이 섹션은 테마에서 제공됩니다. 편집하면 테마 버전�
 #: packages/admin/src/components/SectionEditor.tsx:324
 msgid "This section was imported from another system."
 msgstr "다른 시스템에서 가져온 섹션입니다."
+
+#: packages/admin/src/components/MagicLinkConfirmPage.tsx:51
+msgid "This sign-in link has expired. Request a new one from the login page."
+msgstr ""
+
+#: packages/admin/src/components/MagicLinkConfirmPage.tsx:53
+msgid "This sign-in link is invalid or has already been used. Request a new one from the login page."
+msgstr ""
 
 #: packages/admin/src/components/PortableTextEditor.tsx:3664
 msgid "This spreadsheet data has invalid quoted cells. Fix the quotes or remove the tab separators and try again."
@@ -10557,7 +10576,7 @@ msgstr ""
 #: packages/admin/src/components/MenuEditor.tsx:143
 #: packages/admin/src/components/TaxonomyManager.tsx:1028
 #: packages/admin/src/components/TaxonomySidebar.tsx:774
-#: packages/admin/src/router.tsx:1362
+#: packages/admin/src/router.tsx:1379
 msgid "Translation created"
 msgstr ""
 
@@ -10760,7 +10779,7 @@ msgstr "이름이 없는 패스키"
 msgid "Unpublish {itemLabel}"
 msgstr ""
 
-#: packages/admin/src/router.tsx:1243
+#: packages/admin/src/router.tsx:1260
 msgid "Unpublished"
 msgstr ""
 
@@ -10776,7 +10795,7 @@ msgstr ""
 msgid "Unsaved content may leave your site"
 msgstr ""
 
-#: packages/admin/src/router.tsx:1330
+#: packages/admin/src/router.tsx:1347
 msgid "Unscheduled"
 msgstr ""
 
@@ -11551,7 +11570,7 @@ msgstr ""
 msgid "You need Admin permissions to manage media usage tracking."
 msgstr ""
 
-#: packages/admin/src/router.tsx:2157
+#: packages/admin/src/router.tsx:2174
 msgid "You need Editor permissions to moderate comments."
 msgstr ""
 
