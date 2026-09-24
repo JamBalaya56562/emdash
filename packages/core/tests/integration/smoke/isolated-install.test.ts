@@ -327,6 +327,15 @@ async function waitForReady(
 	);
 }
 
+async function fetchWithServerOutput(url: string, readOutput: () => string): Promise<Response> {
+	try {
+		return await fetch(url, { redirect: "manual", signal: AbortSignal.timeout(15_000) });
+	} catch (error) {
+		const reason = error instanceof Error ? `${error.name}: ${error.message}` : String(error);
+		throw new Error(`Request to ${url} failed (${reason}):\n${readOutput()}`, { cause: error });
+	}
+}
+
 async function waitForInjectedRoute(
 	url: string,
 	readOutput: () => string,
