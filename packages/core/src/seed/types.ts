@@ -373,7 +373,7 @@ export interface SeedApplyResult {
 	blockTypes: { created: number; skipped: number; updated: number };
 	collections: { created: number; skipped: number; updated: number };
 	fields: { created: number; skipped: number; updated: number };
-	taxonomies: { created: number; terms: number };
+	taxonomies: { created: number; skipped: number; terms: number };
 	bylines: { created: number; skipped: number; updated: number };
 	menus: { created: number; items: number };
 	redirects: { created: number; skipped: number; updated: number };
