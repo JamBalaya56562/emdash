@@ -278,6 +278,27 @@ describe("MediaRepository.cleanupPendingUploads", () => {
 		vi.useRealTimers();
 	});
 
+	it("withholds a stale pending key that another media record still references", async () => {
+		vi.useFakeTimers();
+
+		await mediaRepo.createPending({
+			filename: "stale.jpg",
+			mimeType: "image/jpeg",
+			storageKey: "uploads/shared.jpg",
+		});
+		vi.advanceTimersByTime(61 * 60 * 1000);
+		await mediaRepo.create({
+			filename: "keeper.jpg",
+			mimeType: "image/jpeg",
+			storageKey: "uploads/shared.jpg",
+		});
+
+		const deletedKeys = await mediaRepo.cleanupPendingUploads();
+		expect(deletedKeys).toHaveLength(0);
+
+		vi.useRealTimers();
+	});
+
 	it("does not delete recent pending uploads", async () => {
 		// Create pending uploads (current time -- not yet expired)
 		for (let i = 0; i < 5; i++) {
