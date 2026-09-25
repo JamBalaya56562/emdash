@@ -10,7 +10,7 @@ export const prerender = false;
 
 import { apiError, apiSuccess, handleError } from "#api/error.js";
 import { isParseError, parseBody } from "#api/parse.js";
-import { getPublicOrigin } from "#api/public-url.js";
+import { getConfiguredOrigin } from "#api/public-url.js";
 import { setupBody } from "#api/schemas.js";
 import { getAuthMode } from "#auth/mode.js";
 import { OptionsRepository } from "#db/repositories/options.js";
@@ -38,6 +38,19 @@ export const POST: APIRoute = async ({ request, url, locals }) => {
 			}
 		} catch {
 			// Options table doesn't exist yet — first-ever setup, allow it
+		}
+
+		const configuredSiteUrl = getConfiguredOrigin(emdash.config);
+		const loopbackHost =
+			url.hostname === "localhost" || url.hostname === "127.0.0.1" || url.hostname === "[::1]";
+		const siteUrl =
+			configuredSiteUrl ?? (import.meta.env.DEV && loopbackHost ? url.origin : undefined);
+		if (!siteUrl) {
+			return apiError(
+				"SITE_URL_REQUIRED",
+				"Set siteUrl or EMDASH_SITE_URL before running production setup",
+				500,
+			);
 		}
 
 		// Parse request body
@@ -85,7 +98,6 @@ export const POST: APIRoute = async ({ request, url, locals }) => {
 			// observe an empty value and race to write. A spoofed Host header
 			// on a later call during the wizard window must not be able to
 			// replace the first value.
-			const siteUrl = getPublicOrigin(url, emdash.config);
 			await options.setIfAbsent("emdash:site_url", siteUrl);
 
 			if (useExternalAuth) {
