@@ -8,6 +8,7 @@ import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
 import { runSystemCleanup } from "../../src/cleanup.js";
 import { runMigrations } from "../../src/database/migrations/runner.js";
 import { MediaRepository } from "../../src/database/repositories/media.js";
+import { MAX_404_LOG_ROWS } from "../../src/database/repositories/redirect.js";
 import { RevisionRepository } from "../../src/database/repositories/revision.js";
 import type { Database } from "../../src/database/types.js";
 import { setupTestDatabase, setupTestDatabaseWithCollections } from "../utils/test-db.js";
@@ -126,6 +127,43 @@ describe("Revision Pruning", () => {
 });
 
 describe("Scheduled system cleanup", () => {
+	it("caps the 404 log outside the anonymous request path", async () => {
+		const db = await setupTestDatabase();
+		const rows = Array.from({ length: MAX_404_LOG_ROWS + 2 }, (_, index) => ({
+			id: ulid(),
+			path: `/missing-${index}`,
+			referrer: null,
+			user_agent: null,
+			ip: null,
+			hits: 1,
+			last_seen_at: new Date(index).toISOString(),
+			created_at: new Date(index).toISOString(),
+		}));
+
+		try {
+			for (let offset = 0; offset < rows.length; offset += 250) {
+				await db
+					.insertInto("_emdash_404_log")
+					.values(rows.slice(offset, offset + 250))
+					.execute();
+			}
+			const result = await runSystemCleanup(db);
+			expect(result.notFoundLog).toBe(2);
+			expect(
+				Number(
+					(
+						await db
+							.selectFrom("_emdash_404_log")
+							.select((eb) => eb.fn.countAll<number>().as("c"))
+							.executeTakeFirstOrThrow()
+					).c,
+				),
+			).toBe(MAX_404_LOG_ROWS);
+		} finally {
+			await db.destroy();
+		}
+	});
+
 	it("prunes revision entries queued by revision writes", async () => {
 		const db = await setupTestDatabaseWithCollections();
 		const revisionRepo = new RevisionRepository(db);
