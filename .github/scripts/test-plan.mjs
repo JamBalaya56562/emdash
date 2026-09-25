@@ -33,6 +33,7 @@ const UNIT_PACKAGE_BY_PATH = new Map([
 	["packages/marketplace/", "@emdash-cms/marketplace"],
 	["packages/plugin-cli/", "@emdash-cms/plugin-cli"],
 	["packages/plugin-types/", "@emdash-cms/plugin-types"],
+	["packages/plugins/embeds/", "@emdash-cms/plugin-embeds"],
 	["packages/plugins/forms/", "@emdash-cms/plugin-forms"],
 	["packages/registry-client/", "@emdash-cms/registry-client"],
 	["packages/registry-lexicons/", "@emdash-cms/registry-lexicons"],
