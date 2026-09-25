@@ -2576,34 +2576,20 @@ export function createMcpServer(
 		{
 			title: "Upload Media",
 			description:
-				"Upload a media file from base64-encoded data or an external URL and " +
+				"Upload a media file from base64-encoded data and " +
 				"register it in the media library. Returns the media item with id, " +
 				"storageKey, and url — ready to reference from content fields (e.g. " +
 				"featured_image) via content_create / content_update. Uploads are " +
 				"deduplicated by content hash: re-uploading identical bytes returns " +
-				"the existing item with deduplicated: true. URL fetches must resolve " +
-				"to a public http(s) host (SSRF-guarded). Subject to the global " +
+				"the existing item with deduplicated: true. Subject to the global " +
 				"upload MIME allowlist and the configured maximum upload size.",
 			inputSchema: z.object({
 				filename: z.string().min(1).describe("Filename including extension (e.g. 'cover.png')"),
-				base64: z
-					.string()
-					.optional()
-					.describe("Base64-encoded file contents. Provide exactly one of base64 / url."),
-				url: z
-					.url()
-					.optional()
-					.describe(
-						"Public http(s) URL to fetch the file from. Provide exactly one of base64 / url.",
-					),
+				base64: z.string().describe("Base64-encoded file contents."),
 				contentType: z
 					.string()
 					.regex(CONTENT_TYPE_RE, "Invalid content type")
-					.optional()
-					.describe(
-						"MIME type (e.g. 'image/png'). Required with base64; with url it " +
-							"defaults to the response's Content-Type header.",
-					),
+					.describe("MIME type (e.g. 'image/png')."),
 				alt: z.string().optional().describe("Alt text for accessibility"),
 			}),
 			annotations: { destructiveHint: false },
@@ -2620,7 +2606,6 @@ export function createMcpServer(
 					await emdash.handleMediaUpload({
 						filename: args.filename,
 						base64: args.base64,
-						url: args.url,
 						contentType: args.contentType,
 						alt: args.alt,
 						authorId: userId,
