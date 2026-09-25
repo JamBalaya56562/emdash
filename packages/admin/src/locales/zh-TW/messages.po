@@ -1469,6 +1469,10 @@ msgstr ""
 msgid "Also match the byline linked to an entry's author when it has none assigned."
 msgstr ""
 
+#: packages/admin/src/components/DeviceAuthorizePage.tsx:381
+msgid "Also requested, but not available to your role:"
+msgstr ""
+
 #: packages/admin/src/components/editor/GalleryDetailPanel.tsx:485
 #: packages/admin/src/components/editor/ImageDetailPanel.tsx:504
 #: packages/admin/src/components/editor/ImageDetailPanel.tsx:508
@@ -1786,19 +1790,19 @@ msgstr "作者"
 msgid "Author Mapping"
 msgstr "作者對應"
 
-#: packages/admin/src/components/DeviceAuthorizePage.tsx:197
+#: packages/admin/src/components/DeviceAuthorizePage.tsx:229
 msgid "Authorization denied"
 msgstr "授權遭拒"
 
-#: packages/admin/src/components/DeviceAuthorizePage.tsx:105
+#: packages/admin/src/components/DeviceAuthorizePage.tsx:152
 msgid "Authorization failed"
 msgstr "授權失敗"
 
-#: packages/admin/src/components/DeviceAuthorizePage.tsx:259
+#: packages/admin/src/components/DeviceAuthorizePage.tsx:296
 msgid "Authorize"
 msgstr "授權"
 
-#: packages/admin/src/components/DeviceAuthorizePage.tsx:176
+#: packages/admin/src/components/DeviceAuthorizePage.tsx:208
 msgid "Authorize Device"
 msgstr "授權裝置"
 
@@ -1806,7 +1810,7 @@ msgstr "授權裝置"
 msgid "Authorized approvers"
 msgstr ""
 
-#: packages/admin/src/components/DeviceAuthorizePage.tsx:259
+#: packages/admin/src/components/DeviceAuthorizePage.tsx:296
 msgid "Authorizing..."
 msgstr "正在授權…"
 
@@ -2415,9 +2419,13 @@ msgstr "請查看您的電子郵件"
 msgid "Checking {urlInput}..."
 msgstr "正在檢查 {urlInput}..."
 
-#: packages/admin/src/components/DeviceAuthorizePage.tsx:155
+#: packages/admin/src/components/DeviceAuthorizePage.tsx:187
 msgid "Checking authentication..."
 msgstr "正在檢查驗證狀態..."
+
+#: packages/admin/src/components/DeviceAuthorizePage.tsx:340
+msgid "Checking code..."
+msgstr ""
 
 #. placeholder {0}: deletingField.label
 #: packages/admin/src/routes/byline-schema.tsx:362
@@ -3097,6 +3105,14 @@ msgstr ""
 
 #: packages/admin/src/components/BulkTagDialog.tsx:229
 msgid "Could not add tag"
+msgstr ""
+
+#: packages/admin/src/components/DeviceAuthorizePage.tsx:111
+msgid "Could not check this code"
+msgstr ""
+
+#: packages/admin/src/components/DeviceAuthorizePage.tsx:346
+msgid "Could not check this code."
 msgstr ""
 
 #: packages/admin/src/components/users/InviteUserModal.tsx:136
@@ -3900,7 +3916,7 @@ msgstr "要調降使用者權限嗎？"
 msgid "Demoting..."
 msgstr "正在降低角色…"
 
-#: packages/admin/src/components/DeviceAuthorizePage.tsx:270
+#: packages/admin/src/components/DeviceAuthorizePage.tsx:304
 #: packages/admin/src/components/settings/transfer/ApprovalsSection.tsx:108
 msgid "Deny"
 msgstr "拒絕"
@@ -3957,11 +3973,11 @@ msgstr "破壞性操作"
 msgid "Details"
 msgstr ""
 
-#: packages/admin/src/components/DeviceAuthorizePage.tsx:186
+#: packages/admin/src/components/DeviceAuthorizePage.tsx:218
 msgid "Device authorized"
 msgstr "已授權裝置"
 
-#: packages/admin/src/components/DeviceAuthorizePage.tsx:229
+#: packages/admin/src/components/DeviceAuthorizePage.tsx:261
 msgid "Device code"
 msgstr "裝置代碼"
 
@@ -4722,7 +4738,7 @@ msgstr "輸入 Markdown 內容..."
 msgid "Enter name"
 msgstr "輸入名稱"
 
-#: packages/admin/src/components/DeviceAuthorizePage.tsx:177
+#: packages/admin/src/components/DeviceAuthorizePage.tsx:209
 msgid "Enter the code from your terminal"
 msgstr "輸入終端機顯示的代碼"
 
@@ -6655,6 +6671,10 @@ msgstr "邀請第一位團隊成員"
 msgid "Invoke MCP tools from all enabled plugins"
 msgstr "呼叫所有已啟用外掛的 MCP 工具"
 
+#: packages/admin/src/components/DeviceAuthorizePage.tsx:410
+msgid "Invoke MCP tools from the {pluginId} plugin"
+msgstr ""
+
 #: packages/admin/src/components/settings/ApiTokenSettings.tsx:532
 msgid "Invoke only this plugin's enabled MCP tools"
 msgstr "僅呼叫這個外掛已啟用的 MCP 工具"
@@ -8437,7 +8457,7 @@ msgstr ""
 msgid "One"
 msgstr ""
 
-#: packages/admin/src/components/DeviceAuthorizePage.tsx:278
+#: packages/admin/src/components/DeviceAuthorizePage.tsx:310
 msgid "Only authorize codes you recognize."
 msgstr "只授權您能辨識的代碼。"
 
@@ -8929,6 +8949,7 @@ msgstr ""
 msgid "Plugin MCP access updated"
 msgstr "外掛 MCP 存取權已更新"
 
+#: packages/admin/src/components/DeviceAuthorizePage.tsx:409
 #: packages/admin/src/components/settings/ApiTokenSettings.tsx:97
 msgid "Plugin MCP Tools"
 msgstr "外掛 MCP 工具"
@@ -9408,7 +9429,7 @@ msgstr "復原連結已傳送至 {0}"
 msgid "Redirect loop detected"
 msgstr "偵測到重新導向迴圈"
 
-#: packages/admin/src/components/DeviceAuthorizePage.tsx:163
+#: packages/admin/src/components/DeviceAuthorizePage.tsx:195
 msgid "Redirecting to login..."
 msgstr "正在重新導向至登入頁面..."
 
@@ -11056,7 +11077,7 @@ msgid "Sign in with Passkey"
 msgstr "使用通行金鑰登入"
 
 #. placeholder {0}: user.email
-#: packages/admin/src/components/DeviceAuthorizePage.tsx:190
+#: packages/admin/src/components/DeviceAuthorizePage.tsx:222
 msgid "Signed in as {0}"
 msgstr "已以 {0} 的身分登入"
 
@@ -11685,7 +11706,7 @@ msgstr ""
 msgid "The cropped image could not be created."
 msgstr ""
 
-#: packages/admin/src/components/DeviceAuthorizePage.tsx:198
+#: packages/admin/src/components/DeviceAuthorizePage.tsx:230
 msgid "The device will not be granted access."
 msgstr "不會授予此裝置存取權。"
 
@@ -12029,6 +12050,14 @@ msgstr ""
 msgid "This cannot be undone"
 msgstr ""
 
+#: packages/admin/src/components/DeviceAuthorizePage.tsx:350
+msgid "This code has expired. Start the sign-in again from your terminal to get a new one."
+msgstr ""
+
+#: packages/admin/src/components/DeviceAuthorizePage.tsx:348
+msgid "This code is invalid or has already been used."
+msgstr ""
+
 #: packages/admin/src/components/ContentTypeEditor.tsx:425
 msgid "This collection is defined in code. Some settings cannot be changed here. Edit your live.config.ts file to modify the schema."
 msgstr "這個內容集合是在程式碼中定義的。部分設定無法在此變更。請編輯 live.config.ts 檔案以修改結構描述。"
@@ -12039,6 +12068,10 @@ msgstr ""
 
 #: packages/admin/src/components/ContentSettingsPanel.tsx:469
 msgid "This content will be visible on the site immediately."
+msgstr ""
+
+#: packages/admin/src/components/DeviceAuthorizePage.tsx:370
+msgid "This device is requesting permission to use:"
 msgstr ""
 
 #: packages/admin/src/components/WordPressImport.tsx:1077
@@ -12342,10 +12375,6 @@ msgstr ""
 msgid "This will delete the widget area and all its widgets. This action cannot be undone."
 msgstr "這會刪除小工具區域及其中的所有小工具。此動作無法復原。"
 
-#: packages/admin/src/components/DeviceAuthorizePage.tsx:276
-msgid "This will grant CLI access with your permissions."
-msgstr "這會以您的權限授予 CLI 存取權。"
-
 #: packages/admin/src/components/ContentSettingsPanel.tsx:1304
 msgid "This will move the item to trash. You can restore it later from the trash."
 msgstr "這會將項目移至回收桶。您稍後可以從回收桶還原。"
@@ -12573,7 +12602,7 @@ msgstr ""
 msgid "Try again. If it keeps failing, check the server logs."
 msgstr ""
 
-#: packages/admin/src/components/DeviceAuthorizePage.tsx:207
+#: packages/admin/src/components/DeviceAuthorizePage.tsx:239
 msgid "Try another code"
 msgstr "嘗試其他代碼"
 
@@ -13070,7 +13099,7 @@ msgstr "用於網址與 API 端點"
 msgid "Used to identify this section. Lowercase letters, numbers, and hyphens only."
 msgstr "用來識別這個區段。只能使用小寫字母、數字及連字號。"
 
-#: packages/admin/src/components/DeviceAuthorizePage.tsx:223
+#: packages/admin/src/components/DeviceAuthorizePage.tsx:255
 #: packages/admin/src/components/Header.tsx:44
 #: packages/admin/src/components/Header.tsx:84
 #: packages/admin/src/components/users/UserList.tsx:91
@@ -13556,7 +13585,7 @@ msgstr "是"
 msgid "Yoast/RankMath"
 msgstr "Yoast/RankMath"
 
-#: packages/admin/src/components/DeviceAuthorizePage.tsx:188
+#: packages/admin/src/components/DeviceAuthorizePage.tsx:220
 msgid "You can close this page and return to your terminal."
 msgstr "您可以關閉此頁面並返回終端機。"
 
@@ -13736,6 +13765,10 @@ msgstr "您的姓名 (選填)"
 #: packages/admin/src/components/WelcomeModal.tsx:46
 msgid "Your Role"
 msgstr "您的角色"
+
+#: packages/admin/src/components/DeviceAuthorizePage.tsx:375
+msgid "Your role does not permit any of the permissions this device requested."
+msgstr ""
 
 #. placeholder {0}: formatHoldback(config.policy?.minimumReleaseAgeSeconds ?? 0)
 #: packages/admin/src/components/RegistryPluginDetail.tsx:691

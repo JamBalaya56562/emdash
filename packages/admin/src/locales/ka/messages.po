@@ -1469,6 +1469,10 @@ msgstr ""
 msgid "Also match the byline linked to an entry's author when it has none assigned."
 msgstr "ასევე ჩაითვალოს ჩანაწერის ავტორზე მიბმული ბაილაინი, თუ ბაილაინი მინიჭებული არ არის."
 
+#: packages/admin/src/components/DeviceAuthorizePage.tsx:381
+msgid "Also requested, but not available to your role:"
+msgstr ""
+
 #: packages/admin/src/components/editor/GalleryDetailPanel.tsx:485
 #: packages/admin/src/components/editor/ImageDetailPanel.tsx:504
 #: packages/admin/src/components/editor/ImageDetailPanel.tsx:508
@@ -1786,19 +1790,19 @@ msgstr "ავტორი"
 msgid "Author Mapping"
 msgstr "ავტორების მიბმა"
 
-#: packages/admin/src/components/DeviceAuthorizePage.tsx:197
+#: packages/admin/src/components/DeviceAuthorizePage.tsx:229
 msgid "Authorization denied"
 msgstr "ავტორიზაცია უარყოფილია"
 
-#: packages/admin/src/components/DeviceAuthorizePage.tsx:105
+#: packages/admin/src/components/DeviceAuthorizePage.tsx:152
 msgid "Authorization failed"
 msgstr "ავტორიზაცია ვერ მოხერხდა"
 
-#: packages/admin/src/components/DeviceAuthorizePage.tsx:259
+#: packages/admin/src/components/DeviceAuthorizePage.tsx:296
 msgid "Authorize"
 msgstr "ავტორიზაცია"
 
-#: packages/admin/src/components/DeviceAuthorizePage.tsx:176
+#: packages/admin/src/components/DeviceAuthorizePage.tsx:208
 msgid "Authorize Device"
 msgstr "მოწყობილობის ავტორიზაცია"
 
@@ -1806,7 +1810,7 @@ msgstr "მოწყობილობის ავტორიზაცია"
 msgid "Authorized approvers"
 msgstr "ავტორიზებული დამმტკიცებლები"
 
-#: packages/admin/src/components/DeviceAuthorizePage.tsx:259
+#: packages/admin/src/components/DeviceAuthorizePage.tsx:296
 msgid "Authorizing..."
 msgstr "მიმდინარეობს ავტორიზაცია..."
 
@@ -2415,9 +2419,13 @@ msgstr "შეამოწმეთ ელფოსტა"
 msgid "Checking {urlInput}..."
 msgstr "მოწმდება {urlInput}..."
 
-#: packages/admin/src/components/DeviceAuthorizePage.tsx:155
+#: packages/admin/src/components/DeviceAuthorizePage.tsx:187
 msgid "Checking authentication..."
 msgstr "მიმდინარეობს ავთენტიფიკაციის შემოწმება..."
+
+#: packages/admin/src/components/DeviceAuthorizePage.tsx:340
+msgid "Checking code..."
+msgstr ""
 
 #. placeholder {0}: deletingField.label
 #: packages/admin/src/routes/byline-schema.tsx:362
@@ -3097,6 +3105,14 @@ msgstr ""
 
 #: packages/admin/src/components/BulkTagDialog.tsx:229
 msgid "Could not add tag"
+msgstr ""
+
+#: packages/admin/src/components/DeviceAuthorizePage.tsx:111
+msgid "Could not check this code"
+msgstr ""
+
+#: packages/admin/src/components/DeviceAuthorizePage.tsx:346
+msgid "Could not check this code."
 msgstr ""
 
 #: packages/admin/src/components/users/InviteUserModal.tsx:136
@@ -3900,7 +3916,7 @@ msgstr "დავაქვეითოთ მომხმარებელი?"
 msgid "Demoting..."
 msgstr "მიმდინარეობს დაქვეითება..."
 
-#: packages/admin/src/components/DeviceAuthorizePage.tsx:270
+#: packages/admin/src/components/DeviceAuthorizePage.tsx:304
 #: packages/admin/src/components/settings/transfer/ApprovalsSection.tsx:108
 msgid "Deny"
 msgstr "უარყოფა"
@@ -3957,11 +3973,11 @@ msgstr "დესტრუქციული"
 msgid "Details"
 msgstr "დეტალები"
 
-#: packages/admin/src/components/DeviceAuthorizePage.tsx:186
+#: packages/admin/src/components/DeviceAuthorizePage.tsx:218
 msgid "Device authorized"
 msgstr "მოწყობილობა ავტორიზებულია"
 
-#: packages/admin/src/components/DeviceAuthorizePage.tsx:229
+#: packages/admin/src/components/DeviceAuthorizePage.tsx:261
 msgid "Device code"
 msgstr "მოწყობილობის კოდი"
 
@@ -4722,7 +4738,7 @@ msgstr "შეიყვანეთ Markdown შიგთავსი..."
 msgid "Enter name"
 msgstr "შეიყვანეთ სახელი"
 
-#: packages/admin/src/components/DeviceAuthorizePage.tsx:177
+#: packages/admin/src/components/DeviceAuthorizePage.tsx:209
 msgid "Enter the code from your terminal"
 msgstr "შეიყვანეთ კოდი ტერმინალიდან"
 
@@ -6655,6 +6671,10 @@ msgstr "მოიწვიეთ გუნდის პირველი წე
 msgid "Invoke MCP tools from all enabled plugins"
 msgstr "ყველა ჩართული პლაგინის MCP ხელსაწყოების გამოძახება"
 
+#: packages/admin/src/components/DeviceAuthorizePage.tsx:410
+msgid "Invoke MCP tools from the {pluginId} plugin"
+msgstr ""
+
 #: packages/admin/src/components/settings/ApiTokenSettings.tsx:532
 msgid "Invoke only this plugin's enabled MCP tools"
 msgstr "მხოლოდ ამ პლაგინის ჩართული MCP ხელსაწყოების გამოძახება"
@@ -8437,7 +8457,7 @@ msgstr ""
 msgid "One"
 msgstr ""
 
-#: packages/admin/src/components/DeviceAuthorizePage.tsx:278
+#: packages/admin/src/components/DeviceAuthorizePage.tsx:310
 msgid "Only authorize codes you recognize."
 msgstr "დაადასტურეთ მხოლოდ ის კოდები, რომლებსაც იცნობთ."
 
@@ -8929,6 +8949,7 @@ msgstr "პლაგინის დაყენება მოითხოვ�
 msgid "Plugin MCP access updated"
 msgstr "პლაგინის MCP წვდომა განახლდა"
 
+#: packages/admin/src/components/DeviceAuthorizePage.tsx:409
 #: packages/admin/src/components/settings/ApiTokenSettings.tsx:97
 msgid "Plugin MCP Tools"
 msgstr "პლაგინის MCP ინსტრუმენტები"
@@ -9408,7 +9429,7 @@ msgstr "აღდგენის ბმული გაიგზავნა {0}
 msgid "Redirect loop detected"
 msgstr "აღმოჩენილია გადამისამართების მარყუჟი"
 
-#: packages/admin/src/components/DeviceAuthorizePage.tsx:163
+#: packages/admin/src/components/DeviceAuthorizePage.tsx:195
 msgid "Redirecting to login..."
 msgstr "გადამისამართება შესვლის გვერდზე..."
 
@@ -11056,7 +11077,7 @@ msgid "Sign in with Passkey"
 msgstr "შესვლა პასკით"
 
 #. placeholder {0}: user.email
-#: packages/admin/src/components/DeviceAuthorizePage.tsx:190
+#: packages/admin/src/components/DeviceAuthorizePage.tsx:222
 msgid "Signed in as {0}"
 msgstr "შესულია როგორც {0}"
 
@@ -11685,7 +11706,7 @@ msgstr "მას ინახავს არჩეულ ტელეფონ
 msgid "The cropped image could not be created."
 msgstr "მოჭრილი სურათის შექმნა ვერ მოხერხდა."
 
-#: packages/admin/src/components/DeviceAuthorizePage.tsx:198
+#: packages/admin/src/components/DeviceAuthorizePage.tsx:230
 msgid "The device will not be granted access."
 msgstr "მოწყობილობას წვდომა არ მიენიჭება."
 
@@ -12029,6 +12050,14 @@ msgstr ""
 msgid "This cannot be undone"
 msgstr "ეს ვერ დაბრუნდება"
 
+#: packages/admin/src/components/DeviceAuthorizePage.tsx:350
+msgid "This code has expired. Start the sign-in again from your terminal to get a new one."
+msgstr ""
+
+#: packages/admin/src/components/DeviceAuthorizePage.tsx:348
+msgid "This code is invalid or has already been used."
+msgstr ""
+
 #: packages/admin/src/components/ContentTypeEditor.tsx:425
 msgid "This collection is defined in code. Some settings cannot be changed here. Edit your live.config.ts file to modify the schema."
 msgstr "ეს კოლექცია კოდშია განსაზღვრული. ზოგიერთი პარამეტრის შეცვლა აქ შეუძლებელია. სქემის შესაცვლელად დაარედაქტირეთ live.config.ts ფაილი."
@@ -12040,6 +12069,10 @@ msgstr "ამ შიგთავსის უსაფრთხოდ რედ
 #: packages/admin/src/components/ContentSettingsPanel.tsx:469
 msgid "This content will be visible on the site immediately."
 msgstr "ეს შიგთავსი საიტზე დაუყოვნებლივ გამოჩნდება."
+
+#: packages/admin/src/components/DeviceAuthorizePage.tsx:370
+msgid "This device is requesting permission to use:"
+msgstr ""
 
 #: packages/admin/src/components/WordPressImport.tsx:1077
 msgid "This doesn't look like a valid migration key. Generate a new one in the plugin and paste the full string starting with \"em1.\"."
@@ -12342,10 +12375,6 @@ msgstr "ეს ვერსია საიტზე არ ჩანს"
 msgid "This will delete the widget area and all its widgets. This action cannot be undone."
 msgstr "ეს წაშლის ვიჯეტების არეალს და მის ყველა ვიჯეტს. ეს მოქმედება ვერ დაბრუნდება."
 
-#: packages/admin/src/components/DeviceAuthorizePage.tsx:276
-msgid "This will grant CLI access with your permissions."
-msgstr "ეს მიანიჭებს CLI-ს წვდომას თქვენი ნებართვებით."
-
 #: packages/admin/src/components/ContentSettingsPanel.tsx:1304
 msgid "This will move the item to trash. You can restore it later from the trash."
 msgstr "ეს ელემენტს სანაგვეში გადაიტანს. მის აღდგენას მოგვიანებით შეძლებთ სანაგვიდან."
@@ -12573,7 +12602,7 @@ msgstr "სცადეთ ხელახლა."
 msgid "Try again. If it keeps failing, check the server logs."
 msgstr ""
 
-#: packages/admin/src/components/DeviceAuthorizePage.tsx:207
+#: packages/admin/src/components/DeviceAuthorizePage.tsx:239
 msgid "Try another code"
 msgstr "სცადეთ სხვა კოდი"
 
@@ -13070,7 +13099,7 @@ msgstr "გამოიყენება URL-ებსა და API-ის ე
 msgid "Used to identify this section. Lowercase letters, numbers, and hyphens only."
 msgstr "გამოიყენება ამ სექციის იდენტიფიკაციისთვის. მხოლოდ პატარა ასოები, ციფრები და დეფისები."
 
-#: packages/admin/src/components/DeviceAuthorizePage.tsx:223
+#: packages/admin/src/components/DeviceAuthorizePage.tsx:255
 #: packages/admin/src/components/Header.tsx:44
 #: packages/admin/src/components/Header.tsx:84
 #: packages/admin/src/components/users/UserList.tsx:91
@@ -13556,7 +13585,7 @@ msgstr "კი"
 msgid "Yoast/RankMath"
 msgstr "Yoast/RankMath"
 
-#: packages/admin/src/components/DeviceAuthorizePage.tsx:188
+#: packages/admin/src/components/DeviceAuthorizePage.tsx:220
 msgid "You can close this page and return to your terminal."
 msgstr "შეგიძლიათ დახუროთ ეს გვერდი და დაუბრუნდეთ ტერმინალს."
 
@@ -13736,6 +13765,10 @@ msgstr "სახელი (არასავალდებულო)"
 #: packages/admin/src/components/WelcomeModal.tsx:46
 msgid "Your Role"
 msgstr "როლი"
+
+#: packages/admin/src/components/DeviceAuthorizePage.tsx:375
+msgid "Your role does not permit any of the permissions this device requested."
+msgstr ""
 
 #. placeholder {0}: formatHoldback(config.policy?.minimumReleaseAgeSeconds ?? 0)
 #: packages/admin/src/components/RegistryPluginDetail.tsx:691

@@ -1469,6 +1469,10 @@ msgstr ""
 msgid "Also match the byline linked to an entry's author when it has none assigned."
 msgstr ""
 
+#: packages/admin/src/components/DeviceAuthorizePage.tsx:381
+msgid "Also requested, but not available to your role:"
+msgstr ""
+
 #: packages/admin/src/components/editor/GalleryDetailPanel.tsx:485
 #: packages/admin/src/components/editor/ImageDetailPanel.tsx:504
 #: packages/admin/src/components/editor/ImageDetailPanel.tsx:508
@@ -1786,19 +1790,19 @@ msgstr "작성자"
 msgid "Author Mapping"
 msgstr "작성자 매핑"
 
-#: packages/admin/src/components/DeviceAuthorizePage.tsx:197
+#: packages/admin/src/components/DeviceAuthorizePage.tsx:229
 msgid "Authorization denied"
 msgstr "승인이 거부되었습니다."
 
-#: packages/admin/src/components/DeviceAuthorizePage.tsx:105
+#: packages/admin/src/components/DeviceAuthorizePage.tsx:152
 msgid "Authorization failed"
 msgstr ""
 
-#: packages/admin/src/components/DeviceAuthorizePage.tsx:259
+#: packages/admin/src/components/DeviceAuthorizePage.tsx:296
 msgid "Authorize"
 msgstr "승인"
 
-#: packages/admin/src/components/DeviceAuthorizePage.tsx:176
+#: packages/admin/src/components/DeviceAuthorizePage.tsx:208
 msgid "Authorize Device"
 msgstr "장치 승인"
 
@@ -1806,7 +1810,7 @@ msgstr "장치 승인"
 msgid "Authorized approvers"
 msgstr ""
 
-#: packages/admin/src/components/DeviceAuthorizePage.tsx:259
+#: packages/admin/src/components/DeviceAuthorizePage.tsx:296
 msgid "Authorizing..."
 msgstr "승인 중..."
 
@@ -2415,9 +2419,13 @@ msgstr "이메일을 확인하세요"
 msgid "Checking {urlInput}..."
 msgstr "{urlInput} 확인 중..."
 
-#: packages/admin/src/components/DeviceAuthorizePage.tsx:155
+#: packages/admin/src/components/DeviceAuthorizePage.tsx:187
 msgid "Checking authentication..."
 msgstr "인증 확인 중..."
+
+#: packages/admin/src/components/DeviceAuthorizePage.tsx:340
+msgid "Checking code..."
+msgstr ""
 
 #. placeholder {0}: deletingField.label
 #: packages/admin/src/routes/byline-schema.tsx:362
@@ -3097,6 +3105,14 @@ msgstr ""
 
 #: packages/admin/src/components/BulkTagDialog.tsx:229
 msgid "Could not add tag"
+msgstr ""
+
+#: packages/admin/src/components/DeviceAuthorizePage.tsx:111
+msgid "Could not check this code"
+msgstr ""
+
+#: packages/admin/src/components/DeviceAuthorizePage.tsx:346
+msgid "Could not check this code."
 msgstr ""
 
 #: packages/admin/src/components/users/InviteUserModal.tsx:136
@@ -3900,7 +3916,7 @@ msgstr ""
 msgid "Demoting..."
 msgstr ""
 
-#: packages/admin/src/components/DeviceAuthorizePage.tsx:270
+#: packages/admin/src/components/DeviceAuthorizePage.tsx:304
 #: packages/admin/src/components/settings/transfer/ApprovalsSection.tsx:108
 msgid "Deny"
 msgstr "거부"
@@ -3957,11 +3973,11 @@ msgstr ""
 msgid "Details"
 msgstr ""
 
-#: packages/admin/src/components/DeviceAuthorizePage.tsx:186
+#: packages/admin/src/components/DeviceAuthorizePage.tsx:218
 msgid "Device authorized"
 msgstr "기기 인증 완료"
 
-#: packages/admin/src/components/DeviceAuthorizePage.tsx:229
+#: packages/admin/src/components/DeviceAuthorizePage.tsx:261
 msgid "Device code"
 msgstr "장치 코드"
 
@@ -4719,7 +4735,7 @@ msgstr "마크다운 콘텐츠를 입력하세요..."
 msgid "Enter name"
 msgstr "이름을 입력하세요"
 
-#: packages/admin/src/components/DeviceAuthorizePage.tsx:177
+#: packages/admin/src/components/DeviceAuthorizePage.tsx:209
 msgid "Enter the code from your terminal"
 msgstr "터미널에서 코드를 입력하세요"
 
@@ -6652,6 +6668,10 @@ msgstr ""
 msgid "Invoke MCP tools from all enabled plugins"
 msgstr ""
 
+#: packages/admin/src/components/DeviceAuthorizePage.tsx:410
+msgid "Invoke MCP tools from the {pluginId} plugin"
+msgstr ""
+
 #: packages/admin/src/components/settings/ApiTokenSettings.tsx:532
 msgid "Invoke only this plugin's enabled MCP tools"
 msgstr ""
@@ -8434,7 +8454,7 @@ msgstr ""
 msgid "One"
 msgstr ""
 
-#: packages/admin/src/components/DeviceAuthorizePage.tsx:278
+#: packages/admin/src/components/DeviceAuthorizePage.tsx:310
 msgid "Only authorize codes you recognize."
 msgstr "본인이 인식하는 코드만 승인하세요."
 
@@ -8923,6 +8943,7 @@ msgstr ""
 msgid "Plugin MCP access updated"
 msgstr ""
 
+#: packages/admin/src/components/DeviceAuthorizePage.tsx:409
 #: packages/admin/src/components/settings/ApiTokenSettings.tsx:97
 msgid "Plugin MCP Tools"
 msgstr ""
@@ -9402,7 +9423,7 @@ msgstr "복구 링크가 {0}(으)로 전송되었습니다."
 msgid "Redirect loop detected"
 msgstr "리디렉션 루프가 감지되었습니다."
 
-#: packages/admin/src/components/DeviceAuthorizePage.tsx:163
+#: packages/admin/src/components/DeviceAuthorizePage.tsx:195
 msgid "Redirecting to login..."
 msgstr "로그인으로 리디렉션 중..."
 
@@ -11050,7 +11071,7 @@ msgid "Sign in with Passkey"
 msgstr "패스키로 로그인"
 
 #. placeholder {0}: user.email
-#: packages/admin/src/components/DeviceAuthorizePage.tsx:190
+#: packages/admin/src/components/DeviceAuthorizePage.tsx:222
 msgid "Signed in as {0}"
 msgstr "{0}(으)로 로그인됨"
 
@@ -11679,7 +11700,7 @@ msgstr ""
 msgid "The cropped image could not be created."
 msgstr ""
 
-#: packages/admin/src/components/DeviceAuthorizePage.tsx:198
+#: packages/admin/src/components/DeviceAuthorizePage.tsx:230
 msgid "The device will not be granted access."
 msgstr "기기에 접근 권한이 부여되지 않습니다."
 
@@ -12023,6 +12044,14 @@ msgstr ""
 msgid "This cannot be undone"
 msgstr ""
 
+#: packages/admin/src/components/DeviceAuthorizePage.tsx:350
+msgid "This code has expired. Start the sign-in again from your terminal to get a new one."
+msgstr ""
+
+#: packages/admin/src/components/DeviceAuthorizePage.tsx:348
+msgid "This code is invalid or has already been used."
+msgstr ""
+
 #: packages/admin/src/components/ContentTypeEditor.tsx:425
 msgid "This collection is defined in code. Some settings cannot be changed here. Edit your live.config.ts file to modify the schema."
 msgstr ""
@@ -12033,6 +12062,10 @@ msgstr ""
 
 #: packages/admin/src/components/ContentSettingsPanel.tsx:469
 msgid "This content will be visible on the site immediately."
+msgstr ""
+
+#: packages/admin/src/components/DeviceAuthorizePage.tsx:370
+msgid "This device is requesting permission to use:"
 msgstr ""
 
 #: packages/admin/src/components/WordPressImport.tsx:1077
@@ -12336,10 +12369,6 @@ msgstr ""
 msgid "This will delete the widget area and all its widgets. This action cannot be undone."
 msgstr ""
 
-#: packages/admin/src/components/DeviceAuthorizePage.tsx:276
-msgid "This will grant CLI access with your permissions."
-msgstr "현재 권한으로 CLI 접근이 허용됩니다."
-
 #: packages/admin/src/components/ContentSettingsPanel.tsx:1304
 msgid "This will move the item to trash. You can restore it later from the trash."
 msgstr "항목이 휴지통으로 이동됩니다. 나중에 휴지통에서 복원할 수 있습니다."
@@ -12567,7 +12596,7 @@ msgstr ""
 msgid "Try again. If it keeps failing, check the server logs."
 msgstr ""
 
-#: packages/admin/src/components/DeviceAuthorizePage.tsx:207
+#: packages/admin/src/components/DeviceAuthorizePage.tsx:239
 msgid "Try another code"
 msgstr "다른 코드를 사용해 보세요"
 
@@ -13064,7 +13093,7 @@ msgstr ""
 msgid "Used to identify this section. Lowercase letters, numbers, and hyphens only."
 msgstr "이 섹션을 식별하는 데 사용됩니다. 소문자, 숫자, 하이픈만 가능합니다."
 
-#: packages/admin/src/components/DeviceAuthorizePage.tsx:223
+#: packages/admin/src/components/DeviceAuthorizePage.tsx:255
 #: packages/admin/src/components/Header.tsx:44
 #: packages/admin/src/components/Header.tsx:84
 #: packages/admin/src/components/users/UserList.tsx:91
@@ -13550,7 +13579,7 @@ msgstr "예"
 msgid "Yoast/RankMath"
 msgstr ""
 
-#: packages/admin/src/components/DeviceAuthorizePage.tsx:188
+#: packages/admin/src/components/DeviceAuthorizePage.tsx:220
 msgid "You can close this page and return to your terminal."
 msgstr "이 페이지를 닫고 터미널로 돌아갈 수 있습니다."
 
@@ -13730,6 +13759,10 @@ msgstr "이름(선택 사항)"
 #: packages/admin/src/components/WelcomeModal.tsx:46
 msgid "Your Role"
 msgstr "내 권한"
+
+#: packages/admin/src/components/DeviceAuthorizePage.tsx:375
+msgid "Your role does not permit any of the permissions this device requested."
+msgstr ""
 
 #. placeholder {0}: formatHoldback(config.policy?.minimumReleaseAgeSeconds ?? 0)
 #: packages/admin/src/components/RegistryPluginDetail.tsx:691
