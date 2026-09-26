@@ -41,14 +41,13 @@ COPY . .
 RUN sed -i '/slidev/d;/verifyDepsBeforeRun/d' pnpm-workspace.yaml
 RUN sed -i 's|file:./data.db|file:./data/data.db|' templates/blog/astro.config.mjs
 
+# Package compilation and the legacy deploy can exceed Node's default heap.
+ENV NODE_OPTIONS=--max-old-space-size=4096
+
 RUN pnpm build && pnpm --filter @emdash-cms/template-blog build
 
 # Bundle the blog template into a standalone deployment
-# The legacy deploy reads the whole workspace lockfile and needs more than the
-# ~2 GB heap Node gives itself on a Docker Desktop VM of 8 GB or less, where it
-# dies with "Reached heap limit". Make the heap explicit so the build does not
-# depend on the size of the machine running it.
-RUN NODE_OPTIONS=--max-old-space-size=4096 pnpm --filter @emdash-cms/template-blog deploy /deploy --prod --legacy
+RUN pnpm --filter @emdash-cms/template-blog deploy /deploy --prod --legacy
 
 # Copy build output and seed data into the deploy directory
 RUN cp -r /app/templates/blog/dist /deploy/dist
