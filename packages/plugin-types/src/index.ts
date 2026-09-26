@@ -30,6 +30,8 @@
  * the manifest shape may evolve before the registry phase 1 cutover.
  */
 
+import type { ManifestRouteEntry } from "./routes.js";
+
 // ── Plugin capability vocabulary ─────────────────────────────────────────────
 
 /**
@@ -56,6 +58,8 @@ export type PluginCapability =
 	| "comments:moderate"
 	// Schema
 	| "schema:read"
+	| "admin.editor-draft:read"
+	| "admin.editor-draft:patch"
 	| "hooks.content-policy:register"
 	// Taxonomies
 	| "taxonomies:read"
@@ -209,6 +213,7 @@ export interface DeclaredAccess {
 	};
 	comments?: { read?: AccessConstraints; moderate?: AccessConstraints };
 	schema?: { read?: AccessConstraints };
+	admin?: { editorDraftRead?: AccessConstraints; editorDraftPatch?: AccessConstraints };
 	taxonomies?: { read?: AccessConstraints; write?: AccessConstraints };
 	redirects?: { read?: AccessConstraints; write?: AccessConstraints };
 	media?: {
@@ -261,6 +266,8 @@ export function capabilitiesToDeclaredAccess(
 	}
 	if (caps.has("content:revisions:read")) (out.content ??= {}).revisionsRead = {};
 	if (caps.has("schema:read")) out.schema = { read: {} };
+	if (caps.has("admin.editor-draft:read")) (out.admin ??= {}).editorDraftRead = {};
+	if (caps.has("admin.editor-draft:patch")) (out.admin ??= {}).editorDraftPatch = {};
 	if (caps.has("taxonomies:read") || caps.has("taxonomies:write")) {
 		out.taxonomies = { read: {} };
 		if (caps.has("taxonomies:write")) out.taxonomies.write = {};
@@ -329,6 +336,8 @@ export function declaredAccessToCapabilities(declaredAccess: DeclaredAccess): {
 		caps.add("comments:read");
 	}
 	if (declaredAccess.schema?.read) caps.add("schema:read");
+	if (declaredAccess.admin?.editorDraftRead) caps.add("admin.editor-draft:read");
+	if (declaredAccess.admin?.editorDraftPatch) caps.add("admin.editor-draft:patch");
 	if (declaredAccess.content?.policy) caps.add("hooks.content-policy:register");
 	if (declaredAccess.taxonomies?.read) caps.add("taxonomies:read");
 	if (declaredAccess.taxonomies?.write) {
@@ -393,17 +402,37 @@ export interface ManifestHookEntry {
  * Route entry in a plugin manifest. Either a plain route name or a structured
  * entry with the `public` flag set.
  */
-export interface ManifestRouteEntry {
-	name: string;
-	public?: boolean;
-	/** RBAC permission required to invoke this route. */
-	permission?: string;
-	/**
-	 * Cache-Control value for successful GET responses. Only honored on
-	 * routes that are also `public: true`.
-	 */
-	cacheControl?: string;
-}
+export type {
+	ManifestRouteEntry,
+	PluginFormData,
+	PluginFormDataFileEntry,
+	PluginFormDataTextEntry,
+	PluginRouteBodyMode,
+	PluginRouteMethod,
+	PluginRouteQuery,
+	PluginRouteRequest,
+	PluginRouteResponseMode,
+	RouteOptions,
+} from "./routes.js";
+export {
+	extractManifestRoute,
+	extractRouteOptions,
+	isJsonPostRouteContract,
+	manifestRouteEntrySchema,
+	normalizeManifestRoute,
+	PLUGIN_ROUTE_BODY_MODES,
+	PLUGIN_ROUTE_DEFAULT_BODY_BYTES,
+	PLUGIN_ROUTE_MAX_BODY_BYTES,
+	PLUGIN_ROUTE_MAX_DECLARED_HEADERS,
+	PLUGIN_ROUTE_MAX_FILENAME_BYTES,
+	PLUGIN_ROUTE_MAX_MULTIPART_PART_BYTES,
+	PLUGIN_ROUTE_MAX_MULTIPART_PARTS,
+	PLUGIN_ROUTE_METHODS,
+	PLUGIN_ROUTE_RESPONSE_MODES,
+	pluginRouteRequestSchema,
+	routeNameSchema,
+	routeOptionsSchema,
+} from "./routes.js";
 
 /** JSON Schema persisted in plugin manifests for cross-isolate discovery. */
 export type PluginJsonSchema = Record<string, unknown>;
@@ -453,12 +482,23 @@ export interface StorageCollectionConfig {
  */
 export type PluginStorageConfig = Record<string, StorageCollectionConfig>;
 
+export interface PluginEditorDraftFieldSelector {
+	fields?: string[];
+	translatable?: true;
+}
+
+export interface PluginEditorDraftAccess {
+	read?: PluginEditorDraftFieldSelector;
+	patch?: PluginEditorDraftFieldSelector;
+}
+
 export interface PluginEditorPanel {
 	id: string;
 	title: string;
 	route: string;
 	collections?: string[];
 	order?: number;
+	draft?: PluginEditorDraftAccess;
 }
 
 export interface PluginEditorActionConfirm {
@@ -477,6 +517,7 @@ export interface PluginEditorAction {
 	collections?: string[];
 	style?: "default" | "danger";
 	confirm?: PluginEditorActionConfirm;
+	draft?: PluginEditorDraftAccess;
 }
 
 /**
@@ -613,7 +654,6 @@ export {
 	DEPRECATED_PLUGIN_CAPABILITIES,
 	HOOK_NAMES,
 	normalizeManifestHook,
-	normalizeManifestRoute,
 	PLUGIN_CAPABILITIES,
 	pluginManifestSchema,
 	reconcileManifestAccess,

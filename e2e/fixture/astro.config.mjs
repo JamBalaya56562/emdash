@@ -4,23 +4,31 @@
  * Uses env vars for the database path and optional marketplace URL
  * so each test run gets an isolated database.
  */
+import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 
 import node from "@astrojs/node";
 import react from "@astrojs/react";
 import { colorPlugin } from "@emdash-cms/plugin-color";
+import registryTestPlugin from "@emdash-cms/plugin-marketplace-test";
 import { defineConfig } from "astro/config";
 import emdash from "emdash/astro";
 import { sqlite } from "emdash/db";
+import { installRegistryAuthoritativeFixture } from "emdash/testing/registry";
 
 const dbUrl = process.env.EMDASH_TEST_DB || "file:./test.db";
 const marketplaceUrl = process.env.EMDASH_MARKETPLACE_URL || undefined;
+const registryUrl = process.env.EMDASH_REGISTRY_URL || undefined;
+const registryFixturePath = process.env.EMDASH_REGISTRY_FIXTURE;
+if (registryFixturePath) {
+	installRegistryAuthoritativeFixture(JSON.parse(readFileSync(registryFixturePath, "utf8")));
+}
 const editorExtensionsPlugin = {
 	id: "editor-extensions-test",
 	version: "1.0.0",
 	format: "standard",
 	entrypoint: fileURLToPath(new URL("./src/editor-extensions-plugin.ts", import.meta.url)),
-	capabilities: [],
+	capabilities: ["admin.editor-draft:read", "admin.editor-draft:patch"],
 	allowedHosts: [],
 	storage: {},
 	editorPanels: [
@@ -30,6 +38,10 @@ const editorExtensionsPlugin = {
 			route: "entry-health",
 			collections: ["posts"],
 			order: 20,
+			draft: {
+				read: { fields: ["title", "body"] },
+				patch: { fields: ["title", "body"] },
+			},
 		},
 	],
 	editorActions: [
@@ -59,8 +71,10 @@ export default defineConfig({
 			database: sqlite({ url: dbUrl }),
 			middleware: { outer: "./src/outer-middleware.ts" },
 			plugins: [colorPlugin(), editorExtensionsPlugin],
+			sandboxed: [{ ...registryTestPlugin, hooks: [] }],
 			marketplace: marketplaceUrl,
-			sandboxRunner: marketplaceUrl ? "./noop-sandbox.mjs" : undefined,
+			registry: registryUrl,
+			sandboxRunner: "@emdash-cms/sandbox-workerd",
 		}),
 	],
 	i18n: {

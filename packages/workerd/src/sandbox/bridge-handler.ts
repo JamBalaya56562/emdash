@@ -29,10 +29,11 @@ import {
 	createMediaAccess,
 	createSandboxRouteErrorEnvelope,
 	createUnrestrictedHttpAccess,
-	normalizeCapabilities,
+	normalizePluginCapabilities,
 	OptionsRepository,
 	parsePluginMediaMetadataPatch,
 	PluginStorageRepository,
+	PLUGIN_HTTP_MAX_REQUEST_BYTES,
 	readPluginMediaBytes,
 	RedirectAccessError,
 	StorageSerializationError,
@@ -51,6 +52,7 @@ import type {
 	RedirectCreateInput,
 	RedirectListOptions,
 	RedirectUpdateInput,
+	PluginHttpResponseWire,
 	SandboxEmailSendCallback,
 	PluginSecretRedactor,
 	SettingField,
@@ -135,6 +137,7 @@ const SYSTEM_COLUMNS = new Set([
 	"slug",
 	"status",
 	"author_id",
+	"primary_byline_id",
 	"created_at",
 	"updated_at",
 	"published_at",
@@ -178,7 +181,12 @@ export interface BridgeHandlerOptions {
 	i18nConfig?: I18nConfig | null;
 	siteInfo?: SiteInfo;
 	db: Kysely<Database>;
-	beforeContentWrite?: () => Promise<void>;
+	/**
+	 * Called immediately before a content write; it throws to refuse the
+	 * write. When it returns a function, that function is called once the
+	 * write has succeeded.
+	 */
+	beforeContentWrite?: () => Promise<void | (() => Promise<void>)>;
 	contentCreate?: SandboxContentCreateCallback;
 	contentCreateProvider?: () => SandboxContentCreateCallback | null;
 	taxonomyWrite?: TaxonomyAccessWithWrite;
@@ -187,6 +195,7 @@ export interface BridgeHandlerOptions {
 	commentModerate?: () => SandboxCommentModerateCallback | null;
 	cronReschedule?: () => void;
 	now?: () => Date;
+	httpFetch?: typeof fetch;
 	/** Storage for media uploads. Optional; media/upload throws if not provided. */
 	storage?: BridgeStorage | null;
 }
@@ -206,6 +215,19 @@ async function redirectBridgeResult<T>(action: () => Promise<T>): Promise<Redire
 	}
 }
 
+function bridgeJsonReplacer(_key: string, value: unknown): unknown {
+	if (value instanceof Uint8Array) {
+		return { __emdashBytes: Buffer.from(value).toString("base64") };
+	}
+	if (value && typeof value === "object" && !Array.isArray(value)) {
+		const keys = Object.keys(value);
+		if (keys.length === 1 && (keys[0] === "__emdashBytes" || keys[0] === "__emdashEscapedObject")) {
+			return { __emdashEscapedObject: Object.entries(value) };
+		}
+	}
+	return value;
+}
+
 /**
  * Create a bridge handler function scoped to a specific plugin.
  * Returns an async function that takes a Request and returns a Response.
@@ -213,10 +235,7 @@ async function redirectBridgeResult<T>(action: () => Promise<T>): Promise<Redire
 export function createBridgeHandler(
 	opts: BridgeHandlerOptions,
 ): (request: Request) => Promise<Response> {
-	const capabilities = normalizeCapabilities(opts.capabilities);
-	if (capabilities.includes("comments:moderate") && !capabilities.includes("comments:read")) {
-		capabilities.push("comments:read");
-	}
+	const capabilities = normalizePluginCapabilities(opts.capabilities);
 	const normalizedOpts = {
 		...opts,
 		capabilities,
@@ -241,7 +260,9 @@ export function createBridgeHandler(
 			}
 
 			const result = await dispatch(normalizedOpts, method, body);
-			return Response.json({ result });
+			return new Response(JSON.stringify({ result }, bridgeJsonReplacer), {
+				headers: { "Content-Type": "application/json" },
+			});
 		} catch (error) {
 			if (typeof error === "object" && error !== null && "code" in error) {
 				const code = error.code;
@@ -506,47 +527,50 @@ async function dispatch(
 					code: "VALIDATION_ERROR",
 				});
 			}
-			await opts.beforeContentWrite?.();
-			const runtimeContentCreate = opts.contentCreateProvider?.() ?? opts.contentCreate;
-			if (runtimeContentCreate) {
-				const originHookValue = optionalString(body, "originHook");
-				const originHook =
-					originHookValue === "content:beforeSave" || originHookValue === "content:afterSave"
-						? originHookValue
-						: undefined;
-				return runtimeContentCreate(
-					pluginId,
+			return guardedContentWrite(opts, () => {
+				const runtimeContentCreate = opts.contentCreateProvider?.() ?? opts.contentCreate;
+				if (runtimeContentCreate) {
+					const originHookValue = optionalString(body, "originHook");
+					const originHook =
+						originHookValue === "content:beforeSave" || originHookValue === "content:afterSave"
+							? originHookValue
+							: undefined;
+					return runtimeContentCreate(
+						pluginId,
+						requireString(body, "collection"),
+						requireRecord(body, "data"),
+						{
+							locale,
+							translationOf: createOptions
+								? optionalString(createOptions, "translationOf")
+								: undefined,
+							originHook,
+							sandboxOrigin: true,
+						},
+					);
+				}
+				return contentCreate(
+					db,
 					requireString(body, "collection"),
 					requireRecord(body, "data"),
-					{
-						locale,
-						translationOf: createOptions
-							? optionalString(createOptions, "translationOf")
-							: undefined,
-						originHook,
-						sandboxOrigin: true,
-					},
+					locale,
 				);
-			}
-			return contentCreate(
-				db,
-				requireString(body, "collection"),
-				requireRecord(body, "data"),
-				locale,
-			);
+			});
 		case "content/update":
 			requireCapability(opts, "content:write");
-			await opts.beforeContentWrite?.();
-			return contentUpdate(
-				db,
-				requireString(body, "collection"),
-				requireString(body, "id"),
-				requireRecord(body, "data"),
+			return guardedContentWrite(opts, () =>
+				contentUpdate(
+					db,
+					requireString(body, "collection"),
+					requireString(body, "id"),
+					requireRecord(body, "data"),
+				),
 			);
 		case "content/delete":
 			requireCapability(opts, "content:write");
-			await opts.beforeContentWrite?.();
-			return contentDelete(db, requireString(body, "collection"), requireString(body, "id"));
+			return guardedContentWrite(opts, () =>
+				contentDelete(db, requireString(body, "collection"), requireString(body, "id")),
+			);
 		case "content/getVersioned":
 			requireCapability(opts, "content:publish");
 			return requireContentActions(opts).getVersioned(
@@ -612,28 +636,27 @@ async function dispatch(
 		case "content/createMany":
 			requireCapability(opts, "content:write");
 			const createManyLocale = resolveContentCreateLocale(undefined, opts.i18nConfig ?? null);
-			await opts.beforeContentWrite?.();
-			return contentCreateMany(
-				db,
-				requireString(body, "collection"),
-				requireRecordArray(body, "items"),
-				createManyLocale,
+			return guardedContentWrite(opts, () =>
+				contentCreateMany(
+					db,
+					requireString(body, "collection"),
+					requireRecordArray(body, "items"),
+					createManyLocale,
+				),
 			);
 		case "content/updateMany":
 			requireCapability(opts, "content:write");
-			await opts.beforeContentWrite?.();
-			return contentUpdateMany(
-				db,
-				requireString(body, "collection"),
-				requireUpdateManyItems(body, "items"),
+			return guardedContentWrite(opts, () =>
+				contentUpdateMany(
+					db,
+					requireString(body, "collection"),
+					requireUpdateManyItems(body, "items"),
+				),
 			);
 		case "content/deleteMany":
 			requireCapability(opts, "content:write");
-			await opts.beforeContentWrite?.();
-			return contentDeleteMany(
-				db,
-				requireString(body, "collection"),
-				requireStringArray(body, "ids"),
+			return guardedContentWrite(opts, () =>
+				contentDeleteMany(db, requireString(body, "collection"), requireStringArray(body, "ids")),
 			);
 
 		// ── Comments ────────────────────────────────────────────────────
@@ -925,7 +948,14 @@ async function dispatch(
 // value is typed via flow analysis rather than via a `as T` assertion. This
 // keeps the @typescript-eslint/no-unsafe-type-assertion rule clean.
 
-type EmailMessage = { to: string; subject: string; text: string; html?: string };
+type EmailMessage = {
+	to: string;
+	cc?: string[];
+	replyTo?: string;
+	subject: string;
+	text: string;
+	html?: string;
+};
 type LogLevel = "debug" | "info" | "warn" | "error";
 type UpdateManyItem = { id: string; data: Record<string, unknown> };
 type StorageItem = { id: string; data: unknown };
@@ -979,6 +1009,8 @@ function isEmailMessage(value: unknown): value is EmailMessage {
 	if (typeof value.subject !== "string") return false;
 	if (typeof value.text !== "string") return false;
 	if (value.html !== undefined && typeof value.html !== "string") return false;
+	if (value.cc !== undefined && !isStringArray(value.cc)) return false;
+	if (value.replyTo !== undefined && typeof value.replyTo !== "string") return false;
 	return true;
 }
 
@@ -1196,7 +1228,9 @@ function requireMediaBytes(body: Record<string, unknown>, key: string): string |
 function requireEmailMessage(body: Record<string, unknown>, key: string): EmailMessage {
 	const value = body[key];
 	if (!isEmailMessage(value)) {
-		throw new Error("email/send requires message with to, subject, and text");
+		throw new Error(
+			"email/send requires message with to, subject, and text; cc must be an array of strings and replyTo a string",
+		);
 	}
 	return value;
 }
@@ -1255,6 +1289,16 @@ function requireCapability(opts: BridgeHandlerOptions, capability: string): void
 		// Error message matches Cloudflare PluginBridge format
 		throw new Error(`Missing capability: ${capability}`);
 	}
+}
+
+async function guardedContentWrite<T>(
+	opts: BridgeHandlerOptions,
+	write: () => Promise<T>,
+): Promise<T> {
+	const recordWrite = await opts.beforeContentWrite?.();
+	const result = await write();
+	if (typeof recordWrite === "function") await recordWrite();
+	return result;
 }
 
 function requireContentActions(opts: BridgeHandlerOptions): ContentActionCallbacks {
@@ -1651,7 +1695,7 @@ async function contentCreate(
 		id,
 		slug: typeof data.slug === "string" ? data.slug : null,
 		status: typeof data.status === "string" ? data.status : "draft",
-		author_id: typeof data.author_id === "string" ? data.author_id : null,
+		author_id: null,
 		created_at: now,
 		updated_at: now,
 		version: 1,
@@ -2045,14 +2089,7 @@ async function mediaDelete(
 
 // ── HTTP Operations ──────────────────────────────────────────────────────
 
-/** A multipart form part as marshaled by the wrapper. */
-interface MarshaledFormDataPart {
-	name: string;
-	value: string;
-	filename?: string;
-	type?: string;
-	isBlob?: boolean;
-}
+const BASE64_BODY_PATTERN = /^[A-Za-z0-9+/]*={0,2}$/;
 
 /** Marshaled RequestInit shape sent over the bridge from the wrapper. */
 interface MarshaledRequestInit {
@@ -2060,28 +2097,8 @@ interface MarshaledRequestInit {
 	redirect?: RequestRedirect;
 	/** List of [name, value] pairs to preserve multi-value headers */
 	headers?: Array<[string, string]>;
-	/**
-	 * Body is discriminated by bodyType. The wrapper (see wrapper.ts:
-	 * marshalRequestInit) guarantees the shape, but we validate defensively
-	 * at unmarshal time so a misbehaving plugin can't smuggle unexpected
-	 * data into the host fetch.
-	 */
-	bodyType?: "string" | "base64" | "formdata";
-	body?: string | MarshaledFormDataPart[];
-}
-
-function isFormDataPart(value: unknown): value is MarshaledFormDataPart {
-	if (!isRecord(value)) return false;
-	if (typeof value.name !== "string") return false;
-	if (typeof value.value !== "string") return false;
-	if (value.filename !== undefined && typeof value.filename !== "string") return false;
-	if (value.type !== undefined && typeof value.type !== "string") return false;
-	if (value.isBlob !== undefined && typeof value.isBlob !== "boolean") return false;
-	return true;
-}
-
-function isFormDataPartArray(value: unknown): value is MarshaledFormDataPart[] {
-	return Array.isArray(value) && value.every(isFormDataPart);
+	bodyType?: "base64";
+	body?: string;
 }
 
 function isMarshaledHeaders(value: unknown): value is Array<[string, string]> {
@@ -2122,34 +2139,26 @@ function parseMarshaledRequestInit(value: unknown): MarshaledRequestInit | undef
 		out.headers = value.headers;
 	}
 	if (value.bodyType !== undefined) {
-		if (
-			value.bodyType !== "string" &&
-			value.bodyType !== "base64" &&
-			value.bodyType !== "formdata"
-		) {
-			throw new Error('http/fetch: init.bodyType must be "string", "base64", or "formdata"');
+		if (value.bodyType !== "base64") {
+			throw new Error('http/fetch: init.bodyType must be "base64"');
 		}
 		out.bodyType = value.bodyType;
 	}
 	if (value.body !== undefined) {
-		if (out.bodyType === "formdata") {
-			if (!isFormDataPartArray(value.body)) {
-				throw new Error("http/fetch: formdata body must be an array of form parts");
-			}
-			out.body = value.body;
-		} else {
-			if (typeof value.body !== "string") {
-				throw new Error("http/fetch: string/base64 body must be a string");
-			}
-			out.body = value.body;
+		if (typeof value.body !== "string") {
+			throw new Error("http/fetch: base64 body must be a string");
 		}
+		out.body = value.body;
+	}
+	if ((out.bodyType === undefined) !== (out.body === undefined)) {
+		throw new Error("http/fetch: init.bodyType and init.body must be present together");
 	}
 	return out;
 }
 
 /**
  * Reverse the wrapper's marshalRequestInit() to reconstruct a real RequestInit
- * with proper Headers, binary bodies, and FormData.
+ * with proper Headers and a buffered binary body.
  */
 function unmarshalRequestInit(
 	marshaled: MarshaledRequestInit | undefined,
@@ -2167,32 +2176,18 @@ function unmarshalRequestInit(
 		}
 		init.headers = headers;
 	}
-	if (marshaled.bodyType && marshaled.body !== undefined) {
-		switch (marshaled.bodyType) {
-			case "string":
-				if (typeof marshaled.body !== "string") break;
-				init.body = marshaled.body;
-				break;
-			case "base64":
-				if (typeof marshaled.body !== "string") break;
-				init.body = Buffer.from(marshaled.body, "base64");
-				break;
-			case "formdata": {
-				if (!Array.isArray(marshaled.body)) break;
-				const fd = new FormData();
-				for (const part of marshaled.body) {
-					if (part.isBlob) {
-						const bytes = Buffer.from(part.value, "base64");
-						const blob = new Blob([bytes], { type: part.type || "application/octet-stream" });
-						fd.append(part.name, blob, part.filename);
-					} else {
-						fd.append(part.name, part.value);
-					}
-				}
-				init.body = fd;
-				break;
-			}
+	if (marshaled.bodyType === "base64" && marshaled.body !== undefined) {
+		if (marshaled.body.length % 4 !== 0 || !BASE64_BODY_PATTERN.test(marshaled.body)) {
+			throw new Error("http/fetch: body is not valid base64");
 		}
+		const padding = marshaled.body.endsWith("==") ? 2 : marshaled.body.endsWith("=") ? 1 : 0;
+		const decodedLength = (marshaled.body.length / 4) * 3 - padding;
+		if (decodedLength > PLUGIN_HTTP_MAX_REQUEST_BYTES) {
+			throw new Error(
+				`Plugin HTTP request body exceeds the ${PLUGIN_HTTP_MAX_REQUEST_BYTES} byte limit`,
+			);
+		}
+		init.body = Buffer.from(marshaled.body, "base64");
 	}
 	return init;
 }
@@ -2201,30 +2196,25 @@ async function httpFetch(
 	url: string,
 	marshaledInit: unknown,
 	opts: BridgeHandlerOptions,
-): Promise<{
-	status: number;
-	statusText: string;
-	headers: Record<string, string>;
-	bodyBase64: string;
-}> {
+): Promise<PluginHttpResponseWire> {
 	const hasAnyFetch = opts.capabilities.includes("network:request:unrestricted");
 	const httpAccess = hasAnyFetch
-		? createUnrestrictedHttpAccess(opts.pluginId)
-		: createHttpAccess(opts.pluginId, opts.allowedHosts || []);
+		? createUnrestrictedHttpAccess(opts.pluginId, opts.httpFetch)
+		: createHttpAccess(opts.pluginId, opts.allowedHosts || [], opts.httpFetch);
 
 	const init = unmarshalRequestInit(parseMarshaledRequestInit(marshaledInit));
 	const res = await httpAccess.fetch(url, init);
 	// Read as bytes to preserve binary content (images, audio, etc.)
 	const bytes = new Uint8Array(await res.arrayBuffer());
-	const headers: Record<string, string> = {};
-	res.headers.forEach((v, k) => {
-		headers[k] = v;
-	});
+	const headers: Array<[string, string]> = [];
+	res.headers.forEach((value, key) => headers.push([key, value]));
 	return {
 		status: res.status,
 		statusText: res.statusText,
 		headers,
-		bodyBase64: Buffer.from(bytes).toString("base64"),
+		finalUrl: res.url || url,
+		redirected: res.redirected,
+		body: bytes,
 	};
 }
 

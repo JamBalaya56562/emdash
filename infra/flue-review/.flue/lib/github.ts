@@ -9,6 +9,8 @@
 // review. The app needs `pull_requests: write`, `checks: write`, and
 // `contents: read`.
 
+import { limitUtf8Text } from "./byte-budget.js";
+import type { PullRequestRevision, ReviewHeadMove } from "./review-head.js";
 import type { ReviewResult } from "./review-schema.js";
 
 const GITHUB_API = "https://api.github.com";
@@ -18,7 +20,13 @@ const REVIEW_RATE_LIMIT_RETRIES = 3;
 const REVIEW_RATE_LIMIT_FALLBACK_MS = 60_000;
 const REVIEW_RATE_LIMIT_MAX_DELAY_MS = 60 * 60_000;
 const REVIEW_RATE_LIMIT_RESET_BUFFER_MS = 1_000;
+const INLINE_PERMIT_WAIT_MS = 5_000;
+export const POST_MODEL_PERMIT_WAIT_MS = REVIEW_RATE_LIMIT_MAX_DELAY_MS;
 const RATE_LIMIT_ERROR = /\brate limit\b/i;
+const AUTO_FORMAT_MESSAGE = "style: format";
+const EMDASH_BOT_LOGIN = "emdashbot[bot]";
+const AUTO_FORMAT_NAME = "emdashbot[bot]";
+const AUTO_FORMAT_EMAIL = "emdashbot[bot]@users.noreply.github.com";
 const GITHUB_HEADERS = {
 	accept: "application/vnd.github+json",
 	"content-type": "application/json",
@@ -28,6 +36,7 @@ const GITHUB_HEADERS = {
 
 export interface GitHubRateLimitGate {
 	permit(category: string, consumer: string): Promise<{ allowed: boolean; retryAt: number }>;
+	getInstallationToken(): Promise<string>;
 	record(
 		category: string,
 		consumer: string,
@@ -61,6 +70,20 @@ class ExternalGitHubRateLimitGate implements GitHubRateLimitGate {
 		return { allowed: value.allowed, retryAt: value.retryAt };
 	}
 
+	async getInstallationToken(): Promise<string> {
+		const response = await this.stub.fetch("http://github-rate-limit/token");
+		if (!response.ok) throw new Error(`GitHub token broker failed: ${response.status}`);
+		const payload = await response.json<unknown>();
+		if (!payload || typeof payload !== "object" || !("token" in payload)) {
+			throw new Error("GitHub token broker response was invalid");
+		}
+		const token = payload.token;
+		if (typeof token !== "string" || token.length === 0) {
+			throw new Error("GitHub token broker response was invalid");
+		}
+		return token;
+	}
+
 	async record(
 		category: string,
 		consumer: string,
@@ -83,7 +106,12 @@ export function githubRateLimitGate(env: Env): GitHubRateLimitGate {
 
 export type GitHubToken =
 	| string
-	| { readonly token: string; readonly gate: GitHubRateLimitGate; readonly consumer: string };
+	| {
+			readonly token: string;
+			readonly gate: GitHubRateLimitGate;
+			readonly consumer: string;
+			readonly maxPermitWaitMs?: number;
+	  };
 
 function tokenValue(token: GitHubToken): string {
 	return typeof token === "string" ? token : token.token;
@@ -117,6 +145,22 @@ function responseMetadata(response: Response, now = Date.now()) {
 	};
 }
 
+async function acquireGitHubPermit(
+	gate: GitHubRateLimitGate,
+	category: string,
+	consumer: string,
+	maxWaitMs = INLINE_PERMIT_WAIT_MS,
+) {
+	const deadline = Date.now() + maxWaitMs;
+	for (;;) {
+		const permit = await gate.permit(category, consumer);
+		if (permit.allowed) return permit;
+		const now = Date.now();
+		if (now >= deadline || permit.retryAt > deadline) return permit;
+		await sleep(Math.max(1, permit.retryAt - now));
+	}
+}
+
 async function githubFetch(
 	input: string,
 	init: RequestInit = {},
@@ -125,7 +169,12 @@ async function githubFetch(
 	const coordinated = token && typeof token !== "string" ? token : null;
 	const category = new URL(input).pathname === "/graphql" ? "graphql" : "review-rest";
 	if (coordinated) {
-		const permit = await coordinated.gate.permit(category, coordinated.consumer);
+		const permit = await acquireGitHubPermit(
+			coordinated.gate,
+			category,
+			coordinated.consumer,
+			coordinated.maxPermitWaitMs,
+		);
 		if (!permit.allowed) {
 			throw new GitHubRateLimitError(
 				`GitHub request suppressed until ${new Date(permit.retryAt).toISOString()}`,
@@ -202,6 +251,7 @@ export class GitHubRateLimitError extends Error {
 }
 
 interface ReviewRetryOptions {
+	pullRequestAuthorLogin?: string;
 	beforeRetry?: (input: {
 		retry: number;
 		maxRetries: number;
@@ -597,12 +647,12 @@ export async function fetchUnifiedDiff(
 	return res.text();
 }
 
-export async function fetchPullRequestHeadSha(
+export async function fetchPullRequestRevision(
 	token: GitHubToken,
 	owner: string,
 	repo: string,
 	prNumber: number,
-): Promise<string> {
+): Promise<PullRequestRevision> {
 	const res = await coordinatedFetch(
 		token,
 		`${GITHUB_API}/repos/${owner}/${repo}/pulls/${prNumber}`,
@@ -610,16 +660,165 @@ export async function fetchPullRequestHeadSha(
 			headers: installationHeaders(token),
 		},
 	);
-	await requireGitHubResponse(res, "fetch pull request head");
-	const pull = await res.json<{ head?: { sha?: string } }>();
-	if (!pull.head?.sha) throw new Error("Pull request response did not include a head SHA");
-	return pull.head.sha;
+	await requireGitHubResponse(res, "fetch pull request revision");
+	const pull = await res.json<{ head?: { sha?: string }; base?: { sha?: string } }>();
+	if (!pull.head?.sha || !pull.base?.sha) {
+		throw new Error("Pull request response did not include base and head SHAs");
+	}
+	return { headSha: pull.head.sha, baseSha: pull.base.sha };
+}
+
+interface ComparisonCommit {
+	author?: { login?: string; type?: string } | null;
+	commit?: {
+		author?: { name?: string; email?: string } | null;
+		message?: string;
+	};
+}
+
+function isAutoFormatCommit(commit: ComparisonCommit): boolean {
+	return (
+		commit.commit?.message?.split("\n", 1)[0] === AUTO_FORMAT_MESSAGE &&
+		commit.author?.login === EMDASH_BOT_LOGIN &&
+		commit.author.type === "Bot" &&
+		commit.commit.author?.name === AUTO_FORMAT_NAME &&
+		commit.commit.author.email === AUTO_FORMAT_EMAIL
+	);
+}
+
+export async function classifyPullRequestHeadMove(
+	token: GitHubToken,
+	owner: string,
+	repo: string,
+	fromHeadSha: string,
+	toHeadSha: string,
+): Promise<ReviewHeadMove> {
+	const res = await coordinatedFetch(
+		token,
+		`${GITHUB_API}/repos/${owner}/${repo}/compare/${encodeURIComponent(fromHeadSha)}...${encodeURIComponent(toHeadSha)}`,
+		{ headers: installationHeaders(token) },
+	);
+	await requireGitHubResponse(res, "compare pull request heads");
+	const comparison = await res.json<{
+		status?: string;
+		total_commits?: number;
+		commits?: ComparisonCommit[];
+	}>();
+	if (
+		comparison.status !== "ahead" ||
+		!Number.isInteger(comparison.total_commits) ||
+		!comparison.total_commits ||
+		comparison.commits?.length !== comparison.total_commits
+	) {
+		return "substantive";
+	}
+	return comparison.commits.every(isAutoFormatCommit) ? "format_only" : "substantive";
+}
+
+const REVIEWER_LOGIN = "emdashbot[bot]";
+const PRIOR_FINDINGS_MAX_CHARS = 30_000;
+const PRIOR_COMMENT_MAX_BYTES = 4_000;
+const REVIEW_COMMENTS_PAGE_SIZE = 100;
+const LINE_BREAK = /\r\n|[\n\r\u2028\u2029]/;
+
+interface ReviewComment {
+	id?: number;
+	in_reply_to_id?: number | null;
+	user?: { login?: string } | null;
+	author_association?: string | null;
+	body?: string;
+	path?: string;
+	line?: number | null;
+	original_line?: number | null;
+	created_at?: string;
+}
+
+async function fetchNewestReviewComments(
+	token: GitHubToken,
+	owner: string,
+	repo: string,
+	prNumber: number,
+): Promise<ReviewComment[]> {
+	const res = await githubFetch(
+		`${GITHUB_API}/repos/${owner}/${repo}/pulls/${prNumber}/comments?sort=created&direction=desc&per_page=${REVIEW_COMMENTS_PAGE_SIZE}`,
+		{ headers: installationHeaders(token) },
+		token,
+	);
+	await requireGitHubResponse(res, "list review comments");
+	return res.json<ReviewComment[]>();
 }
 
 /**
- * Fetch the most recent emdashbot[bot] review body for a re-review, so the
- * agent can avoid re-flagging already-addressed findings. Returns undefined on
- * a first review or any failure (non-fatal: we just review fresh).
+ * Quoted, so a line inside a comment body cannot pass for a reply header of
+ * its own.
+ */
+function quote(text: string, spaces: number): string {
+	const pad = " ".repeat(spaces);
+	return limitUtf8Text(text.trim(), PRIOR_COMMENT_MAX_BYTES, " … (truncated)")
+		.split(LINE_BREAK)
+		.map((line) => `${pad}> ${line}`)
+		.join("\n");
+}
+
+function byCreated(a: ReviewComment, b: ReviewComment): number {
+	return (a.created_at ?? "").localeCompare(b.created_at ?? "");
+}
+
+function renderPriorFindings(comments: readonly ReviewComment[]): string {
+	const findings: ReviewComment[] = [];
+	const replies = new Map<number, ReviewComment[]>();
+	for (const comment of comments) {
+		if (typeof comment.in_reply_to_id === "number") {
+			replies.set(comment.in_reply_to_id, [
+				...(replies.get(comment.in_reply_to_id) ?? []),
+				comment,
+			]);
+		} else if (comment.user?.login === REVIEWER_LOGIN) {
+			findings.push(comment);
+		}
+	}
+	if (findings.length === 0) return "";
+	const threads = findings
+		.toSorted((a, b) => byCreated(b, a))
+		.map((finding) => {
+			// GitHub reports `line: null` once a push has changed the code under
+			// the comment; `original_line` then numbers an older commit.
+			const anchor =
+				typeof finding.line === "number"
+					? `${finding.path}:${finding.line}`
+					: `${finding.path}:${finding.original_line} (outdated: the code under it has changed since)`;
+			const lines = [`- \`${anchor}\``, quote(finding.body ?? "", 2)];
+			const thread = finding.id === undefined ? [] : (replies.get(finding.id) ?? []);
+			for (const reply of thread.toSorted(byCreated)) {
+				const author = `${reply.user?.login ?? "unknown"} (${reply.author_association ?? "NONE"})`;
+				lines.push(`  - Reply from ${author}:`, quote(reply.body ?? "", 4));
+			}
+			return lines.join("\n");
+		});
+	const kept: string[] = [];
+	let length = 0;
+	for (const thread of threads) {
+		length += thread.length + 2;
+		if (kept.length > 0 && length > PRIOR_FINDINGS_MAX_CHARS) break;
+		kept.push(
+			thread.length > PRIOR_FINDINGS_MAX_CHARS
+				? `${thread.slice(0, PRIOR_FINDINGS_MAX_CHARS)} … (thread truncated)`
+				: thread,
+		);
+	}
+	const omitted =
+		kept.length < threads.length || comments.length >= REVIEW_COMMENTS_PAGE_SIZE
+			? "\n\n(older findings omitted)"
+			: "";
+	return `\n\n### Your inline findings, newest first, with the replies to each\n\n${kept.join("\n\n")}${omitted}`;
+}
+
+/**
+ * Fetch the most recent emdashbot[bot] review body, plus the bot's inline
+ * findings and the replies to them, for a re-review, so the agent can avoid
+ * re-flagging findings that were addressed or answered. Returns undefined on a
+ * first review or when the reviews can't be read (non-fatal: we just review
+ * fresh); unreadable threads only leave the findings out.
  */
 export async function fetchPriorReview(
 	token: GitHubToken,
@@ -650,11 +849,15 @@ export async function fetchPriorReview(
 			}>
 		>();
 		const ours = reviews
-			.filter((r) => r.user?.login === "emdashbot[bot]" && r.body)
+			.filter((r) => r.user?.login === REVIEWER_LOGIN && r.body)
 			.toSorted((a, b) => (a.submitted_at ?? "").localeCompare(b.submitted_at ?? ""));
 		const latest = ours.at(-1);
 		if (!latest) return undefined;
-		return `Your previous review (state: ${latest.state ?? "unknown"}):\n\n${latest.body}`;
+		const findings = await fetchNewestReviewComments(token, owner, repo, prNumber).then(
+			renderPriorFindings,
+			() => "",
+		);
+		return `Your previous review (state: ${latest.state ?? "unknown"}):\n\n${latest.body}${findings}`;
 	} catch {
 		return undefined;
 	}
@@ -836,7 +1039,10 @@ export async function postReview(
 	retryOptions?: ReviewRetryOptions,
 ): Promise<void> {
 	const url = `${GITHUB_API}/repos/${owner}/${repo}/pulls/${prNumber}/reviews`;
-	const event = verdictToEvent(result.verdict);
+	const event =
+		retryOptions?.pullRequestAuthorLogin === EMDASH_BOT_LOGIN
+			? "COMMENT"
+			: verdictToEvent(result.verdict);
 	const marker = attemptId ? `<!-- emdash-review-attempt:${attemptId} -->` : undefined;
 	const summary = `${result.summary.trim() || FALLBACK_SUMMARY}${marker ? `\n\n${marker}` : ""}`;
 	if (commitId && marker) {

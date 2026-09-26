@@ -169,6 +169,10 @@ const updated = await ctx.media!.updateMetadata!(mediaId, {
 
 Provide both focal coordinates as numbers from `0` to `1`, or set both to `null`. Concurrent patches to different metadata fields do not replace one another.
 
+### Uploading media
+
+`ctx.media.upload()` accepts image, video, audio, and PDF content and throws for any other content type. In a trusted plugin, `upload()` and `getUploadUrl()` enforce the default media upload allowlist: PNG, JPEG, GIF, WebP, and AVIF images, any `video/*` or `audio/*` type, and `application/pdf`. Other types throw a `PluginRouteError` with status `415`, and a malformed content type throws one with status `400`; a route handler can let either propagate as the response. In a trusted plugin, a file stored by `upload()` or reserved by `getUploadUrl()` also takes an extension that matches the content type, whatever extension the filename has; when the content type has no known extension, the filename's extension is kept only if it belongs to an allowed media type. A sandboxed plugin keeps the filename's extension when it is 1 to 10 letters or digits.
+
 ### Managing redirects safely
 
 `redirects:read` provides cursor-paginated rule listing and versioned single-rule reads. Add `redirects:write` when the plugin creates, updates, or deletes rules. Write access can change where visitors are sent.
@@ -222,6 +226,8 @@ Plugins with `network:request` can only fetch hosts listed in `allowedHosts`. A 
 The bridge checks the request URL's host against the allowlist before forwarding the request. A request to a host that wasn't declared throws inside the plugin without ever leaving the sandbox.
 
 `network:request:unrestricted` skips the manifest host allowlist. The sandbox bridge still accepts only HTTP and HTTPS, blocks known internal hosts and private literal addresses, rechecks every redirect, and removes credential headers when a redirect crosses origins. Use unrestricted access only when an operator supplies the destination at runtime. For fixed destinations, declare `network:request` with explicit hosts so the consent dialog names them.
+
+`ctx.http.fetch()` buffers request and response bodies and limits each decoded body to 8 MiB. The returned WHATWG `Response` preserves binary bytes, status text, headers, final URL, redirect state, and `clone()` behavior in both sandbox runners. Read binary data with `arrayBuffer()` or `blob()`.
 
 ## What the sandbox enforces
 

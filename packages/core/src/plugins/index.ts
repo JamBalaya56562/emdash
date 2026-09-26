@@ -9,7 +9,7 @@
  */
 
 // definePlugin
-export { definePlugin } from "./define-plugin.js";
+export { definePlugin, definePluginRoute } from "./define-plugin.js";
 
 // Standard plugin adapter
 export { adaptSandboxEntry } from "./adapt-sandbox-entry.js";
@@ -44,6 +44,18 @@ export {
 } from "./context.js";
 export { createContentAccess } from "./content-access.js";
 export type { ContentActionCallbacks, PluginContextFactoryOptions } from "./context.js";
+export {
+	PLUGIN_HTTP_MAX_REQUEST_BYTES,
+	PLUGIN_HTTP_MAX_RESPONSE_BYTES,
+	bufferPluginHttpRequest,
+	pluginHttpRedirectAction,
+	pluginHttpResponseFromWire,
+	pluginHttpResponseToWire,
+	readPluginHttpBytes,
+	rewritePluginHttpRedirect,
+} from "./http-wire.js";
+export type { PluginHttpResponseWire } from "./http-wire.js";
+export type { PluginHttpRedirectAction } from "./http-wire.js";
 export { CronAccessImpl } from "./cron.js";
 export {
 	DEFAULT_PLUGIN_MEDIA_READ_BYTES,
@@ -115,6 +127,7 @@ export type {
 	SandboxEmailSendCallback,
 	SandboxCommentModerateCallback,
 	SandboxContentCreateCallback,
+	SandboxHttpFetchCallback,
 	ResourceLimits,
 	PluginCodeStorage,
 	SerializedRequest,
@@ -275,6 +288,7 @@ export type {
 
 	// Route types
 	PluginRoute,
+	PluginRouteDefinition,
 	RouteContext,
 
 	// Admin types
@@ -302,5 +316,6 @@ export {
 	isDeprecatedCapability,
 	normalizeCapability,
 	normalizeCapabilities,
+	normalizePluginCapabilities,
 } from "./types.js";
 export type { CurrentPluginCapability, DeprecatedPluginCapability } from "./types.js";

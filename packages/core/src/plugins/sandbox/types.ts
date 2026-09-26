@@ -56,6 +56,8 @@ export interface PluginCodeStorage {
  */
 export interface SandboxEmailMessage {
 	to: string;
+	cc?: string[];
+	replyTo?: string;
 	subject: string;
 	text: string;
 	html?: string;
@@ -90,6 +92,8 @@ export type SandboxContentCreateCallback = (
 	},
 ) => Promise<ContentItem>;
 
+export type SandboxHttpFetchCallback = typeof fetch;
+
 /**
  * Options for creating a sandbox runner
  */
@@ -98,8 +102,12 @@ export interface SandboxOptions {
 	storage?: PluginCodeStorage;
 	/** Database for bridge operations */
 	db: Kysely<Database>;
-	/** Called immediately before a sandboxed plugin content mutation. */
-	beforeContentWrite?: () => Promise<void>;
+	/**
+	 * Called immediately before a sandboxed plugin content mutation; it throws
+	 * to refuse the write. When it returns a function, the bridge calls that
+	 * function once the write has succeeded.
+	 */
+	beforeContentWrite?: () => Promise<void | (() => Promise<void>)>;
 	/** Runtime-owned taxonomy mutation surface used by sandbox bridges. */
 	taxonomyWrite?: TaxonomyAccessWithWrite;
 	contentActions?: ContentActionCallbacks;
@@ -117,6 +125,8 @@ export interface SandboxOptions {
 	/** Email send callback, wired from the EmailPipeline by the runtime */
 	emailSend?: SandboxEmailSendCallback;
 	commentModerate?: SandboxCommentModerateCallback;
+	/** Optional host HTTP transport used by test hosts and custom runtimes. */
+	httpFetch?: SandboxHttpFetchCallback;
 	/**
 	 * Media storage adapter for sandboxed plugin byte reads, uploads, and deletes.
 	 * Each operation remains gated by its own media capability.
@@ -170,6 +180,12 @@ export interface SandboxedPluginInstance {
 	): Promise<unknown>;
 
 	/**
+	 * Change whether the plugin may access host services.
+	 * Deactivation revokes credentials synchronously; reactivation issues fresh credentials.
+	 */
+	setActive?(active: boolean): void;
+
+	/**
 	 * Terminate the sandboxed plugin.
 	 * Releases resources and prevents further invocations.
 	 */
@@ -206,6 +222,14 @@ const SANDBOX_ROUTE_ERROR_DEFINITIONS = {
 	},
 	MEDIA_USAGE_ACTIVATION_CHECK_FAILED: {
 		message: "Unable to verify media usage activation state",
+		status: 503,
+	},
+	TRANSFER_IMPORT_IN_PROGRESS: {
+		message: "A site import is in progress or incomplete; writes are disabled",
+		status: 503,
+	},
+	TRANSFER_FENCE_CHECK_FAILED: {
+		message: "Unable to verify whether site writes are allowed",
 		status: 503,
 	},
 } as const;

@@ -1117,6 +1117,9 @@ const sbomSchema = _sbomSchema;
 //#endregion
 //#region ../../packages/registry-lexicons/dist/generated/types/com/emdashcms/experimental/package/releaseExtension.js
 var releaseExtension_exports = /* @__PURE__ */ __exportAll({
+	adminAccessSchema: () => adminAccessSchema,
+	adminEditorDraftPatchConstraintsSchema: () => adminEditorDraftPatchConstraintsSchema,
+	adminEditorDraftReadConstraintsSchema: () => adminEditorDraftReadConstraintsSchema,
 	commentsAccessSchema: () => commentsAccessSchema,
 	commentsModerateConstraintsSchema: () => commentsModerateConstraintsSchema,
 	commentsReadConstraintsSchema: () => commentsReadConstraintsSchema,
@@ -1154,6 +1157,17 @@ var releaseExtension_exports = /* @__PURE__ */ __exportAll({
 	usersAccessSchema: () => usersAccessSchema,
 	usersReadConstraintsSchema: () => usersReadConstraintsSchema
 });
+const _adminAccessSchema = /* @__PURE__ */ object$1({
+	$type: /* @__PURE__ */ optional$1(/* @__PURE__ */ literal$1("com.emdashcms.experimental.package.releaseExtension#adminAccess")),
+	get editorDraftPatch() {
+		return /* @__PURE__ */ optional$1(adminEditorDraftPatchConstraintsSchema);
+	},
+	get editorDraftRead() {
+		return /* @__PURE__ */ optional$1(adminEditorDraftReadConstraintsSchema);
+	}
+});
+const _adminEditorDraftPatchConstraintsSchema = /* @__PURE__ */ object$1({ $type: /* @__PURE__ */ optional$1(/* @__PURE__ */ literal$1("com.emdashcms.experimental.package.releaseExtension#adminEditorDraftPatchConstraints")) });
+const _adminEditorDraftReadConstraintsSchema = /* @__PURE__ */ object$1({ $type: /* @__PURE__ */ optional$1(/* @__PURE__ */ literal$1("com.emdashcms.experimental.package.releaseExtension#adminEditorDraftReadConstraints")) });
 const _commentsAccessSchema = /* @__PURE__ */ object$1({
 	$type: /* @__PURE__ */ optional$1(/* @__PURE__ */ literal$1("com.emdashcms.experimental.package.releaseExtension#commentsAccess")),
 	get moderate() {
@@ -1194,6 +1208,9 @@ const _contentRevisionsReadConstraintsSchema = /* @__PURE__ */ object$1({ $type:
 const _contentWriteConstraintsSchema = /* @__PURE__ */ object$1({ $type: /* @__PURE__ */ optional$1(/* @__PURE__ */ literal$1("com.emdashcms.experimental.package.releaseExtension#contentWriteConstraints")) });
 const _declaredAccessSchema = /* @__PURE__ */ object$1({
 	$type: /* @__PURE__ */ optional$1(/* @__PURE__ */ literal$1("com.emdashcms.experimental.package.releaseExtension#declaredAccess")),
+	get admin() {
+		return /* @__PURE__ */ optional$1(adminAccessSchema);
+	},
 	get comments() {
 		return /* @__PURE__ */ optional$1(commentsAccessSchema);
 	},
@@ -1329,6 +1346,9 @@ const _usersAccessSchema = /* @__PURE__ */ object$1({
 	}
 });
 const _usersReadConstraintsSchema = /* @__PURE__ */ object$1({ $type: /* @__PURE__ */ optional$1(/* @__PURE__ */ literal$1("com.emdashcms.experimental.package.releaseExtension#usersReadConstraints")) });
+const adminAccessSchema = _adminAccessSchema;
+const adminEditorDraftPatchConstraintsSchema = _adminEditorDraftPatchConstraintsSchema;
+const adminEditorDraftReadConstraintsSchema = _adminEditorDraftReadConstraintsSchema;
 const commentsAccessSchema = _commentsAccessSchema;
 const commentsModerateConstraintsSchema = _commentsModerateConstraintsSchema;
 const commentsReadConstraintsSchema = _commentsReadConstraintsSchema;
@@ -7864,6 +7884,83 @@ const meta = meta$1;
 
 //#endregion
 //#region ../../packages/plugin-types/dist/index.js
+const PLUGIN_ROUTE_MAX_BODY_BYTES = 8 * 1024 * 1024;
+const PLUGIN_ROUTE_DEFAULT_BODY_BYTES = 1024 * 1024;
+const PLUGIN_ROUTE_MAX_MULTIPART_PART_BYTES = 1024 * 1024;
+const PLUGIN_ROUTE_MAX_DECLARED_HEADERS = 32;
+const PLUGIN_ROUTE_METHODS = [
+	"GET",
+	"HEAD",
+	"POST",
+	"PUT",
+	"PATCH",
+	"DELETE"
+];
+const PLUGIN_ROUTE_BODY_MODES = [
+	"none",
+	"json",
+	"text",
+	"bytes",
+	"form-data"
+];
+const PLUGIN_ROUTE_RESPONSE_MODES = ["json", "raw"];
+const HEADER_NAME_PATTERN = /^[!#$%&'*+.^_`|~0-9A-Za-z-]+$/;
+const FORBIDDEN_REQUEST_HEADERS = new Set([
+	"authorization",
+	"cookie",
+	"cf-access-client-id",
+	"cf-access-client-secret",
+	"cf-access-jwt-assertion",
+	"proxy-authorization",
+	"set-cookie",
+	"x-emdash-request"
+]);
+const declaredHeadersSchema = array(string().min(1).max(128).regex(HEADER_NAME_PATTERN, "Invalid HTTP header name")).max(PLUGIN_ROUTE_MAX_DECLARED_HEADERS).superRefine((headers, ctx) => {
+	const seen = /* @__PURE__ */ new Set();
+	for (const [index, header] of headers.entries()) {
+		const normalized = header.toLowerCase();
+		if (FORBIDDEN_REQUEST_HEADERS.has(normalized) || normalized.startsWith("cf-access-")) ctx.addIssue({
+			code: "custom",
+			message: `Header "${header}" cannot be exposed to a sandboxed route`,
+			path: [index]
+		});
+		if (seen.has(normalized)) ctx.addIssue({
+			code: "custom",
+			message: `Header "${header}" is declared more than once`,
+			path: [index]
+		});
+		seen.add(normalized);
+	}
+});
+const pluginRouteRequestSchema = object({
+	body: _enum(PLUGIN_ROUTE_BODY_MODES),
+	maxBytes: number().int().positive().max(PLUGIN_ROUTE_MAX_BODY_BYTES).optional(),
+	headers: declaredHeadersSchema.optional()
+}).superRefine((request, ctx) => {
+	if (request.body === "none" && request.maxBytes !== void 0) ctx.addIssue({
+		code: "custom",
+		message: "maxBytes cannot be set when request.body is none",
+		path: ["maxBytes"]
+	});
+});
+const routeOptionsSchema = object({
+	methods: array(_enum(PLUGIN_ROUTE_METHODS)).min(1).max(PLUGIN_ROUTE_METHODS.length).optional(),
+	request: pluginRouteRequestSchema.optional(),
+	response: _enum(PLUGIN_ROUTE_RESPONSE_MODES).optional(),
+	public: boolean().optional(),
+	permission: string().min(1).optional(),
+	cacheControl: string().min(1).optional()
+}).superRefine((route, ctx) => {
+	if (route.methods && new Set(route.methods).size !== route.methods.length) ctx.addIssue({
+		code: "custom",
+		message: "Route methods must not contain duplicates"
+	});
+});
+const routeNameSchema = string().min(1).regex(/^[a-zA-Z0-9][a-zA-Z0-9_\-/]*$/, "Route name must be a safe path segment");
+const manifestRouteEntrySchema = routeOptionsSchema.extend({ name: routeNameSchema });
+function isJsonPostRouteContract(route) {
+	return route.response !== "raw" && (route.methods === void 0 || route.methods.includes("POST")) && (route.request === void 0 || route.request.body === "json");
+}
 /**
 * Zod schema for PluginManifest validation
 *
@@ -7888,6 +7985,8 @@ const CURRENT_PLUGIN_CAPABILITIES = [
 	"comments:read",
 	"comments:moderate",
 	"schema:read",
+	"admin.editor-draft:read",
+	"admin.editor-draft:patch",
 	"hooks.content-policy:register",
 	"taxonomies:read",
 	"taxonomies:write",
@@ -7994,14 +8093,6 @@ const manifestHookEntrySchema = object({
 * Both plain strings and objects are accepted; strings are normalized
 * to `{ name }` objects via `normalizeManifestRoute()`.
 */
-/** Route names must be safe path segments — alphanumeric, hyphens, underscores, forward slashes */
-const routeNamePattern = /^[a-zA-Z0-9][a-zA-Z0-9_\-/]*$/;
-const manifestRouteEntrySchema = object({
-	name: string().min(1).regex(routeNamePattern, "Route name must be a safe path segment"),
-	public: boolean().optional(),
-	permission: string().min(1).optional(),
-	cacheControl: string().min(1).optional()
-});
 const pluginJsonSchema = record(string(), unknown());
 const pluginMcpConfigSchema = object({ tools: array(object({
 	name: string().min(1),
@@ -8082,13 +8173,26 @@ const dashboardWidgetSchema = object({
 	title: string().optional()
 });
 const editorExtensionIdPattern = /^[a-z][a-z0-9_-]*$/;
-const editorCollectionsSchema = array(string().max(63).regex(/^[a-z][a-z0-9_]*$/, "Invalid collection slug")).max(64).refine((collections) => new Set(collections).size === collections.length, { message: "Editor extension collections must be unique" });
+const collectionSlugPattern = /^[a-z][a-z0-9_]*$/;
+const editorCollectionsSchema = array(string().max(63).regex(collectionSlugPattern, "Invalid collection slug")).max(64).refine((collections) => new Set(collections).size === collections.length, { message: "Editor extension collections must be unique" });
+const editorDraftFieldSelectorSchema = object({
+	fields: array(string().max(63).regex(collectionSlugPattern, "Invalid field slug")).max(32).refine((fields) => new Set(fields).size === fields.length, { message: "Editor draft fields must be unique" }).optional(),
+	translatable: literal(true).optional()
+}).refine((selector) => (selector.fields?.length ?? 0) > 0 || selector.translatable === true, { message: "Editor draft selector must include fields or translatable" });
+const editorDraftAccessSchema = object({
+	read: editorDraftFieldSelectorSchema.optional(),
+	patch: editorDraftFieldSelectorSchema.optional()
+}).refine((access) => access.read !== void 0 || access.patch !== void 0, { message: "Editor draft access must include read or patch" });
 const editorPanelSchema = object({
 	id: string().min(1).max(64).regex(editorExtensionIdPattern, "Invalid editor panel id"),
 	title: string().min(1).max(128),
-	route: string().min(1).max(128).regex(routeNamePattern, "Route name must be a safe path segment"),
+	route: routeNameSchema.max(128),
 	collections: editorCollectionsSchema.optional(),
-	order: number().int().min(-1e3).max(1e3).optional()
+	order: number().int().min(-1e3).max(1e3).optional(),
+	draft: editorDraftAccessSchema.optional()
+}).refine((extension) => extension.draft === void 0 || (extension.collections?.length ?? 0) > 0, {
+	message: "Editor draft access requires explicit collection scope",
+	path: ["collections"]
 });
 const editorActionConfirmSchema = object({
 	title: string().min(1).max(128),
@@ -8100,14 +8204,18 @@ const editorActionConfirmSchema = object({
 const editorActionSchema = object({
 	id: string().min(1).max(64).regex(editorExtensionIdPattern, "Invalid editor action id"),
 	label: string().min(1).max(128),
-	route: string().min(1).max(128).regex(routeNamePattern, "Route name must be a safe path segment"),
+	route: routeNameSchema.max(128),
 	placement: _enum(["toolbar", "overflow"]),
 	collections: editorCollectionsSchema.optional(),
 	style: _enum(["default", "danger"]).optional(),
-	confirm: editorActionConfirmSchema.optional()
+	confirm: editorActionConfirmSchema.optional(),
+	draft: editorDraftAccessSchema.optional()
 }).refine((action) => action.style !== "danger" || action.confirm !== void 0, {
 	message: "Danger editor actions require confirmation",
 	path: ["confirm"]
+}).refine((extension) => extension.draft === void 0 || (extension.collections?.length ?? 0) > 0, {
+	message: "Editor draft access requires explicit collection scope",
+	path: ["collections"]
 });
 function uniqueExtensionIds(items, ctx, path) {
 	const seen = /* @__PURE__ */ new Set();
@@ -8170,6 +8278,10 @@ const declaredAccessSchema = object({
 		moderate: accessConstraints.optional()
 	}).optional(),
 	schema: object({ read: accessConstraints.optional() }).optional(),
+	admin: object({
+		editorDraftRead: accessConstraints.optional(),
+		editorDraftPatch: accessConstraints.optional()
+	}).optional(),
 	taxonomies: object({
 		read: accessConstraints.optional(),
 		write: accessConstraints.optional()
@@ -8211,7 +8323,7 @@ const pluginManifestBaseSchema = object({
 	allowedHosts: array(string()),
 	storage: record(string(), storageCollectionSchema),
 	hooks: array(union([_enum(HOOK_NAMES), manifestHookEntrySchema])),
-	routes: array(union([string().min(1).regex(routeNamePattern, "Route name must be a safe path segment"), manifestRouteEntrySchema])),
+	routes: array(union([routeNameSchema, manifestRouteEntrySchema])),
 	mcp: pluginMcpConfigSchema.optional(),
 	admin: pluginAdminConfigSchema
 });
@@ -8243,9 +8355,63 @@ function validateEditorExtensionRoutes(manifest, ctx) {
 				"route"
 			]
 		});
+		if (typeof route !== "string" && !isJsonPostRouteContract(route)) ctx.addIssue({
+			code: "custom",
+			message: "Editor extension routes must accept POST JSON requests and return JSON",
+			path: [
+				"admin",
+				kind,
+				index,
+				"route"
+			]
+		});
 	}
 }
-const pluginManifestSchema = pluginManifestBaseSchema.superRefine(validateEditorExtensionRoutes);
+function validateUniqueRoutes(manifest, ctx) {
+	const seen = /* @__PURE__ */ new Set();
+	for (const [index, route] of manifest.routes.entries()) {
+		const name = typeof route === "string" ? route : route.name;
+		if (seen.has(name)) ctx.addIssue({
+			code: "custom",
+			message: `Route "${name}" must be declared exactly once`,
+			path: ["routes", index]
+		});
+		seen.add(name);
+	}
+}
+function validateMcpToolRoutes(manifest, ctx) {
+	for (const [index, tool] of (manifest.mcp?.tools ?? []).entries()) {
+		const route = manifest.routes.find((candidate) => (typeof candidate === "string" ? candidate : candidate.name) === tool.route);
+		if (typeof route === "string" || route === void 0 || route.public === true || route.permission !== tool.permission || !isJsonPostRouteContract(route)) ctx.addIssue({
+			code: "custom",
+			message: "MCP tools must reference a private POST-compatible JSON route",
+			path: [
+				"mcp",
+				"tools",
+				index,
+				"route"
+			]
+		});
+	}
+}
+function validateBlockKitAdminRoute(manifest, ctx) {
+	if ((manifest.admin.pages?.length ?? 0) === 0 && (manifest.admin.widgets?.length ?? 0) === 0) return;
+	const routeIndex = manifest.routes.findIndex((route) => (typeof route === "string" ? route : route.name) === "admin");
+	if (routeIndex < 0) return;
+	const route = manifest.routes[routeIndex];
+	if (!route) return;
+	if (typeof route !== "string" && (route.public === true || !isJsonPostRouteContract(route))) ctx.addIssue({
+		code: "custom",
+		message: "Block Kit admin routes must be private POST-compatible JSON routes",
+		path: ["routes", routeIndex]
+	});
+}
+const pluginManifestSchema = pluginManifestBaseSchema.superRefine((manifest, ctx) => {
+	validateUniqueRoutes(manifest, ctx);
+	validateEditorExtensionRoutes(manifest, ctx);
+	validateMcpToolRoutes(manifest, ctx);
+	validateBlockKitAdminRoute(manifest, ctx);
+});
 /**
 * Reconcile a parsed manifest's trust contract with its enforcement currency.
 * `declaredAccess` is authoritative: when present, `capabilities`/`allowedHosts`
@@ -8329,6 +8495,8 @@ function capabilitiesToDeclaredAccess(capabilities, allowedHosts) {
 	}
 	if (caps.has("content:revisions:read")) (out.content ??= {}).revisionsRead = {};
 	if (caps.has("schema:read")) out.schema = { read: {} };
+	if (caps.has("admin.editor-draft:read")) (out.admin ??= {}).editorDraftRead = {};
+	if (caps.has("admin.editor-draft:patch")) (out.admin ??= {}).editorDraftPatch = {};
 	if (caps.has("taxonomies:read") || caps.has("taxonomies:write")) {
 		out.taxonomies = { read: {} };
 		if (caps.has("taxonomies:write")) out.taxonomies.write = {};
@@ -8383,6 +8551,8 @@ function declaredAccessToCapabilities(declaredAccess) {
 		caps.add("comments:read");
 	}
 	if (declaredAccess.schema?.read) caps.add("schema:read");
+	if (declaredAccess.admin?.editorDraftRead) caps.add("admin.editor-draft:read");
+	if (declaredAccess.admin?.editorDraftPatch) caps.add("admin.editor-draft:patch");
 	if (declaredAccess.content?.policy) caps.add("hooks.content-policy:register");
 	if (declaredAccess.taxonomies?.read) caps.add("taxonomies:read");
 	if (declaredAccess.taxonomies?.write) {
@@ -12648,7 +12818,7 @@ const verifier = new import_dist$2.Verifier((0, import_dist$2.toTrustMaterial)(i
 });
 
 //#endregion
-//#region ../../packages/registry-verification/dist/errors-CI-j3m_y.js
+//#region ../../packages/registry-verification/dist/errors-D3_zxvwe.js
 function verificationError(code, message, details) {
 	return {
 		success: false,

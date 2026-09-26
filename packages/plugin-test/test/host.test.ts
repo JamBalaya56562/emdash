@@ -29,6 +29,62 @@ describe("runtime plugin test host", () => {
 		runtimeHost = undefined;
 	});
 
+	it("exercises declared raw routes through core and Worker Loader", async () => {
+		runtimeHost = await createPluginRuntimeTestHost();
+		const bytes = new Uint8Array([0xef, 0xbb, 0xbf, 0xff, 0, 13, 10, 128]);
+		const response = await runtimeHost.actions.routes.request("raw-download", {
+			method: "POST",
+			rawBody: bytes,
+		});
+		expect(response.status).toBe(202);
+		expect(new Uint8Array(await response.arrayBuffer())).toEqual(bytes);
+
+		const headers = await runtimeHost.actions.routes.request("declared-headers", {
+			method: "POST",
+			headers: {
+				"x-signature": "sha256=test",
+				"x-hidden": "secret",
+				cookie: "session=secret",
+			},
+		});
+		expect(await headers.json()).toEqual({
+			success: true,
+			data: { signature: "sha256=test", hidden: "missing" },
+		});
+
+		const disallowed = await runtimeHost.actions.routes.request("raw-download", {
+			method: "GET",
+		});
+		expect(disallowed.status).toBe(405);
+		expect(disallowed.headers.get("allow")).toBe("POST");
+	});
+
+	it("parses multipart fields and files through the runtime host", async () => {
+		runtimeHost = await createPluginRuntimeTestHost();
+		const form = new FormData();
+		form.append("title", "Report");
+		form.append("attachment", new File([new Uint8Array([0, 255])], "report.bin"));
+		const response = await runtimeHost.actions.routes.request("raw-form", {
+			method: "POST",
+			rawBody: form,
+		});
+		expect(await response.json()).toEqual({
+			success: true,
+			data: {
+				entries: [
+					{ name: "title", kind: "text", value: "Report" },
+					{
+						name: "attachment",
+						kind: "file",
+						filename: "report.bin",
+						contentType: "application/octet-stream",
+						bytes: [0, 255],
+					},
+				],
+			},
+		});
+	});
+
 	it("runs content actions through EmDashRuntime and preserves state across a cold restart", async () => {
 		runtimeHost = await createPluginRuntimeTestHost({
 			site: { url: "https://example.test", locale: "en", trailingSlash: "never" },
@@ -526,6 +582,70 @@ describe("runtime plugin test host", () => {
 				expect.objectContaining({ source: "/automatic-old", auto: true }),
 				expect.objectContaining({ source: "/concurrent", auto: false }),
 				expect.objectContaining({ source: "/old/[slug]", isPattern: true }),
+			]),
+		);
+	});
+
+	it("intercepts binary HTTP through the runtime and Worker Loader boundary", async () => {
+		runtimeHost = await createPluginRuntimeTestHost();
+		const admin = await runtimeHost.fixtures.user({
+			email: "http-admin@example.com",
+			role: "admin",
+		});
+		const firstUrl = "https://api.example.com/first";
+		const secondUrl = "https://api.example.com/second";
+		const firstBytes = new Uint8Array([0, 255, 195, 40]);
+		const secondBytes = new Uint8Array([137, 80, 78, 71]);
+		await runtimeHost.http.respond(
+			firstUrl,
+			new Response(firstBytes, {
+				status: 206,
+				statusText: "Partial Content",
+				headers: { "content-type": "application/octet-stream" },
+			}),
+		);
+		await runtimeHost.http.respond(
+			secondUrl,
+			new Response(secondBytes, {
+				status: 200,
+				headers: { "content-type": "image/png" },
+			}),
+		);
+
+		const results = await Promise.all(
+			[firstUrl, secondUrl].map(async (url) => {
+				const response = await runtimeHost!.actions.routes.request("http-roundtrip", {
+					user: admin,
+					headers: { "X-EmDash-Request": "1" },
+					body: { url },
+				});
+				expect(response.status).toBe(200);
+				return response.json() as Promise<{ data: Record<string, unknown> }>;
+			}),
+		);
+		const first = results[0];
+		const second = results[1];
+		if (!first || !second) throw new Error("Expected both HTTP route results");
+		expect(first.data).toMatchObject({
+			status: 206,
+			statusText: "Partial Content",
+			url: firstUrl,
+			redirected: false,
+			contentType: "application/octet-stream",
+			bytes: [...firstBytes],
+			cloneBytes: [...firstBytes],
+		});
+		expect(second.data).toMatchObject({
+			status: 200,
+			url: secondUrl,
+			contentType: "image/png",
+			bytes: [...secondBytes],
+			cloneBytes: [...secondBytes],
+		});
+		expect(runtimeHost.http.requests()).toEqual(
+			expect.arrayContaining([
+				expect.objectContaining({ url: firstUrl, method: "POST", body: firstBytes }),
+				expect.objectContaining({ url: secondUrl, method: "POST", body: firstBytes }),
 			]),
 		);
 	});
@@ -1270,22 +1390,30 @@ describe("runtime plugin test host", () => {
 			runtimeHost.admin.loadWidget("status", { locale: "en" }),
 		]);
 
-		expect(pageResponse.blocks[0]).toMatchObject({
-			type: "fields",
-			fields: [
-				{ label: "Surface", value: "admin-page" },
-				{ label: "Locale", value: "ar" },
-				{ label: "Direction", value: "rtl" },
-			],
-		});
-		expect(widgetResponse.blocks[0]).toMatchObject({
-			type: "fields",
-			fields: [
-				{ label: "Surface", value: "dashboard-widget" },
-				{ label: "Locale", value: "en" },
-				{ label: "Direction", value: "ltr" },
-			],
-		});
+		expect(pageResponse.blocks).toEqual(
+			expect.arrayContaining([
+				expect.objectContaining({
+					type: "fields",
+					fields: [
+						{ label: "Surface", value: "admin-page" },
+						{ label: "Locale", value: "ar" },
+						{ label: "Direction", value: "rtl" },
+					],
+				}),
+			]),
+		);
+		expect(widgetResponse.blocks).toEqual(
+			expect.arrayContaining([
+				expect.objectContaining({
+					type: "fields",
+					fields: [
+						{ label: "Surface", value: "dashboard-widget" },
+						{ label: "Locale", value: "en" },
+						{ label: "Direction", value: "ltr" },
+					],
+				}),
+			]),
+		);
 	});
 
 	it("rejects undeclared UI surfaces and unsafe browser resources before rendering", async () => {
@@ -1309,10 +1437,13 @@ describe("runtime plugin test host", () => {
 		await runtimeHost.fixtures.collection({
 			slug: "posts",
 			label: "Posts",
-			fields: [{ slug: "title", label: "Title", type: "string" }],
+			fields: [
+				{ slug: "title", label: "Title", type: "string" },
+				{ slug: "excerpt", label: "Excerpt", type: "text" },
+			],
 		});
 		const entry = await runtimeHost.fixtures.content("posts", {
-			data: { title: "Saved entry" },
+			data: { title: "Saved entry", excerpt: "Saved excerpt" },
 			locale: "en",
 		});
 
@@ -1346,6 +1477,62 @@ describe("runtime plugin test host", () => {
 			fields: expect.arrayContaining([{ label: "Version", value: "2" }]),
 		});
 
+		const draft = await runtimeHost.admin.captureEditorDraft(
+			"posts",
+			entry.id,
+			{ title: "Unsaved title", excerpt: "Unsaved excerpt" },
+			{ contentLocale: "en", generation: 9, invocationId: "plugin_test_translate" },
+		);
+		const proposal = await runtimeHost.admin.actEditorPanel(
+			"entry-context",
+			"posts",
+			entry.id,
+			"translate",
+			{ contentLocale: "en", draft },
+		);
+		expect(proposal.patch).toEqual({
+			type: "editor-draft-patch",
+			operations: [
+				{ op: "set", field: "title", value: "Unsaved title translated" },
+				{ op: "set", field: "excerpt", value: "Unsaved excerpt translated" },
+			],
+		});
+		const patched = await runtimeHost.admin.applyEditorDraftPatch(
+			"panel",
+			"entry-context",
+			draft,
+			proposal,
+			{
+				entryId: draft.entryId,
+				locale: draft.locale,
+				generation: draft.generation,
+				invocationId: draft.invocationId,
+			},
+			draft.fields,
+		);
+		expect(patched).toEqual({
+			title: "Unsaved title translated",
+			excerpt: "Unsaved excerpt translated",
+		});
+		await expect(runtimeHost.inspect.content.get("posts", entry.id)).resolves.toMatchObject({
+			data: { title: "Saved entry", excerpt: "Saved excerpt" },
+		});
+		await expect(
+			runtimeHost.admin.applyEditorDraftPatch(
+				"panel",
+				"entry-context",
+				draft,
+				proposal,
+				{
+					entryId: draft.entryId,
+					locale: draft.locale,
+					generation: draft.generation + 1,
+					invocationId: draft.invocationId,
+				},
+				draft.fields,
+			),
+		).rejects.toThrow("EDITOR_DRAFT_STALE");
+
 		await expect(
 			runtimeHost.admin.invokeEditorAction("refresh-entry", "posts", entry.id, {
 				locale: "ar",
@@ -1358,8 +1545,20 @@ describe("runtime plugin test host", () => {
 		await expect(
 			runtimeHost.admin.actEditorPanel("entry-context", "posts", entry.id, "invalid"),
 		).rejects.toThrow("INVALID_BLOCK_RESPONSE");
+		await runtimeHost.fixtures.collection({
+			slug: "plugin_test_invalid",
+			label: "Plugin test invalid responses",
+			fields: [{ slug: "title", label: "Title", type: "string" }],
+		});
+		const invalidEntry = await runtimeHost.fixtures.content("plugin_test_invalid", {
+			data: { title: "Invalid response target" },
+		});
 		await expect(
-			runtimeHost.admin.invokeEditorAction("invalid-action", "posts", entry.id),
+			runtimeHost.admin.invokeEditorAction(
+				"invalid-action",
+				"plugin_test_invalid",
+				invalidEntry.id,
+			),
 		).rejects.toThrow("INVALID_EDITOR_ACTION_RESPONSE");
 	});
 
@@ -1420,7 +1619,7 @@ describe("plugin test host", () => {
 		});
 
 		await expect(host.invokeRoute("hello")).resolves.toEqual({
-			pluginId: "plugin-test-fixture",
+			pluginId: host.manifest.id,
 		});
 		await expect(host.kv.get("last-route")).resolves.toBe("hello");
 

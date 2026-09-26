@@ -136,6 +136,15 @@ export default {
 				return { input: routeCtx.input, kvValue, ui: routeCtx.ui };
 			}
 		},
+		"editor-draft": {
+			handler: async (routeCtx) => ({
+				snapshot: routeCtx.input.draft,
+				patch: {
+					type: "editor-draft-patch",
+					operations: [{ op: "set", field: "title", value: routeCtx.input.draft.fields.title + " translated" }]
+				}
+			})
+		},
 		"kv-test": {
 			handler: async (routeCtx, ctx) => {
 				await ctx.kv.set("test-key", routeCtx.input.value);
@@ -249,6 +258,62 @@ export default {
 					alias: await ctx.kv.get("settings:apiKey")
 				};
 			}
+		}
+	}
+};
+`;
+
+const BINARY_HTTP_PLUGIN = `
+export default {
+	hooks: {},
+	routes: {
+		"roundtrip": {
+			handler: async (route, ctx) => {
+				const response = await ctx.http.fetch(route.input.url, {
+					method: "POST",
+					headers: { "content-type": "application/octet-stream" },
+					body: new Uint8Array([0, 255, 195, 40])
+				});
+				const clone = response.clone();
+				return {
+					status: response.status,
+					statusText: response.statusText,
+					url: response.url,
+					redirected: response.redirected,
+					bytes: [...new Uint8Array(await response.arrayBuffer())],
+					cloneBytes: [...new Uint8Array(await clone.arrayBuffer())]
+				};
+			}
+		}
+	}
+};
+`;
+
+const RAW_ROUTE_PLUGIN = `
+export default {
+	routes: {
+		bytes: {
+			handler: async ({ input }) => ({
+				__emdashPluginResponse: true,
+				status: 206,
+				headers: [["content-type", "application/octet-stream"]],
+				body: { kind: "bytes", value: input }
+			})
+		},
+		multipart: {
+			handler: async ({ input }) => ({
+				__emdashPluginResponse: true,
+				status: 200,
+				headers: [],
+				body: { kind: "bytes", value: input.entries[1].bytes }
+			})
+		},
+		ordinary: {
+			handler: async () => ({
+				status: 201,
+				headers: [["x-test", "ordinary"]],
+				body: { kind: "text", value: "not raw" }
+			})
 		}
 	}
 };
@@ -445,6 +510,43 @@ describe.skipIf(!workerdAvailable)("WorkerdSandboxRunner integration", () => {
 		expect(result.ui).toEqual({ surface: "dashboard-widget", locale: "ar", direction: "rtl" });
 	}, 30_000);
 
+	it("preserves editor draft snapshots and patch effects through the route transport", async () => {
+		const plugin = await runner.load(
+			{
+				id: "test-editor-draft",
+				version: "1.0.0",
+				capabilities: ["admin.editor-draft:read", "admin.editor-draft:patch"],
+				allowedHosts: [],
+				storage: {},
+			},
+			ECHO_PLUGIN,
+		);
+		const draft = {
+			collection: "posts",
+			entryId: "entry-1",
+			locale: "en",
+			baseRevision: "rev-1",
+			invocationId: "workerd_invocation",
+			fields: { title: "Unsaved" },
+			fieldDefinitions: [
+				{ slug: "title", label: "Title", type: "string", required: true, translatable: true },
+			],
+		};
+		await expect(
+			plugin.invokeRoute(
+				"editor-draft",
+				{ type: "editor_action", draft },
+				{ method: "POST", url: "/api/editor-draft", headers: {} },
+			),
+		).resolves.toEqual({
+			snapshot: draft,
+			patch: {
+				type: "editor-draft-patch",
+				operations: [{ op: "set", field: "title", value: "Unsaved translated" }],
+			},
+		});
+	}, 30_000);
+
 	it("preserves bounded media bytes and metadata through a real workerd process", async () => {
 		const stored = new Map([["private/original.bin", new Uint8Array([0, 255, 17, 42])]]);
 		runner = new WorkerdSandboxRunner({
@@ -539,6 +641,171 @@ describe.skipIf(!workerdAvailable)("WorkerdSandboxRunner integration", () => {
 			storage_key: "private/original.bin",
 			content_hash: "sha1:original",
 		});
+	}, 30_000);
+
+	it("preserves concurrent binary HTTP through the real workerd bridge", async () => {
+		await runner.terminateAll();
+		const requests: Array<{ url: string; body: Uint8Array }> = [];
+		runner = new WorkerdSandboxRunner({
+			db,
+			httpFetch: async (input, init) => {
+				const request = new Request(input, init);
+				requests.push({
+					url: request.url,
+					body: new Uint8Array(await request.arrayBuffer()),
+				});
+				const second = request.url.endsWith("/second");
+				return new Response(
+					second ? new Uint8Array([137, 80, 78, 71]) : new Uint8Array([0, 255, 195, 40]),
+					{
+						status: second ? 200 : 206,
+						statusText: second ? "OK" : "Partial Content",
+						headers: { "content-type": "application/octet-stream" },
+					},
+				);
+			},
+		});
+		const plugin = await runner.load(
+			{
+				id: "binary-http",
+				version: "1.0.0",
+				capabilities: ["network:request"],
+				allowedHosts: ["93.184.216.34"],
+				storage: {},
+			},
+			BINARY_HTTP_PLUGIN,
+		);
+		const urls = ["https://93.184.216.34/first", "https://93.184.216.34/second"];
+		const results = await Promise.all(
+			urls.map((url) =>
+				plugin.invokeRoute(
+					"roundtrip",
+					{ url },
+					{ method: "POST", url: "/api/roundtrip", headers: {} },
+				),
+			),
+		);
+
+		expect(results).toEqual(
+			expect.arrayContaining([
+				expect.objectContaining({
+					status: 206,
+					statusText: "Partial Content",
+					url: urls[0],
+					bytes: [0, 255, 195, 40],
+					cloneBytes: [0, 255, 195, 40],
+				}),
+				expect.objectContaining({
+					status: 200,
+					url: urls[1],
+					bytes: [137, 80, 78, 71],
+					cloneBytes: [137, 80, 78, 71],
+				}),
+			]),
+		);
+		expect(requests).toEqual(
+			expect.arrayContaining(urls.map((url) => ({ url, body: new Uint8Array([0, 255, 195, 40]) }))),
+		);
+	}, 30_000);
+
+	it("preserves raw route and multipart bytes through the real workerd wrapper", async () => {
+		const bytes = new Uint8Array([0, 255, 195, 40]);
+		const plugin = await runner.load(
+			{
+				id: "raw-route-transport",
+				version: "1.0.0",
+				capabilities: [],
+				allowedHosts: [],
+				storage: {},
+			},
+			RAW_ROUTE_PLUGIN,
+		);
+		const request = { method: "POST", url: "/api/raw", headers: {} };
+
+		const concurrentBodies = [bytes, new Uint8Array([1, 2, 3]), new Uint8Array([254, 253])];
+		const concurrentResults = await Promise.all(
+			concurrentBodies.map((body) => plugin.invokeRoute("bytes", body, request)),
+		);
+		expect(concurrentResults).toEqual(
+			concurrentBodies.map((body) => ({
+				__emdashPluginResponse: true,
+				status: 206,
+				headers: [["content-type", "application/octet-stream"]],
+				body: { kind: "bytes", value: body },
+			})),
+		);
+
+		const multipart = {
+			entries: [
+				{ name: "caption", kind: "text", value: "binary" },
+				{
+					name: "upload",
+					kind: "file",
+					filename: "invalid.bin",
+					contentType: "application/octet-stream",
+					bytes,
+				},
+			],
+		};
+		await expect(plugin.invokeRoute("multipart", multipart, request)).resolves.toMatchObject({
+			__emdashPluginResponse: true,
+			body: { kind: "bytes", value: bytes },
+		});
+
+		await expect(plugin.invokeRoute("ordinary", {}, request)).resolves.toEqual({
+			status: 201,
+			headers: [["x-test", "ordinary"]],
+			body: { kind: "text", value: "not raw" },
+		});
+	}, 30_000);
+
+	it("drops cached network authority when a plugin version is replaced", async () => {
+		await runner.terminateAll();
+		const httpFetch = vi.fn<typeof fetch>().mockResolvedValue(
+			new Response(new Uint8Array([0, 255]), {
+				status: 206,
+				statusText: "Partial Content",
+				headers: { "content-type": "application/octet-stream" },
+			}),
+		);
+		runner = new WorkerdSandboxRunner({ db, httpFetch });
+		const unrestricted = await runner.load(
+			{
+				id: "authority-update",
+				version: "1.0.0",
+				capabilities: ["network:request:unrestricted"],
+				allowedHosts: [],
+				storage: {},
+			},
+			BINARY_HTTP_PLUGIN,
+		);
+		await expect(
+			unrestricted.invokeRoute(
+				"roundtrip",
+				{ url: "https://93.184.216.34/first" },
+				{ method: "POST", url: "/api/roundtrip", headers: {} },
+			),
+		).resolves.toMatchObject({ status: 206 });
+		await unrestricted.terminate();
+
+		const restricted = await runner.load(
+			{
+				id: "authority-update",
+				version: "2.0.0",
+				capabilities: ["network:request"],
+				allowedHosts: ["api.example.com"],
+				storage: {},
+			},
+			BINARY_HTTP_PLUGIN,
+		);
+		await expect(
+			restricted.invokeRoute(
+				"roundtrip",
+				{ url: "https://93.184.216.34/second" },
+				{ method: "POST", url: "/api/roundtrip", headers: {} },
+			),
+		).rejects.toThrow(/not allowed to fetch from host/i);
+		expect(httpFetch).toHaveBeenCalledOnce();
 	}, 30_000);
 
 	it("runs an equivalent runtime content and cold-restart journey through workerd", async () => {
@@ -1000,6 +1267,38 @@ describe.skipIf(!workerdAvailable)("WorkerdSandboxRunner integration", () => {
 
 		expect(result.stored).toBe("hello");
 	}, 30_000);
+
+	it("refreshes bridge credentials when a plugin is reactivated", async () => {
+		const plugin = await runner.load(
+			{
+				id: "test-reactivation",
+				version: "1.0.0",
+				capabilities: [],
+				allowedHosts: [],
+				storage: {},
+				hooks: [],
+				routes: ["kv-test"],
+				admin: {},
+			},
+			ECHO_PLUGIN,
+		);
+		const request = { method: "POST", url: "/api/test", headers: {} };
+		const invoke = (value: string) => plugin.invokeRoute("kv-test", { value }, request);
+		const originalToken = runner["plugins"].get(plugin.id)?.token;
+		if (!originalToken || !plugin.setActive) {
+			throw new Error("Plugin must have active credentials and support status changes");
+		}
+
+		await expect(invoke("before disable")).resolves.toEqual({ stored: "before disable" });
+
+		plugin.setActive(false);
+		expect(runner.validateToken(originalToken)).toBeNull();
+		await expect(invoke("while disabled")).rejects.toThrow("Invalid auth token");
+
+		plugin.setActive(true);
+		expect(runner.validateToken(originalToken)).toBeNull();
+		await expect(invoke("after reactivation")).resolves.toEqual({ stored: "after reactivation" });
+	}, 60_000);
 
 	it("encrypts settings through the production workerd process", async () => {
 		vi.stubEnv(

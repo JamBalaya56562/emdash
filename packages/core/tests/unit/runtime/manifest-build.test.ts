@@ -25,6 +25,7 @@ import { setI18nConfig } from "../../../src/i18n/config.js";
 import { definePlugin } from "../../../src/plugins/define-plugin.js";
 import { createHookPipeline } from "../../../src/plugins/hooks.js";
 import type { ResolvedPlugin } from "../../../src/plugins/types.js";
+import { BlockTypeRegistry } from "../../../src/schema/block-type-registry.js";
 import { SchemaRegistry } from "../../../src/schema/registry.js";
 import { setupTestDatabase, teardownTestDatabase } from "../../utils/test-db.js";
 
@@ -63,6 +64,7 @@ function buildRuntime(
 	db: Kysely<Database>,
 	config: EmDashConfig = {},
 	configuredPlugins: ResolvedPlugin[] = [],
+	sandboxEnabled = false,
 ): EmDashRuntime {
 	const pipelineFactoryOptions = { db } as const;
 	const hooks = createHookPipeline(configuredPlugins, pipelineFactoryOptions);
@@ -75,7 +77,7 @@ function buildRuntime(
 			throw new Error("createDialect not used in this test");
 		}) as any,
 		createStorage: null,
-		sandboxEnabled: false,
+		sandboxEnabled,
 		sandboxedPluginEntries: [],
 		createSandboxRunner: null,
 	};
@@ -232,7 +234,7 @@ describe("generateManifest()", () => {
 		expect(manifest.collections.posts?.fields.title?.kind).toBe("string");
 	});
 
-	it("falls back to a text descriptor for unknown database field types", async () => {
+	it("marks unknown database field types as unsupported", async () => {
 		const registry = new SchemaRegistry(db);
 		const collection = await registry.createCollection({
 			slug: "imports",
@@ -262,9 +264,55 @@ describe("generateManifest()", () => {
 		const manifest = await generateManifest({}, {}, { db });
 
 		expect(manifest.collections.imports?.fields.payload).toMatchObject({
-			kind: "string",
+			kind: "unsupported",
 			label: "Payload",
+			unsupportedType: {
+				type: "unknown_plugin_type",
+				path: "type",
+			},
 		});
+	});
+
+	it("includes retained block definitions and changes hash when their contract changes", async () => {
+		const blocks = new BlockTypeRegistry(db);
+		const registry = new SchemaRegistry(db);
+		const hero = await blocks.createBlockType({
+			slug: "hero",
+			label: "Hero",
+			fields: [{ slug: "heading", label: "Heading", type: "string", required: true }],
+		});
+		await registry.createCollection({ slug: "landing_pages", label: "Landing pages" });
+		await registry.createField("landing_pages", {
+			slug: "layout",
+			label: "Layout",
+			type: "blocks",
+			validation: { allowedTypes: ["hero"] },
+		});
+
+		const before = await generateManifest({}, {}, { db });
+		expect(before.collections.landing_pages?.fields.layout).toMatchObject({
+			kind: "blocks",
+			blockTypes: [
+				{
+					slug: "hero",
+					currentVersion: 1,
+					versions: [{ version: 1, active: true }],
+				},
+			],
+		});
+		expect(before.collections.landing_pages?.fields.layout?.blockTypeFingerprint).toMatch(
+			/^blocks-field:v1:sha256:/,
+		);
+
+		await blocks.updateBlockType("hero", {
+			expectedFingerprint: hero.versions[0]!.fingerprint,
+			fields: [
+				{ slug: "heading", label: "Heading", type: "string", required: true },
+				{ slug: "eyebrow", label: "Eyebrow", type: "string" },
+			],
+		});
+		const after = await generateManifest({}, {}, { db });
+		expect(after.hash).not.toBe(before.hash);
 	});
 });
 
@@ -380,16 +428,30 @@ describe("EmDashRuntime.getManifest()", () => {
 		expect(manifest.contentLocale).toEqual({ defaultLocale: "en", implicit: true });
 	});
 
+	it("reports whether the plugin sandbox is enabled", async () => {
+		expect((await buildRuntime(db).getManifest()).sandboxEnabled).toBe(false);
+		expect((await buildRuntime(db, {}, [], true).getManifest()).sandboxEnabled).toBe(true);
+	});
+
 	it("exposes configured saved-entry panels and actions to the admin", async () => {
 		const plugin = definePlugin({
 			id: "content-guard",
 			version: "1.0.0",
+			capabilities: ["admin.editor-draft:read", "admin.editor-draft:patch"],
 			routes: {
 				health: { permission: "content:edit_own", handler: async () => ({ blocks: [] }) },
 				repair: { permission: "content:edit_own", handler: async () => ({ refresh: true }) },
 			},
 			admin: {
-				editorPanels: [{ id: "health", title: "Health", route: "health" }],
+				editorPanels: [
+					{
+						id: "health",
+						title: "Health",
+						route: "health",
+						collections: ["posts"],
+						draft: { read: { translatable: true }, patch: { fields: ["title"] } },
+					},
+				],
 				editorActions: [{ id: "repair", label: "Repair", route: "repair", placement: "overflow" }],
 			},
 		});
@@ -397,7 +459,13 @@ describe("EmDashRuntime.getManifest()", () => {
 
 		expect((await runtime.getManifest()).plugins["content-guard"]).toMatchObject({
 			adminMode: "blocks",
-			editorPanels: [{ id: "health", route: "health" }],
+			editorPanels: [
+				{
+					id: "health",
+					route: "health",
+					draft: { read: { translatable: true }, patch: { fields: ["title"] } },
+				},
+			],
 			editorActions: [{ id: "repair", route: "repair", placement: "overflow" }],
 		});
 	});

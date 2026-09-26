@@ -88,6 +88,7 @@ export {
 	handleMediaList,
 	handleMediaGet,
 	handleMediaCreate,
+	handleMediaRegisterUpload,
 	handleMediaUpdate,
 	handleMediaReplaceMetadata,
 	handleMediaDelete,
@@ -150,6 +151,7 @@ export { decodeSlug, slugify } from "./utils/slugify.js";
 export {
 	getEmDashCollection,
 	getEmDashEntry,
+	getEmDashReferences,
 	getEditMeta,
 	getTranslations,
 	resolveEmDashPath,
@@ -162,8 +164,17 @@ export type {
 	EditFieldMeta,
 	EntryResult,
 	EmDashCollections,
+	EmDashCollectionReferences,
 	InferCollectionData,
+	InferCollectionReferences,
+	ReferencePage,
+	ReferencePages,
+	ReferenceQuery,
+	ReferenceResult,
+	ReferenceSelection,
 	ResolvePathResult,
+	SelectableReferences,
+	SelectedReferences,
 	TranslationSummary,
 	TranslationsResult,
 	WhereRange,
@@ -256,8 +267,10 @@ export type {
 } from "./object-cache/types.js";
 
 // Plugin system
+export { pluginResponse } from "./plugin-types.js";
 export {
 	definePlugin,
+	definePluginRoute,
 	adaptSandboxEntry,
 	pluginManifestSchema,
 	createHookPipeline,
@@ -288,6 +301,14 @@ export {
 	// HTTP access for plugins (shared between in-process, Cloudflare, and workerd runners)
 	createHttpAccess,
 	createUnrestrictedHttpAccess,
+	PLUGIN_HTTP_MAX_REQUEST_BYTES,
+	PLUGIN_HTTP_MAX_RESPONSE_BYTES,
+	bufferPluginHttpRequest,
+	pluginHttpRedirectAction,
+	pluginHttpResponseFromWire,
+	pluginHttpResponseToWire,
+	readPluginHttpBytes,
+	rewritePluginHttpRedirect,
 	createContentAccess,
 	createContentAccessWithWrite,
 	createSettingsAccess,
@@ -344,6 +365,8 @@ export type {
 	MediaBytes,
 	MediaMetadataPatch,
 	HttpAccess,
+	PluginHttpResponseWire,
+	PluginHttpRedirectAction,
 	LogAccess,
 	SiteInfo,
 	TaxonomyAccess,
@@ -381,6 +404,7 @@ export type {
 	MediaUploadEvent,
 	HookResult,
 	PluginRoute,
+	PluginRouteDefinition,
 	RouteContext,
 	PluginAdminConfig,
 	PluginAdminPage,
@@ -422,6 +446,7 @@ export type {
 	SandboxEmailSendCallback,
 	SandboxCommentModerateCallback,
 	SandboxContentCreateCallback,
+	SandboxHttpFetchCallback,
 	PluginManifest,
 	ValidatedPluginManifest,
 	SerializedRequest,
@@ -439,6 +464,7 @@ export {
 	isDeprecatedCapability,
 	normalizeCapability,
 	normalizeCapabilities,
+	normalizePluginCapabilities,
 } from "./plugins/index.js";
 export type { CurrentPluginCapability, DeprecatedPluginCapability } from "./plugins/index.js";
 
@@ -446,7 +472,15 @@ export type { CurrentPluginCapability, DeprecatedPluginCapability } from "./plug
 export type { PluginDescriptor } from "./astro/integration/runtime.js";
 
 // Schema registry
-export { SchemaRegistry, SchemaError, getCollectionInfo } from "./schema/index.js";
+export {
+	SchemaRegistry,
+	SchemaError,
+	BlockTypeRegistry,
+	expandCollectionBlockFields,
+	normalizeBlocksData,
+	resolveBlockTypes,
+	getCollectionInfo,
+} from "./schema/index.js";
 export type {
 	FieldType,
 	ColumnType,
@@ -454,6 +488,7 @@ export type {
 	CollectionSource,
 	FieldValidation,
 	FieldWidgetOptions,
+	UnsupportedFieldType,
 	Collection,
 	Field,
 	CreateCollectionInput,
@@ -461,6 +496,21 @@ export type {
 	CreateFieldInput,
 	UpdateFieldInput,
 	CollectionWithFields,
+	BlockFieldDefinition,
+	BlockFieldOptions,
+	BlockFieldType,
+	BlockType,
+	BlockTypeCompatibility,
+	BlockTypeDifference,
+	BlockTypeSource,
+	BlockTypeVersion,
+	CreateBlockTypeInput,
+	UpdateBlockTypeInput,
+	ApplySeedBlockTypeInput,
+	SeedBlockTypeVersionInput,
+	BlockWriteOptions,
+	ResolvedBlockTypes,
+	StoredBlockValue,
 } from "./schema/index.js";
 export {
 	FIELD_TYPE_TO_COLUMN,
@@ -535,9 +585,11 @@ export {
 } from "./settings/index.js";
 export type {
 	SiteSettings,
+	SiteSettingsUpdate,
 	SiteSettingKey,
 	MediaReference,
 	SeoSettings,
+	SeoSettingsUpdate,
 } from "./settings/types.js";
 
 // SEO

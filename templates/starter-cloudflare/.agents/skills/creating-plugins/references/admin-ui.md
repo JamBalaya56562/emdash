@@ -91,6 +91,52 @@ The plugin CLI preserves `admin.settingsSchema` in the registry manifest and gen
 
 The `secret` settings field is write-only in the admin response and encrypted before persistence. The site must provide `EMDASH_ENCRYPTION_KEY`; missing, wrong, or tampered key material fails closed. Keep the encryption-key list with database backups. Existing `ctx.kv.get("settings:<key>")` reads remain compatible through EmDash 0.x.
 
+## Sandboxed saved-entry extensions
+
+Declare saved-entry panels and actions in `emdash-plugin.jsonc`:
+
+```jsonc title="emdash-plugin.jsonc"
+{
+	"admin": {
+		"editorPanels": [
+			{
+				"id": "health",
+				"title": "Content health",
+				"route": "editor/health",
+				"collections": ["posts"],
+				"draft": {
+					"read": { "translatable": true },
+					"patch": { "fields": ["title", "excerpt"] },
+				},
+			},
+		],
+		"editorActions": [
+			{
+				"id": "repair",
+				"label": "Repair metadata",
+				"route": "editor/repair",
+				"placement": "overflow",
+				"style": "danger",
+				"confirm": {
+					"title": "Repair?",
+					"text": "This changes the saved entry.",
+					"confirm": "Repair",
+					"deny": "Cancel",
+				},
+			},
+		],
+	},
+}
+```
+
+Every referenced route must be private. EmDash reloads the saved entry and checks ownership plus the route permission before invoking it. `routeCtx.ui.entry` contains only the canonical collection, ID, locale, and version.
+
+Panels start collapsed. `panel_load` never includes draft values. After an explicit `block_action`, `form_submit`, or `editor_action`, `admin.editor-draft:read` can attach only the fields selected by the extension's `draft.read` declaration. `fields` selects explicit slugs and `translatable: true` selects current schema fields marked translatable. Draft declarations require explicit collection scope.
+
+`admin.editor-draft:patch` permits a separate `draft.patch` field selector and does not imply read. Return `patch: { type: "editor-draft-patch", operations }` with whole-field `set` or `clear` operations. The host rejects the complete patch on an unknown, forbidden, invalid, unsupported, oversized, or stale operation. Accepted patches receive a host-rendered preview, update the form atomically, mark it dirty, and remain unsaved. A response may contain a toast and one terminal effect: patch, refresh, or navigation.
+
+Use `createPluginRuntimeTestHost().admin` to exercise this boundary. `captureEditorDraft()` creates a saved-entry draft request, the existing panel/action helpers invoke the production route, and `applyEditorDraftPatch()` applies only a current response through the host validator.
+
 ## Sandboxed declarative field widgets
 
 Core and the admin contain a declarative field-widget path. Declare the widget in the registry manifest:
@@ -127,7 +173,7 @@ Other Block Kit element types display an unsupported-element message in this sur
 
 `emdash-plugin.jsonc` accepts `admin.fieldWidgets`, and the plugin CLI carries the definitions through the bundle manifest and generated descriptor for registry installation. The artifact round-trip is covered by plugin CLI, shared manifest, and plugin-test tests. The browser E2E fixture still tests a native React color picker rather than a registry-installed declarative widget, so verify the real editor render and value persistence for the chosen elements.
 
-The sandbox admin context does not expose the administrator's active locale. Labels in manifest metadata and Block Kit responses are static strings from the plugin; there is no locale-aware callback or translation catalog handoff for registry plugins.
+The sandbox admin route receives `routeCtx.ui` with the host-attested admin locale, text direction, and surface. Use it to select localized text in a runtime Block Kit response. Labels in manifest metadata remain static strings; registry plugins do not hand translation catalogs to the host.
 
 ## Native React pages, widgets, and fields
 

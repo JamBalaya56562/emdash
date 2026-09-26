@@ -33,7 +33,7 @@ const DEFAULT_WALL_TIME_MS = 30_000;
 import type { PluginManifest } from "emdash";
 
 import { createBridgeHandler } from "./bridge-handler.js";
-import { generatePluginWrapper } from "./wrapper.js";
+import { generatePluginWrapper, parseRouteTransport, stringifyRouteTransport } from "./wrapper.js";
 
 function isRecord(value: unknown): value is Record<string, unknown> {
 	return value !== null && typeof value === "object" && !Array.isArray(value);
@@ -216,6 +216,7 @@ export class MiniflareDevRunner implements SandboxRunner {
 				commentModerate: () => this.commentModerateCallback,
 				cronReschedule: () => this.cronRescheduleCallback?.(),
 				now: this.options.now,
+				httpFetch: this.options.httpFetch,
 				storage: this.options.mediaStorage,
 			});
 
@@ -228,7 +229,7 @@ export class MiniflareDevRunner implements SandboxRunner {
 
 			// outboundService intercepts all fetch() calls from this worker.
 			// Calls to http://bridge/... go to the Node bridge handler.
-			// Other calls pass through for network:fetch.
+			// Other calls pass through for network:request.
 			workerConfigs.push({
 				name: pluginId.replace(SAFE_ID_RE, "_"),
 				// The wrapper imports "sandbox-plugin.js", so we provide both
@@ -245,13 +246,13 @@ export class MiniflareDevRunner implements SandboxRunner {
 					// Only allow bridge calls. Any other outbound fetch is blocked
 					// to enforce that all network access goes through ctx.http.fetch
 					// (which routes via the bridge with capability + host validation).
-					// Without this, plugins could bypass network:fetch / allowedHosts
+					// Without this, plugins could bypass network:request / allowedHosts
 					// by calling plain fetch() directly.
 					if (url.hostname === "bridge") {
 						return bridgeHandler(request);
 					}
 					return new Response(
-						`Direct fetch() blocked in sandbox. Plugin "${manifest.id}" must use ctx.http.fetch() (requires network:fetch capability).`,
+						`Direct fetch() blocked in sandbox. Plugin "${manifest.id}" must use ctx.http.fetch() (requires network:request capability).`,
 						{ status: 403 },
 					);
 				},
@@ -341,7 +342,7 @@ class MiniflareDevPlugin implements SandboxedPluginInstance {
 							"Content-Type": "application/json",
 							Authorization: `Bearer ${this.runner.invokeAuthToken}`,
 						},
-						body: JSON.stringify({ input, request, invocationId }),
+						body: stringifyRouteTransport({ input, request, invocationId }),
 					},
 				);
 				if (!res.ok) {
@@ -357,7 +358,7 @@ class MiniflareDevPlugin implements SandboxedPluginInstance {
 					}
 					throw new Error(`Plugin ${this.id} route ${routeName} failed: ${text}`);
 				}
-				return res.json();
+				return parseRouteTransport(await res.text());
 			},
 			options,
 		);

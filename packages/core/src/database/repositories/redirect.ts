@@ -17,9 +17,9 @@ import { encodeCursor, decodeCursor, type FindManyResult } from "./types.js";
 // ---------------------------------------------------------------------------
 
 /**
- * Hard cap on rows stored in `_emdash_404_log`. When exceeded, the oldest
- * rows (by `last_seen_at`) are evicted on insert. Prevents an unauthenticated
- * attacker from growing the table without bound by requesting unique URLs.
+ * Hard cap on rows stored in `_emdash_404_log`. Scheduled maintenance evicts
+ * the oldest rows by `last_seen_at` without adding a read-amplifying count to
+ * the anonymous request path.
  */
 export const MAX_404_LOG_ROWS = 10_000;
 
@@ -640,6 +640,7 @@ export class RedirectRepository {
 		const referrer = truncateOrNull(entry.referrer, REFERRER_MAX_LENGTH);
 		const userAgent = truncateOrNull(entry.userAgent, USER_AGENT_MAX_LENGTH);
 		const ip = entry.ip ?? null;
+		const id = ulid();
 
 		// Atomic upsert by path. The UNIQUE index on `path` makes this safe
 		// under concurrency: two requests for the same new path can't both
@@ -648,7 +649,7 @@ export class RedirectRepository {
 		await this.db
 			.insertInto("_emdash_404_log")
 			.values({
-				id: ulid(),
+				id,
 				path: entry.path,
 				referrer,
 				user_agent: userAgent,
@@ -659,7 +660,7 @@ export class RedirectRepository {
 			})
 			.onConflict((oc) =>
 				oc.column("path").doUpdateSet({
-					hits: sql`hits + 1`,
+					hits: sql`${sql.ref("_emdash_404_log.hits")} + 1`,
 					last_seen_at: now,
 					referrer,
 					user_agent: userAgent,
@@ -667,11 +668,6 @@ export class RedirectRepository {
 				}),
 			)
 			.execute();
-
-		// Enforce the row cap. Cheap when the table is under cap (single
-		// COUNT(*) query); evicts oldest rows if we're over. Updates (dedup
-		// hits) don't grow the table so this is a no-op for repeat paths.
-		await this.enforce404Cap();
 	}
 
 	/**
@@ -679,36 +675,26 @@ export class RedirectRepository {
 	 * MAX_404_LOG_ROWS. "Oldest" is by `last_seen_at`, so a path that keeps
 	 * getting hit stays in the table even if it was first seen long ago.
 	 *
-	 * Private — callers use `log404`, which invokes this after every upsert.
+	 * Called by scheduled system cleanup, never by the anonymous request path.
 	 */
-	private async enforce404Cap(): Promise<void> {
-		const countRow = await this.db
-			.selectFrom("_emdash_404_log")
-			.select((eb) => eb.fn.countAll<number>().as("c"))
-			.executeTakeFirst();
-		const count = Number(countRow?.c ?? 0);
-		if (count <= MAX_404_LOG_ROWS) return;
-
-		const excess = count - MAX_404_LOG_ROWS;
-
-		// Evict the oldest rows in a single SQL statement. Using a subquery
-		// (rather than materialising the victim IDs in JS and passing them
-		// back as bind parameters) keeps the statement bounded regardless of
-		// how far over cap the table is — important for existing installs
-		// that crossed the threshold before this cap was introduced.
-		await this.db
+	async cleanup404Log(): Promise<number> {
+		// Keep the newest rows in one statement. Deriving the victims inside the
+		// DELETE makes overlapping cleanup runs idempotent: each statement
+		// evaluates the current newest set instead of acting on a stale count.
+		const result = await this.db
 			.deleteFrom("_emdash_404_log")
 			.where(
 				"id",
-				"in",
+				"not in",
 				this.db
 					.selectFrom("_emdash_404_log")
 					.select("id")
-					.orderBy("last_seen_at", "asc")
-					.orderBy("id", "asc")
-					.limit(excess),
+					.orderBy("last_seen_at", "desc")
+					.orderBy("id", "desc")
+					.limit(MAX_404_LOG_ROWS),
 			)
-			.execute();
+			.executeTakeFirst();
+		return Number(result.numDeletedRows);
 	}
 
 	async find404s(opts: {

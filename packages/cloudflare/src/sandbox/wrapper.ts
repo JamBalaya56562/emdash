@@ -11,7 +11,8 @@
  *
  */
 
-import { normalizeCapabilities, type PluginManifest } from "emdash";
+import { normalizePluginCapabilities, type PluginManifest } from "emdash";
+import { generatePluginHttpWireRuntimeSource } from "emdash/plugins/http-wire";
 
 const TRAILING_SLASH_RE = /\/$/;
 const NEWLINE_RE = /[\n\r]/g;
@@ -40,10 +41,7 @@ export function generatePluginWrapper(manifest: PluginManifest, options?: Wrappe
 	const site = options?.site ?? { name: "", url: "", locale: "en" };
 	// Normalize so manifests that still declare legacy names (`read:users`)
 	// expose the same APIs as canonical names (`users:read`).
-	const capabilities = normalizeCapabilities(manifest.capabilities ?? []);
-	if (capabilities.includes("comments:moderate") && !capabilities.includes("comments:read")) {
-		capabilities.push("comments:read");
-	}
+	const capabilities = normalizePluginCapabilities(manifest.capabilities ?? []);
 	const hasContentAccess =
 		capabilities.includes("content:read") ||
 		capabilities.includes("content:write") ||
@@ -66,6 +64,7 @@ export function generatePluginWrapper(manifest: PluginManifest, options?: Wrappe
 	const hasContentRestore = capabilities.includes("content:restore");
 	const hasSchemaRead = capabilities.includes("schema:read");
 	const hasRevisionRead = capabilities.includes("content:revisions:read");
+	const httpWireRuntimeSource = generatePluginHttpWireRuntimeSource();
 
 	return `
 // =============================================================================
@@ -78,6 +77,8 @@ import { WorkerEntrypoint } from "cloudflare:workers";
 
 // Plugin code lives in a separate module for scope isolation
 import pluginModule from "sandbox-plugin.js";
+
+${httpWireRuntimeSource}
 
 // Extract hooks and routes from the plugin module
 const hooks = pluginModule?.hooks || pluginModule?.default?.hooks || {};
@@ -96,25 +97,22 @@ function storageSerializationErrorDetails(value) {
 	};
 }
 
+const SANDBOX_ROUTE_ERROR_MESSAGES = {
+	MEDIA_USAGE_ACTIVATION_IN_PROGRESS: "Media usage activation is in progress",
+	MEDIA_USAGE_ACTIVATION_CHECK_FAILED: "Unable to verify media usage activation state",
+	TRANSFER_IMPORT_IN_PROGRESS: "A site import is in progress or incomplete; writes are disabled",
+	TRANSFER_FENCE_CHECK_FAILED: "Unable to verify whether site writes are allowed",
+};
+
 function sandboxRouteErrorDetails(value) {
 	if (!value || typeof value !== "object") return null;
-	const code =
-		value.code === "MEDIA_USAGE_ACTIVATION_IN_PROGRESS" ||
-		value.code === "MEDIA_USAGE_ACTIVATION_CHECK_FAILED"
-			? value.code
-			: value.name === "MEDIA_USAGE_ACTIVATION_IN_PROGRESS" ||
-				  value.name === "MEDIA_USAGE_ACTIVATION_CHECK_FAILED"
-				? value.name
-				: null;
+	const code = Object.hasOwn(SANDBOX_ROUTE_ERROR_MESSAGES, value.code)
+		? value.code
+		: Object.hasOwn(SANDBOX_ROUTE_ERROR_MESSAGES, value.name)
+			? value.name
+			: null;
 	if (!code || (value.status !== undefined && value.status !== 503)) return null;
-	return {
-		code,
-		message:
-			code === "MEDIA_USAGE_ACTIVATION_IN_PROGRESS"
-				? "Media usage activation is in progress"
-				: "Unable to verify media usage activation state",
-		status: 503,
-	};
+	return { code, message: SANDBOX_ROUTE_ERROR_MESSAGES[code], status: 503 };
 }
 
 function unwrapCommentResult(value) {
@@ -297,11 +295,15 @@ function createContext(env, originHook, invocationId) {
 	// HTTP access - proxies to bridge (capability + host enforced by bridge)
 	const http = {
 		fetch: async (url, init) => {
-			const result = await bridge.httpFetch(url, init);
-			return new Response(result.text, {
-				status: result.status,
-				headers: result.headers,
-			});
+			const buffered = await bufferPluginHttpRequest(init);
+			const bridgeInit = buffered ? {
+				...(buffered.method ? { method: buffered.method } : {}),
+				...(buffered.redirect ? { redirect: buffered.redirect } : {}),
+				headers: buffered.headers ? Array.from(new Headers(buffered.headers).entries()) : undefined,
+				body: buffered.body ? new Uint8Array(buffered.body) : undefined,
+			} : undefined;
+			const result = await bridge.httpFetch(url, bridgeInit);
+			return pluginHttpResponseFromWire(result);
 		}
 	};
 	
