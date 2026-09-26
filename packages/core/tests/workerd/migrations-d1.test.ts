@@ -341,10 +341,12 @@ describe("replay idempotence on D1", () => {
 		const failed: string[] = [];
 
 		for (const name of remaining) {
-			await migrateThrough(name);
-			if (!guarded.has(name)) continue;
 			const migration = migrations.get(name);
 			if (!migration) throw new Error(`no migration is registered as ${name}`);
+			// Stepping through the migrator here times the test out: it queries every
+			// table twice per step, and on D1 it runs this same `up` without a transaction.
+			await migration.up(db);
+			if (!guarded.has(name)) continue;
 			try {
 				await migration.up(db);
 			} catch (error) {
